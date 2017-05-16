@@ -3,6 +3,62 @@ import { IPost } from '../../models';
 
 export let blogPosts: IPost[] = [
     {
+        name: "WeGL fallback (for THREE.js)",
+        category: "Web Development",
+        link: "https://developer.mozilla.org/pl/docs/Web/JavaScript/Referencje/Obiekty/Object",
+        status: "",
+        date: "11 May 2017",
+        content:
+            [
+                "For this website in fact I needed a fallback for WebGL.",
+                "This came to my attention when unexpectedly Chrome refused to render WebGL",
+                "Looking around on the internet it was hard to find a single solution",
+                "So I have Frankensteined some solutions together and came up with the method you see below",
+                <pre>
+{`export const isGL = () => {
+    const canvas = document.createElement("canvas");
+    const gl = canvas.getContext("webgl")
+        || canvas.getContext("experimental-webgl");
+    return gl && gl instanceof WebGLRenderingContext
+};`}
+                </pre>
+            ],
+        image: "/images/blogPosts/webGLFallbackForTHREEjs/threejs.jpg"
+    },
+    {
+        name: "Some useful Object manipulation without libraries",
+        category: "Web Development",
+        link: "https://developer.mozilla.org/pl/docs/Web/JavaScript/Referencje/Obiekty/Object",
+        status: "",
+        date: "27 Apr 2017",
+        content:
+            [
+                "Libraries such as lodash and underscore provide some nice, out-of-the-box methods for manipulating Objects",
+                "But what if you don't feel like installing these?",
+                "Here are some ways to still do cool stuff with Objects",
+                <div>
+                    <h2>Are two Objects the same?</h2>
+                    <code>
+                        const isObjectsEqual = JSON.stringify(obj1)===JSON.stringify(obj2);
+                    </code>
+                </div>,
+                <div>
+                    <h2>Is Object empty?</h2>
+                    <code>
+                        const isObjectEmpty = Object.keys(obj).length === 0 && obj.constructor === Object;
+                    </code>
+                </div>,
+                <div>
+                    <h2>Does a specific key exist in an Object?</h2>
+                    <code>
+                        const isKey = key in obj;
+                    </code>
+                </div>
+
+            ],
+        image: "/images/blogPosts/objectManipulationWithoutLibraries/curlyBraces.png"
+    },
+    {
         name: "Regular expressions and whitespace",
         category: "Web Development",
         link: "https://developer.mozilla.org/en/docs/Web/JavaScript/Guide/Regular_Expressions",

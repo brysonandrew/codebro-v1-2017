@@ -41,7 +41,7 @@ addComponentCSS({
             color: #66F8B6;
             border-radius: 6px;
             padding: 4px;
-            margin: 0;
+            margin: 2px 0;
         }
         
         ul li {
