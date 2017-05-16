@@ -3,6 +3,7 @@ import THREE = require('three');
 import { connect } from 'react-redux';
 import { IStoreState } from '../../redux/main_reducer';
 import { Flame } from "./flame";
+import {isGL} from "../../utils/webgl";
 
 interface IProperties {
     activePageIndex?: number
@@ -19,6 +20,7 @@ interface IProps extends IProperties, ICallbacks {}
 interface IState extends IProperties, ICallbacks {
     isMounted?: boolean
     isAnimating?: boolean
+    isFallbackRendered?: boolean
 }
 
 export class Background extends React.Component<IProps, IState> {
@@ -32,11 +34,26 @@ export class Background extends React.Component<IProps, IState> {
         super(props, context);
         this.state = {
             isMounted: false,
-            isAnimating: true
+            isAnimating: false,
+            isFallbackRendered: false
         }
     }
 
     componentDidMount() {
+        if (isGL()) {
+            this.initGL();
+        } else {
+            this.initGLFallback();
+        }
+    }
+
+    initGLFallback() {
+        this.setState({
+            isFallbackRendered: true
+        })
+    }
+
+    initGL() {
         if (this.props.activePageIndex === -1) {
             this.setState({
                 isAnimating: true,
@@ -62,33 +79,34 @@ export class Background extends React.Component<IProps, IState> {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.activePageIndex !== this.props.activePageIndex) {
-            if (nextProps.activePageIndex === -1) {
-                setTimeout(() => {
+        if (isGL()) {
+            if (nextProps.activePageIndex !== this.props.activePageIndex) {
+                if (nextProps.activePageIndex === -1) {
+                    setTimeout(() => {
+                        this.setState({
+                            isAnimating: true
+                        });
+                        this.animate();
+                    }, 0);
+                } else if (nextProps.activePageIndex === 2) {
+                    setTimeout(() => {
+                        this.setState({
+                            isAnimating: true
+                        });
+                        this.animate();
+                    }, 0);
+                    this.camera.position.z = 100;
+                } else {
                     this.setState({
-                        isAnimating: true
+                        isAnimating: false
                     });
-                    this.animate();
-                }, 0);
-            } else if (nextProps.activePageIndex === 2) {
-                setTimeout(() => {
-                    this.setState({
-                        isAnimating: true
-                    });
-                    this.animate();
-                }, 0);
-                this.camera.position.z = 100;
-            } else {
-                this.setState({
-                    isAnimating: false
-                });
+                }
             }
         }
     }
 
     initRenderer() {
-        this.renderer = new THREE.WebGLRenderer();
-        console.log(this.renderer);
+        this.renderer =  new THREE.WebGLRenderer();
         this.renderer.setSize( window.innerWidth, window.innerHeight );
         document.body.appendChild( this.renderer.domElement );
     }
@@ -134,10 +152,25 @@ export class Background extends React.Component<IProps, IState> {
     }
 
     render(): JSX.Element {
+        const styles = {
+            background: {
+                position: "relative"
+            },
+            background__image: {
+                position: "absolute",
+                top: 0,
+                left: "50%",
+                width: "auto",
+                height: "100vh",
+                transform: "translate(-50%)"
+            }
+        };
+        console.log(this.state.isFallbackRendered)
         return (
-            <div>
-                {this.state.isMounted
-                    ?   null
+            <div style={ styles.background }>
+                {this.state.isFallbackRendered
+                    ?   <img style={ styles.background__image }
+                             src={"/images/background/fallback.png"}/>
                     :   "loading"}
             </div>
         );

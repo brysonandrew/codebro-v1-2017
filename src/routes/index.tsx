@@ -2,6 +2,8 @@ import * as React from 'react';
 import { Route, IndexRoute } from 'react-router';
 import { App } from '../App/App';
 
+import {BackgroundFromStore} from "../Widgets/Background/Background";
+
 import { ShowroomIndex } from '../App/Showroom/Showroom';
 import { SphinxContainerFromStore }
     from '../App/Showroom/Sites/Sphinx/SphinxContainer';
@@ -28,6 +30,8 @@ import { HomeFromStore } from '../Home/Home';
 
 const routes = (
         <Route component={App}>
+            <Route path="/background" component={BackgroundFromStore}/>
+            {/*showroom*/}
             <Route path="/showroom" component={ShowroomIndex}/>
             <Route path="/showroom/sphinx" component={SphinxContainerFromStore}/>
             <Route path="/showroom/cyclops" component={CyclopsContainerFromStore}/>

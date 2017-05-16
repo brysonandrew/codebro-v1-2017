@@ -6672,6 +6672,10 @@ declare namespace THREE {
     export class OrbitControls {
         constructor(camera?: any);
     }
+
+    export class CanvasRenderer {
+        constructor();
+    }
 }
 
 declare module "three" {

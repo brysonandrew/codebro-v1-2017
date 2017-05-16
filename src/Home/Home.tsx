@@ -115,10 +115,14 @@ export class Home extends React.Component<IProps, IState> {
     public render(): JSX.Element {
         let styles = {
             home: {
+
+            },
+            home__content: {
                 position: "fixed",
                 height: "100vh",
                 width: "100vw",
-                textAlign: "center"
+                textAlign: "center",
+                zIndex: 2
             },
             home__logo: {
                 position: "absolute",
@@ -136,20 +140,22 @@ export class Home extends React.Component<IProps, IState> {
         };
         return (
             <div style={styles.home}>
-                <div style={styles.home__logo}>
-                    <Logo
-                        activePageIndex={this.props.activePageIndex}
-                    />
+                <div style={styles.home__content}>
+                    <div style={styles.home__logo}>
+                        <Logo
+                            activePageIndex={this.props.activePageIndex}
+                        />
+                    </div>
+                    <div style={styles.home__introHeader}>
+                        <IntroHeader
+                            isOnFrontPage={(this.props.activePageIndex===-1)}
+                        />
+                    </div>
+                    <MenuFromStore/>
+                    {(this.props.activePageIndex > -1)
+                        ?   this.componentTypes[this.componentIndex].component
+                        :   null}
                 </div>
-                <div style={styles.home__introHeader}>
-                    <IntroHeader
-                        isOnFrontPage={(this.props.activePageIndex===-1)}
-                    />
-                </div>
-                <MenuFromStore/>
-                {(this.props.activePageIndex > -1)
-                    ?   this.componentTypes[this.componentIndex].component
-                    :   null}
                 <BackgroundFromStore/>
             </div>
         );
