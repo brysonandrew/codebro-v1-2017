@@ -36,16 +36,5 @@ export const pages: IPage[] = [
         viewPaths: workPosts.map(post => convertNameToPath(post.name)),
         posts: workPosts,
         slides: workPosts.map(post => convertPostToSlides(post))
-    },
-    {
-        name: "SLIDESHOW",
-        path: "slideshow",
-        componentType: "slideshow",
-        viewPaths: blogPosts.map(post => convertNameToPath(post.name))
-                    .concat(showroomLinks.map(link => convertNameToPath(link.name)))
-                    .concat(workshopLinks.map(link => convertNameToPath(link.name))),
-        slides: blogPosts.map(x => convertPostToSlides(x))
-                    .concat(showroomLinks.map(x => convertPostToSlides(x)))
-                    .concat(workshopLinks.map(x => convertPostToSlides(x)))
     }
 ];

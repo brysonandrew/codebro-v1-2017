@@ -10,10 +10,10 @@ export let blogPosts: IPost[] = [
         date: "11 May 2017",
         content:
             [
-                "For this website in fact I needed a fallback for WebGL.",
-                "This came to my attention when unexpectedly Chrome refused to render WebGL",
-                "Looking around on the internet it was hard to find a single solution",
-                "So I have Frankensteined some solutions together and came up with the method you see below",
+                "So the other day Chrome refused to render the beautiful 3D particle on codebro.io.",
+                "This motivated me to find a fallback for the WebGL renderer.",
+                "Looking around on the internet it was hard to find a single solution.",
+                "So I have Frankensteined some solutions together and came up with the method you see below.",
                 <pre>
 {`export const isGL = () => {
     const canvas = document.createElement("canvas");
