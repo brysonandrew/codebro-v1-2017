@@ -9,7 +9,6 @@ import { BackgroundFromStore } from "../Widgets/Background/Background";
 import { Logo } from "../Widgets/Logo/Logo";
 import { pages } from "../data/pages";
 import { IntroHeader } from "../Widgets/IntroHeader/IntroHeader";
-import { SlideshowFromStore } from "../Widgets/Slideshow/Slideshow";
 import { IComponentType, IHomeParams } from "../models";
 
 interface IProperties {
@@ -34,19 +33,6 @@ interface IState extends IProperties, ICallbacks {
 
 export class Home extends React.Component<IProps, IState> {
 
-    componentIndex = 0;
-
-    componentTypes: IComponentType[] = [
-        {
-            handle:     "post",
-            component:  <PostsFromStore/>
-        },
-        {
-            handle:     "slideshow",
-            component:  <SlideshowFromStore/>
-        }
-    ];
-
     public constructor(props?: any, context?: any) {
         super(props, context);
         this.state = {
@@ -68,10 +54,6 @@ export class Home extends React.Component<IProps, IState> {
                                     .findIndex(item =>
                                         item === params.activeView);
             onViewIndexSelect(activeViewIndex);
-            /////SET COMPONENT TYPE
-            this.componentIndex = Immutable.List(this.componentTypes)
-                                    .findIndex((item, index) =>
-                                        item.handle === pages[activePageIndex].componentType);
         }
         //responsive on window resize
         window.addEventListener("resize"
@@ -101,10 +83,6 @@ export class Home extends React.Component<IProps, IState> {
                                             .findIndex(item =>
                                                 item === nextProps.params.activeView);
                     onViewIndexSelect(activeViewIndex);
-                    /////SET COMPONENT TYPE
-                    this.componentIndex = Immutable.List(this.componentTypes)
-                                            .findIndex((item, index) =>
-                                                item.handle === pages[activePageIndex].componentType);
                 }
             } else {
                 this.props.onViewIndexSelect(-1);
@@ -153,7 +131,7 @@ export class Home extends React.Component<IProps, IState> {
                     </div>
                     <MenuFromStore/>
                     {(this.props.activePageIndex > -1)
-                        ?   this.componentTypes[this.componentIndex].component
+                        ?   <PostsFromStore/>
                         :   null}
                 </div>
                 <BackgroundFromStore/>
