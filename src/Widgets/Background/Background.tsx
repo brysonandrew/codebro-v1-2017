@@ -2,8 +2,8 @@ import * as React from 'react';
 import THREE = require('three');
 import { connect } from 'react-redux';
 import { IStoreState } from '../../redux/main_reducer';
-import { Flame } from "./flame";
-import {isGL} from "../../utils/webgl";
+import { BinaryCluster } from "./binaryCluster";
+import { isGL } from "../../utils/webgl";
 
 interface IProperties {
     activePageIndex?: number
@@ -28,7 +28,7 @@ export class Background extends React.Component<IProps, IState> {
     scene;
     renderer;
     animateLoop;
-    flame = new Flame();
+    binaryCluster = new BinaryCluster();
 
     public constructor(props?: any, context?: any) {
         super(props, context);
@@ -122,7 +122,7 @@ export class Background extends React.Component<IProps, IState> {
     }
 
     initAssets() {
-        this.scene.add(this.flame.render());
+        this.scene.add(this.binaryCluster.render());
     }
 
     onWindowResized(renderer) {
@@ -142,7 +142,7 @@ export class Background extends React.Component<IProps, IState> {
 
     renderMotion() {
         if (this.state.isAnimating) {
-            this.flame.burn();
+            this.binaryCluster.burn();
             this.camera.lookAt( this.scene.position );
             this.renderer.render( this.scene, this.camera );
         } else {
@@ -159,18 +159,17 @@ export class Background extends React.Component<IProps, IState> {
             background__image: {
                 position: "absolute",
                 top: 0,
-                left: "50%",
-                width: "auto",
+                left: 0,
+                width: "100vw",
                 height: "100vh",
-                transform: "translate(-50%)"
+                background: "url(/images/background/fallback.png)",
+                backgroundSize: "cover"
             }
         };
-        console.log(this.state.isFallbackRendered)
         return (
             <div style={ styles.background }>
                 {this.state.isFallbackRendered
-                    ?   <img style={ styles.background__image }
-                             src={"/images/background/fallback.png"}/>
+                    ?   <div style={ styles.background__image }/>
                     :   "loading"}
             </div>
         );

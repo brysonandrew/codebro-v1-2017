@@ -1,18 +1,8 @@
 import THREE = require('three');
 
-export class Flame {
+export class BinaryCluster {
 
-    cluster = new THREE.Group;
-    gravity = 2;
-    isEngulfing = false;
-    engulfBounds = {
-        min: {
-            x: 0, y: 0, z: 0
-        },
-        max: {
-            x: 0, y: 0, z: 0
-        }
-    };
+    clusters = new THREE.Group;
     count = 0;
 
     constructor() {
@@ -83,7 +73,7 @@ export class Flame {
 
         cluster0["life"] = 0;
 
-        this.cluster.add(cluster0);
+        this.clusters.add(cluster0);
 
         let positions1 = new Float32Array( amount * 3 );
 
@@ -96,7 +86,6 @@ export class Flame {
             sizes[i] = 14;
 
             color.setHSL(0.15 * ( i / amount ) - 0.005, 0.8, 0.6);
-            // color.setHSL(360 * Math.random(), 0.8, 0.6);
             color.toArray((colors as any), i * 3);
         });
 
@@ -139,12 +128,7 @@ export class Flame {
 
         cluster1["life"] = 0;
 
-        this.cluster.add(cluster1);
-    }
-
-    engulf(target) {
-        this.isEngulfing = !this.isEngulfing;
-        this.engulfBounds = new THREE.Box3().setFromObject(target);
+        this.clusters.add(cluster1);
     }
 
     burn() {
@@ -153,18 +137,18 @@ export class Flame {
         }
         this.count++;
 
-        this.cluster.children.forEach((spark, i) => {
-            spark.rotation.y += 0.01;
-            spark.position.x = Math.sin(spark.rotation.y) * 50;
-            spark.position.z = Math.cos(spark.rotation.y) * 50;
-            if (spark["life"]===500) {
-                this.cluster.children.splice(i, 1);
+        this.clusters.children.forEach((cluster, i) => {
+            cluster.rotation.y += 0.01;
+            cluster.position.x = Math.sin(cluster.rotation.y) * 50;
+            cluster.position.z = Math.cos(cluster.rotation.y) * 50;
+            if (cluster["life"]===500) {
+                this.clusters.children.splice(i, 1);
             }
-            spark["life"]++;
+            cluster["life"]++;
         });
     }
 
     render() {
-        return this.cluster;
+        return this.clusters;
     }
 }
