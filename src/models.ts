@@ -52,3 +52,25 @@ export interface IShowroomLink {
     parts?: string[]
     image: string
 }
+
+export interface IBackground {
+    name: string
+    displayTest: boolean
+    component: JSX.Element
+}
+
+export interface IParticle {
+    size: number
+    src: string
+    opacity: number
+    hueRotate: number
+    life: number
+    x: number
+    y: number
+}
+
+export interface ISocialMediaLink {
+    name: string
+    iconPath: string
+    link: string
+}

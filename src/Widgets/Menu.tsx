@@ -160,18 +160,16 @@ export class Menu extends React.Component<IProps, IState> {
             menu_crossArm1: {
                 position: "absolute",
                 background: "#ffffff",
-                left: -1,
-                width: 3,
                 height: "50%",
+                width: 3,
                 transform: (hoveringIndex > -1) ? "rotate(90deg)" : "rotate(45deg)",
                 transition: "transform 200ms"
             },
             menu_crossArm2: {
                 position: "absolute",
                 background: "#ffffff",
-                left: 1,
-                width: 3,
                 height: "50%",
+                width: 3,
                 transform: (hoveringIndex > -1) ? "rotate(90deg)" : "rotate(-45deg)",
                 transition: "transform 200ms"
             },
@@ -229,7 +227,7 @@ export class Menu extends React.Component<IProps, IState> {
                             :   null}
                     </Link>
                 )}
-                <div style={styles.menu_lineBelow}></div>
+                <div style={styles.menu_lineBelow}/>
             </div>
         );
     }

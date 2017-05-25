@@ -5,11 +5,12 @@ import { IStoreState } from '../redux/main_reducer';
 import { changePageIndex, changeViewIndex, changeViewportDimensions } from './HomeActionCreators';
 import { MenuFromStore } from '../Widgets/Menu';
 import { PostsFromStore } from "../Widgets/Posts/Posts";
-import { BackgroundFromStore } from "../Widgets/Background/Background";
+import { Background } from "../Widgets/Background/Background";
 import { Logo } from "../Widgets/Logo/Logo";
 import { pages } from "../data/pages";
 import { IntroHeader } from "../Widgets/IntroHeader/IntroHeader";
 import { IComponentType, IHomeParams } from "../models";
+import {SocialMediaMenu} from "../Widgets/SocialMediaMenu";
 
 interface IProperties {
     activePageIndex?: number
@@ -57,8 +58,7 @@ export class Home extends React.Component<IProps, IState> {
         }
         //responsive on window resize
         window.addEventListener("resize"
-            , () => onResizeViewport(window.innerWidth, window
-                .innerHeight));
+            , () => onResizeViewport(window.innerWidth, window.innerHeight));
         window.addEventListener("load"
             , () => onResizeViewport(window.innerWidth, window.innerHeight));
     }
@@ -110,6 +110,11 @@ export class Home extends React.Component<IProps, IState> {
                 width: "100%",
                 textAlign: "left"
             },
+            home__socialMedia: {
+                position: "absolute",
+                top: "calc(4.5vh +  80px)",
+                left: "2vw",
+            },
             home__introHeader: {
                 position: "absolute",
                 top: "2vh",
@@ -124,6 +129,11 @@ export class Home extends React.Component<IProps, IState> {
                             activePageIndex={this.props.activePageIndex}
                         />
                     </div>
+                    {(this.props.activePageIndex===-1)
+                        ?   <div style={styles.home__socialMedia}>
+                                <SocialMediaMenu/>
+                            </div>
+                        :   null}
                     <div style={styles.home__introHeader}>
                         <IntroHeader
                             isOnFrontPage={(this.props.activePageIndex===-1)}
@@ -134,7 +144,7 @@ export class Home extends React.Component<IProps, IState> {
                         ?   <PostsFromStore/>
                         :   null}
                 </div>
-                <BackgroundFromStore/>
+                <Background/>
             </div>
         );
     }
