@@ -115,7 +115,6 @@ export class Home extends React.Component<IProps, IState> {
                 top: 0,
                 left: 0,
                 background: "transparent",
-                border: "orange 1px solid",
                 width: "100%",
                 height: "100%",
                 textAlign: "left"

@@ -62,8 +62,7 @@ export class Background extends React.Component<IProps, IState> {
     render(): JSX.Element {
         const styles = {
             background: {
-                opacity: this.state.isMounted ? 1 : 0,
-                border: "1px green solid"
+                opacity: this.state.isMounted ? 1 : 0
             }
         };
         return (
