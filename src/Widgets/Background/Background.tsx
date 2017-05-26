@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { isGL } from "../../utils/webgl";
-import { GLBackground } from "./GLBackground/GLBackground";
+import { GLBackgroundFromStore } from "./GLBackground/GLBackground";
 import { IBackground } from "../../models";
 import { DOMBackgroundFromStore } from "./DOMBackground/DOMBackground";
 
@@ -49,7 +49,7 @@ export class Background extends React.Component<IProps, IState> {
             {
                 name: "GL",
                 displayTest: isGL(),
-                component: <GLBackground/>
+                component: <GLBackgroundFromStore/>
             },
         ];
         const availableBackgrounds = this.backgrounds.filter(background => background.displayTest);
@@ -62,10 +62,8 @@ export class Background extends React.Component<IProps, IState> {
     render(): JSX.Element {
         const styles = {
             background: {
-                position: "relative",
-                width: "100%",
-                height: "100vh",
-                opacity: this.state.isMounted ? 1 : 0
+                opacity: this.state.isMounted ? 1 : 0,
+                border: "1px green solid"
             }
         };
         return (

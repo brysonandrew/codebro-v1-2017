@@ -37,7 +37,6 @@ export class SocialMediaMenu extends React.Component<IProps, IState> {
                 marginBottom: 20,
                 height: "auto",
                 cursor: "hover",
-                filter: "invert(100%)",
                 transition: "opacity 200ms"
             }
         };

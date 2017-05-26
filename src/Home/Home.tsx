@@ -110,6 +110,16 @@ export class Home extends React.Component<IProps, IState> {
                 width: "100%",
                 textAlign: "left"
             },
+            home__background: {
+                position: "absolute",
+                top: 0,
+                left: 0,
+                background: "transparent",
+                border: "orange 1px solid",
+                width: "100%",
+                height: "100%",
+                textAlign: "left"
+            },
             home__socialMedia: {
                 position: "absolute",
                 top: "calc(4.5vh +  80px)",
@@ -144,7 +154,9 @@ export class Home extends React.Component<IProps, IState> {
                         ?   <PostsFromStore/>
                         :   null}
                 </div>
-                <Background/>
+                <div style={styles.home__background}>
+                    <Background/>
+                </div>
             </div>
         );
     }
