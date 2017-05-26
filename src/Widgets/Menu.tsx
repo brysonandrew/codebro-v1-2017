@@ -113,7 +113,6 @@ export class Menu extends React.Component<IProps, IState> {
                 width: 100 / this.menuItems.length + "%",
                 fontSize: 40,
                 color: "#ffffff",
-                fontFamily: "UrbanJungle, 'arial', sans-serif",
                 transform: isMounted ? "translate3d(0px,0px,0px)" : "translate3d(0px,80px,0px)",
                 transition: "all 400ms",
                 cursor: "pointer"
@@ -174,10 +173,10 @@ export class Menu extends React.Component<IProps, IState> {
                 transition: "transform 200ms"
             },
             menu__name: {
-                display: "inline-block"
+                display: "inline-block",
             },
             menu__nameOrigin: {
-                fontFamily: "PlayBold, 'arial', sans-serif",
+                fontFamily: "PlayfairRegular, 'arial', sans-serif",
                 transition: "opacity 200ms"
             },
             menu__nameTransform: {

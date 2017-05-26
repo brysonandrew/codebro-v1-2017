@@ -111,7 +111,7 @@ export class Home extends React.Component<IProps, IState> {
                 textAlign: "left"
             },
             home__background: {
-                position: "absolute",
+                position: "fixed",
                 top: 0,
                 left: 0,
                 background: "transparent",

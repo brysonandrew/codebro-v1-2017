@@ -132,19 +132,19 @@ export class BinaryCluster {
     }
 
     burn() {
-        if ((this.count % 5)===0) {
+        const maxClusters = 500;
+        const spawnFactor = 5;
+        if ((this.count % spawnFactor ===0) && (this.count < maxClusters)) {
             this.addCluster();
         }
         this.count++;
 
-        this.clusters.children.forEach((cluster, i) => {
+        console.log(this.clusters.children.length)
+
+        this.clusters.children.forEach(cluster => {
             cluster.rotation.y += 0.01;
             cluster.position.x = Math.sin(cluster.rotation.y) * 50;
-            cluster.position.z = Math.cos(cluster.rotation.y) * 50;
-            if (cluster["life"]===500) {
-                this.clusters.children.splice(i, 1);
-            }
-            cluster["life"]++;
+            cluster.position.z = Math.cos(cluster.rotation.y) * 50 * Math.sin(this.count * 0.01) * 25;
         });
     }
 

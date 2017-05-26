@@ -5,6 +5,14 @@ addComponentCSS({
     //language=CSS
     default: `
         @font-face {
+            font-family: PlayfairRegular;
+            src: url(/fonts/PlayfairDisplay/PlayfairDisplaySC-Black.ttf);
+        }
+        @font-face {
+            font-family: PlayfairBold;
+            src: url(/fonts/PlayfairDisplay/PlayfairDisplaySC-Bold.ttf);
+        }
+        @font-face {
             font-family: PlayRegular;
             src: url(/fonts/Play/Play-Regular.ttf);
         }
