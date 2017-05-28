@@ -1,5 +1,5 @@
 // Utility functions to concatenate view components CSS
-import {IDictionary} from '../models';
+import {IDictionary} from '../data/models';
 
 // Concatenate each component CSS into this variable
 let componentsCSS = '';

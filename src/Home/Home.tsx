@@ -3,19 +3,18 @@ import * as Immutable from 'immutable';
 import { connect } from 'react-redux';
 import { IStoreState } from '../redux/main_reducer';
 import { changePageIndex, changeViewIndex, changeViewportDimensions } from './HomeActionCreators';
-import { MenuFromStore } from '../Widgets/Menu';
-import { PostsFromStore } from "../Widgets/Posts/Posts";
+import { MenuFromStore } from '../Menu/Menu';
 import { Background } from "../Widgets/Background/Background";
 import { Logo } from "../Widgets/Logo/Logo";
-import { pages } from "../data/pages";
-import { IntroHeader } from "../Widgets/IntroHeader/IntroHeader";
-import { IComponentType, IHomeParams } from "../models";
-import {SocialMediaMenu} from "../Widgets/SocialMediaMenu";
+import { pageLinks } from "../data/pages";
+import { IParams } from "../data/models";
+import { colors } from "../data/themeOptions";
 
 interface IProperties {
     activePageIndex?: number
     activeViewIndex?: number
     width?: number
+    height?: number
 }
 
 interface ICallbacks {
@@ -25,11 +24,12 @@ interface ICallbacks {
 }
 
 interface IProps extends IProperties, ICallbacks {
-    params: IHomeParams
+    params: IParams
 }
 
 interface IState extends IProperties, ICallbacks {
-    isMini: boolean
+    isMini?: boolean
+    isScreenUp?: boolean
 }
 
 export class Home extends React.Component<IProps, IState> {
@@ -37,7 +37,8 @@ export class Home extends React.Component<IProps, IState> {
     public constructor(props?: any, context?: any) {
         super(props, context);
         this.state = {
-            isMini: false
+            isMini: false,
+            isScreenUp: this.props.activePageIndex > -1
         };
     }
 
@@ -45,15 +46,15 @@ export class Home extends React.Component<IProps, IState> {
         const { params, onResizeViewport, onPageIndexSelect, onViewIndexSelect } = this.props;
         //routing
         /////SET PAGE
-        let activePageIndex = Immutable.List(pages)
-                                .findIndex((item, index) =>
-                                    item.path === params.activePage);
+        let activePageIndex = Immutable.List(pageLinks)
+                                       .findIndex(item =>
+                                            item.path === params.activePagePath);
         onPageIndexSelect(activePageIndex);
         if (activePageIndex > -1) {
             /////SET VIEW
-            let activeViewIndex = Immutable.List(pages[activePageIndex].viewPaths)
-                                    .findIndex(item =>
-                                        item === params.activeView);
+            let activeViewIndex = Immutable.List(pageLinks[activePageIndex].viewPaths)
+                                           .findIndex(item =>
+                                                item === params.activeViewPath);
             onViewIndexSelect(activeViewIndex);
         }
         //responsive on window resize
@@ -64,43 +65,56 @@ export class Home extends React.Component<IProps, IState> {
     }
 
     componentWillReceiveProps(nextProps) {
-        const { onPageIndexSelect, onViewIndexSelect } = this.props;
+        const { onPageIndexSelect, onViewIndexSelect, params } = this.props;
         if (nextProps.width !== this.props.width) {
             this.setState({
                 isMini: (nextProps.width < 600)
             })
         }
         if (nextProps.activePageIndex !== this.props.activePageIndex) {
-            if (nextProps.activePageIndex > -1){
-                /////SET PAGE
-                let activePageIndex = Immutable.List(pages)
-                                        .findIndex((item, index) =>
-                                            item.path === nextProps.params.activePage);
+            this.setState({
+                isScreenUp: nextProps.activePageIndex > -1
+            });
+        }
+        if (JSON.stringify(nextProps.params) !== JSON.stringify(params)) {
+            if (nextProps.params.activePagePath !== params.activePagePath){
+                let activePageIndex = Immutable.List(pageLinks)
+                                               .findIndex(item =>
+                                                    item.path === nextProps.params.activePagePath);
                 onPageIndexSelect(activePageIndex);
-                if (activePageIndex > -1) {
-                    /////SET VIEW
-                    let activeViewIndex = Immutable.List(pages[activePageIndex].viewPaths)
-                                            .findIndex(item =>
-                                                item === nextProps.params.activeView);
-                    onViewIndexSelect(activeViewIndex);
-                }
-            } else {
-                this.props.onViewIndexSelect(-1);
+            }
+            if (nextProps.params.activeViewPath !== params.activeViewPath){
+                /////SET VIEW
+                let activeViewIndex = Immutable.List(pageLinks[nextProps.activePageIndex].viewPaths)
+                                               .findIndex(item =>
+                                                    item === nextProps.params.activeView);
+                onViewIndexSelect(activeViewIndex);
             }
         }
     }
 
     public render(): JSX.Element {
+        const {isScreenUp} = this.state;
+        const { activePageIndex } = this.props;
         let styles = {
             home: {
-
-            },
-            home__content: {
-                position: "fixed",
+                position: "relative",
+                width: "100%",
                 height: "100vh",
-                width: "100vw",
+            },
+            home__frontPage: {
+                position: "absolute",
+                width: "100%",
+                height: "100%",
                 textAlign: "center",
                 zIndex: 2
+            },
+            home__content: {
+                position: "absolute",
+                width: "100%",
+                height: "100%",
+                textAlign: "center",
+                zIndex: 6
             },
             home__logo: {
                 position: "absolute",
@@ -108,16 +122,19 @@ export class Home extends React.Component<IProps, IState> {
                         ? "85.5vh" : "4.5vh",
                 left: "2vw",
                 width: "100%",
-                textAlign: "left"
+                textAlign: "left",
+                zIndex: 8
             },
             home__background: {
                 position: "fixed",
-                top: 0,
-                left: 0,
                 background: "transparent",
-                width: "100%",
-                height: "100%",
                 textAlign: "left"
+            },
+            home__menu: {
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)"
             },
             home__socialMedia: {
                 position: "absolute",
@@ -128,31 +145,45 @@ export class Home extends React.Component<IProps, IState> {
                 position: "absolute",
                 top: "2vh",
                 right: "4vw",
+            },
+            home__pageTransitionScreen: {
+                position: "absolute",
+                bottom: 0,
+                left: 0,
+                width: "100%",
+                height: "100vh"
             }
         };
+        const isFrontPage = activePageIndex===-1;
+        const screenColors = isScreenUp ? Object.keys(colors) : Object.keys(colors).reverse();
+        console.log(activePageIndex)
         return (
             <div style={styles.home}>
-                <div style={styles.home__content}>
-                    <div style={styles.home__logo}>
-                        <Logo
-                            activePageIndex={this.props.activePageIndex}
-                        />
-                    </div>
-                    {(this.props.activePageIndex===-1)
-                        ?   <div style={styles.home__socialMedia}>
-                                <SocialMediaMenu/>
-                            </div>
-                        :   null}
-                    <div style={styles.home__introHeader}>
-                        <IntroHeader
-                            isOnFrontPage={(this.props.activePageIndex===-1)}
-                        />
-                    </div>
-                    <MenuFromStore/>
-                    {(this.props.activePageIndex > -1)
-                        ?   <PostsFromStore/>
-                        :   null}
+                <div style={styles.home__logo}>
+                    <Logo
+                        activePageIndex={activePageIndex}
+                    />
                 </div>
+                {isFrontPage
+                    ?   <div style={styles.home__frontPage}>
+                            <div style={styles.home__menu}>
+                                <MenuFromStore/>
+                            </div>
+                        </div>
+                    :   <div style={styles.home__content}>
+                            {pageLinks[activePageIndex].component}
+                        </div>}
+                {screenColors.map((key, i) =>
+                    <div
+                        key={i}
+                        style={Object.assign({}, styles.home__pageTransitionScreen,
+                                {
+                                    background: colors[key],
+                                    transform: `scaleY(${isScreenUp ? 1 : 0})`,
+                                    transition: "transform 600ms",
+                                    transitionDelay: `${400 * i}ms`,
+                                    zIndex: isScreenUp ? (i + 4) : (4 - i)
+                                })}    />)}
                 <div style={styles.home__background}>
                     <Background/>
                 </div>
@@ -166,6 +197,7 @@ export class Home extends React.Component<IProps, IState> {
 function mapStateToProps(state: IStoreState, ownProps: IProps): IProperties {
     return {
         width: state.homeStore.width,
+        height: state.homeStore.height,
         activePageIndex: state.homeStore.activePageIndex,
         activeViewIndex: state.homeStore.activeViewIndex
     };

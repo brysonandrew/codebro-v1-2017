@@ -10,16 +10,15 @@ export class BinaryCluster {
     }
 
     addCluster() {
-        let amount = 1;
-        let radius = 40;
+        const amount = 1;
+        const radius = 40;
 
-        let colors = new Float32Array( amount * 3 );
-        let sizes = new Float32Array( amount );
+        const colors = new Float32Array( amount * 3 );
+        const sizes = new Float32Array( amount );
 
-        let vertex = new THREE.Vector3();
-        let color = new THREE.Color( 0xffffff );
+        const vertex = new THREE.Vector3();
 
-        let positions0 = new Float32Array( amount * 3 );
+        const positions0 = new Float32Array( amount * 3 );
 
         positions0.forEach((_, i) => {
             vertex.x = (Math.random() * 2 - 1) * radius;
@@ -27,10 +26,9 @@ export class BinaryCluster {
             vertex.z = (Math.random() * 2 - 1) * radius;
             vertex.toArray((positions0 as any), i);
 
-            sizes[i] = 14;
+            sizes[i] = 6;
 
-            color.setHSL(0.15 * ( i / amount ) - 0.005, 0.8, 0.6);
-            // color.setHSL(360 * Math.random(), 0.8, 0.6);
+            const color = new THREE.Color( 0xD50000 );
             color.toArray((colors as any), i * 3);
         });
 
@@ -71,8 +69,6 @@ export class BinaryCluster {
 
         cluster0.rotation.z = Math.PI;
 
-        cluster0["life"] = 0;
-
         this.clusters.add(cluster0);
 
         let positions1 = new Float32Array( amount * 3 );
@@ -83,9 +79,9 @@ export class BinaryCluster {
             vertex.z = (Math.random() * 2 - 1) * radius;
             vertex.toArray((positions1 as any), i);
 
-            sizes[i] = 14;
+            sizes[i] = 6;
 
-            color.setHSL(0.15 * ( i / amount ) - 0.005, 0.8, 0.6);
+            const color = new THREE.Color( 0xD50000 );
             color.toArray((colors as any), i * 3);
         });
 
@@ -97,7 +93,7 @@ export class BinaryCluster {
         let material1 = new THREE.ShaderMaterial( {
             uniforms: {
                 amplitude: { value: 1.0 },
-                color:     { value: new THREE.Color( 0xffffff ) },
+                color:     { value: new THREE.Color( 0xD50000 ) },
                 texture:   { value: new THREE.TextureLoader().load( "/images/assets/1bitWhite.png" ) }
             },
             vertexShader:   `uniform float amplitude;
@@ -126,14 +122,12 @@ export class BinaryCluster {
 
         cluster1.rotation.z = Math.PI * 0.5;
 
-        cluster1["life"] = 0;
-
         this.clusters.add(cluster1);
     }
 
     burn() {
         const maxClusters = 500;
-        const spawnFactor = 5;
+        const spawnFactor = 2;
         if ((this.count % spawnFactor ===0) && (this.count < maxClusters)) {
             this.addCluster();
         }
@@ -144,7 +138,7 @@ export class BinaryCluster {
         this.clusters.children.forEach(cluster => {
             cluster.rotation.y += 0.01;
             cluster.position.x = Math.sin(cluster.rotation.y) * 50;
-            cluster.position.z = Math.cos(cluster.rotation.y) * 50 * Math.sin(this.count * 0.01) * 25;
+            cluster.position.z = Math.cos(cluster.rotation.y) * 50 * Math.tan(this.count * 0.01) * 1.5;
         });
     }
 

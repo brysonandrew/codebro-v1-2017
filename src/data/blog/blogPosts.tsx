@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { IPost } from '../../models';
+import { IPost } from '../models';
 
 export let blogPosts: IPost[] = [
     {

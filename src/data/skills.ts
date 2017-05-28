@@ -1,4 +1,4 @@
-import {IBar} from "../models";
+import {IBar} from "./models";
 
 export const skills: IBar[] = [
     {

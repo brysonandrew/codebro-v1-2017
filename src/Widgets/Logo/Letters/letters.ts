@@ -1,3 +1,46 @@
+const x = [
+    {
+        type: "backward",
+        columnIndex: 0,
+        rowIndex: 0
+    },
+    {
+        type: "backward",
+        columnIndex: 1,
+        rowIndex: 1
+    },
+    {
+        type: "forward",
+        columnIndex: 1,
+        rowIndex: 2
+    },
+    {
+        type: "forward",
+        columnIndex: 0,
+        rowIndex: 3
+    },
+    {
+        type: "forward",
+        columnIndex: 3,
+        rowIndex: 0
+    },
+    {
+        type: "forward",
+        columnIndex: 2,
+        rowIndex: 1
+    },
+    {
+        type: "backward",
+        columnIndex: 2,
+        rowIndex: 2
+    },
+    {
+        type: "backward",
+        columnIndex: 3,
+        rowIndex: 3
+    }
+];
+
 const c = [
     {
         type: "forward",
@@ -308,7 +351,8 @@ const k = [
 
 export let findLetter = (letter) => {
     let ltr = letter.toLowerCase();
-           if (ltr==="c") { return c
+           if (ltr==="x") { return x
+    } else if (ltr==="c") { return c
     } else if (ltr==="o") { return o
     } else if (ltr==="d") { return d
     } else if (ltr==="e") { return e

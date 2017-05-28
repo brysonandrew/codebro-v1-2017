@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { isGL } from "../../utils/webgl";
 import { GLBackgroundFromStore } from "./GLBackground/GLBackground";
-import { IBackground } from "../../models";
+import { IBackground } from "../../data/models";
 import { DOMBackgroundFromStore } from "./DOMBackground/DOMBackground";
 
 interface IProps {}
@@ -31,15 +31,15 @@ export class Background extends React.Component<IProps, IState> {
             {
                 name: "img",
                 displayTest: true,
-                component: <div style={ {
-                            position: "absolute",
-                            top: 0,
-                            left: 0,
-                            width: "100vw",
-                            height: "100vh",
-                            background: "url(/images/background/fallback.png)",
-                            backgroundSize: "cover"
-                        } }/>
+                component:  <div style={ {
+                                position: "absolute",
+                                top: 0,
+                                left: 0,
+                                width: "100vw",
+                                height: "100vh",
+                                background: "url(/images/background/fallback.png)",
+                                backgroundSize: "cover"
+                            } }/>
             },
             {
                 name: "DOM",

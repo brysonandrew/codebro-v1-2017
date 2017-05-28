@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {ISocialMediaLink} from "../models";
+import {ISocialMediaLink} from "./models";
 
 export const socialMediaLinks: ISocialMediaLink[] = [
     {

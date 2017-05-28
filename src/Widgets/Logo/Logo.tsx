@@ -1,6 +1,6 @@
 import * as React from 'react';
-import THREE = require('three');
 import { Word } from './Word';
+import { Link } from 'react-router';
 
 interface ILogoProps {
     isDarkTheme?: boolean
@@ -9,7 +9,6 @@ interface ILogoProps {
 
 interface ILogoState {
     isHovered?: boolean
-    isLogoShort?: boolean
 }
 
 export class Logo extends React.Component<ILogoProps, ILogoState> {
@@ -17,16 +16,8 @@ export class Logo extends React.Component<ILogoProps, ILogoState> {
     public constructor(props?: any, context?: any) {
         super(props, context);
         this.state = {
-            isHovered: false,
-            isLogoShort: true
-        };
-    }
-
-    handleClick() {
-        this.setState({
-            isLogoShort: !this.state.isLogoShort,
             isHovered: false
-        });
+        };
     }
 
     handleMouseEnter() {
@@ -42,20 +33,20 @@ export class Logo extends React.Component<ILogoProps, ILogoState> {
     }
 
     render(): JSX.Element {
-        let style = {
+
+        const isFrontPage = this.props.activePageIndex===-1;
+        const style = {
             display: "inline-block",
             cursor: "pointer",
             transition: "opacity 200ms"
         };
-        let words = this.state.isLogoShort
-                    || (this.props.activePageIndex>-1) ? ["c", "b"] : ["code", "bro"];
+        const words = isFrontPage ? ["c", "b"] : ["x"];
 
         return (
-            <div style={style}
-                 onClick={(this.props.activePageIndex===-1)
-                            ? () => this.handleClick() : null}
-                 onMouseEnter={() => this.handleMouseEnter()}
-                 onMouseLeave={() => this.handleMouseLeave()}
+            <Link style={style}
+                  to={isFrontPage ? null : ''}
+                  onMouseEnter={() => this.handleMouseEnter()}
+                  onMouseLeave={() => this.handleMouseLeave()}
             >
                 {words.map((word, i ) =>
                     <Word
@@ -64,7 +55,7 @@ export class Logo extends React.Component<ILogoProps, ILogoState> {
                         isDarkTheme={this.props.isDarkTheme}
                         isLogoHovered={this.state.isHovered}
                     />)}
-            </div>
+            </Link>
         );
     }
 }

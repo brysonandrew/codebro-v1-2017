@@ -1,40 +1,35 @@
-import { IPage } from '../models';
-import { blogPosts } from './blog/blogPosts';
-import { workPosts } from './work/workPosts';
-import { showroomLinks } from './showroom';
-import { workshopLinks } from './workshop';
+import * as React from 'react';
+import { nameToPath } from "./helpers/nameToPath";
+import { Link } from 'react-router';
+import { IPageLink } from "./models";
+import { blogPosts } from "./blog/blogPosts";
+import { Philosophy } from "../Philosophy/Philosophy";
+import { BlogFromStore } from "../Blog/Blog";
 
-const convertPostToSlides = (input) => {
-    return {
-        name: input.name,
-        parts: input.parts,
-        category: input.category,
-        image: input.image
-    }
+const linkStyle = {
+    fontFamily: "PlayfairBold, 'arial', sans-serif",
+    color: "#fafafa",
+    fontSize: 22
 };
 
-const convertNameToPath =
-    (name) =>
-        name.replace(/-/g, "")
-            .replace(/\s/g, "-")
-            .replace(/[.,]/g, "")
-            .toLowerCase();
+///CONSTRUCTORS
+function InternalPageLink(name, content, component) {
+    this.path = nameToPath(name);
+    this.viewPaths = content.map(content => nameToPath(content.name));
+    this.content = content;
+    this.component = component;
+    this.linkComponent = <Link style={linkStyle}
+                           to={nameToPath(name)}>{name}</Link>;
+}
 
-export const pages: IPage[] = [
-    {
-        name: "BLOG",
-        path: "blog-posts",
-        componentType: "post",
-        viewPaths: blogPosts.map(post => convertNameToPath(post.name)),
-        posts: blogPosts,
-        slides: blogPosts.map(post => convertPostToSlides(post))
-    },
-    {
-        name: "WORK",
-        path: "work",
-        componentType: "post",
-        viewPaths: workPosts.map(post => convertNameToPath(post.name)),
-        posts: workPosts,
-        slides: workPosts.map(post => convertPostToSlides(post))
-    }
+function ExternalPageLink(name, link) {
+    this.path = nameToPath(name); // unused but required so it doesn't return undefined when changing home params
+    this.linkComponent = <a style={linkStyle}
+                        href={link}>{name}</a>
+}
+///EXPORTS
+export const pageLinks: IPageLink[] = [
+    new InternalPageLink("Philosophy", [], <Philosophy/>),
+    new ExternalPageLink("Work", "http://showroom.codebro.io"),
+    new InternalPageLink("Blog", blogPosts, <BlogFromStore/>),
 ];

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { IStoreState } from '../../redux/main_reducer';
-import { IPost } from '../../models';
-import { changePageIndex } from '../../Home/HomeActionCreators';
+import { IStoreState } from '../redux/main_reducer';
+import { IPost } from '../data/models';
+import { changePageIndex } from '../Home/HomeActionCreators';
 
 interface IProperties {
     activePageIndex?: number

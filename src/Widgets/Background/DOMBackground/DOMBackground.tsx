@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { IStoreState } from '../../../redux/main_reducer';
 import { addComponentCSS } from '../../../utils/css_styler';
-import { IParticle } from "../../../models";
+import { IParticle } from "../../../data/models";
 import { Particle } from "./particle";
 import {changeViewportDimensions} from "../../../Home/HomeActionCreators";
 

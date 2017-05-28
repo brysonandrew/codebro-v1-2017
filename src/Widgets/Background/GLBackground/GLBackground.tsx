@@ -68,6 +68,7 @@ export class GLBackground extends React.Component<IProps, IState> {
 
     initScene() {
         this.scene = new THREE.Scene();
+        this.scene.background = new THREE.Color( 0x311B92 );
     }
 
     initAssets() {

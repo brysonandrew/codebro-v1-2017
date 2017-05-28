@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { IStoreState } from '../../redux/main_reducer';
+import { IStoreState } from '../redux/main_reducer';
 import { PostFromStore } from './Post';
-import { pages } from "../../data/pages";
-import { VerticalMenuSelector } from "./VerticalMenuSelector";
-import { changeViewIndex } from '../../Home/HomeActionCreators';
+import { pageLinks } from "../data/pages";
+import { changeViewIndex } from '../Home/HomeActionCreators';
 
 interface IProperties {
     activePageIndex?: number
@@ -24,10 +23,10 @@ interface IState extends IProperties, ICallbacks {
     isHovering?: boolean
 }
 
-export class Posts extends React.Component<IProps, IState> {
+export class Blog extends React.Component<IProps, IState> {
 
     timerId;
-    postsRef: HTMLDivElement
+    postsRef: HTMLDivElement;
 
     public constructor(props?: any, context?: any) {
         super(props, context);
@@ -44,7 +43,7 @@ export class Posts extends React.Component<IProps, IState> {
         this.timerId = setTimeout(() => {
             this.setState({isMounted: true});
             window.scrollTo(0,0);
-        }, 1000);
+        }, 0);
     }
 
     handleMouseEnter() {
@@ -60,10 +59,10 @@ export class Posts extends React.Component<IProps, IState> {
     }
 
     render(): JSX.Element {
-        let { isHovering, isMounted } = this.state;
+        const { isHovering, isMounted } = this.state;
 
-        let styles = {
-            posts: {
+        const styles = {
+            blog: {
                 position: "absolute",
                 top: "calc(8% + 40px)",
                 left: "6vw",
@@ -72,7 +71,7 @@ export class Posts extends React.Component<IProps, IState> {
                 textAlign: "center"
 
             },
-            posts__content: {
+            blog__content: {
                 display: "inline-block",
                 width: "88vw",
                 height: "100%",
@@ -80,7 +79,7 @@ export class Posts extends React.Component<IProps, IState> {
                 borderRadius: 8,
                 zIndex: 1
             },
-            posts__verticalMenu: {
+            blog__verticalMenu: {
                 display: "inline-block",
                 verticalAlign: "top",
                 width: "6vw",
@@ -88,32 +87,20 @@ export class Posts extends React.Component<IProps, IState> {
                 zIndex: 2
             }
         };
-
+console.log(this.props.activePageIndex);
         return (
-            <div style={styles.posts}>
-                <div style={styles.posts__content}
+            <div style={styles.blog}>
+                <div style={styles.blog__content}
                      ref={(el) => this.postsRef = el}
                      onMouseEnter={() => this.handleMouseEnter()}
                      onMouseLeave={() => this.handleMouseLeave()}
                 >
-                    {this.state.isMounted && pages[this.props.activePageIndex].posts.map((post, i) =>
+                    {this.state.isMounted && pageLinks[this.props.activePageIndex].content.map((post, i) =>
                         <PostFromStore
                             key={i}
                             viewIndex={i}
                             post={post}
                             postsRef={this.postsRef}
-                        />
-                    )}
-                </div>
-                <div style={styles.posts__verticalMenu}>
-                    {pages[this.props.activePageIndex].posts.map((post, i) =>
-                        <VerticalMenuSelector
-                            key={i}
-                            activePageIndex={this.props.activePageIndex}
-                            activeViewIndex={this.props.activeViewIndex}
-                            viewIndex={i}
-                            post={post}
-                            onClick={this.handleSelectorClick.bind(this)}
                         />
                     )}
                 </div>
@@ -141,6 +128,6 @@ function mapDispatchToProps(dispatch, ownProps: IProps): ICallbacks {
     }
 }
 
-export let PostsFromStore = connect(
+export let BlogFromStore = connect(
     mapStateToProps, mapDispatchToProps
-)(Posts);
+)(Blog);

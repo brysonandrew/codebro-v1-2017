@@ -1,24 +1,25 @@
 import * as React from 'react';
 import {addComponentCSS} from '../utils/css_styler';
+import {colors} from "../data/themeOptions";
 
 addComponentCSS({
     //language=CSS
     default: `
         @font-face {
             font-family: PlayfairRegular;
-            src: url(/fonts/PlayfairDisplay/PlayfairDisplaySC-Black.ttf);
+            /*noinspection CssUnknownTarget*/src: url(/fonts/PlayfairDisplay/PlayfairDisplaySC-Black.ttf);
         }
         @font-face {
             font-family: PlayfairBold;
-            src: url(/fonts/PlayfairDisplay/PlayfairDisplaySC-Bold.ttf);
+            /*noinspection CssUnknownTarget*/src: url(/fonts/PlayfairDisplay/PlayfairDisplaySC-Bold.ttf);
         }
         @font-face {
             font-family: PlayRegular;
-            src: url(/fonts/Play/Play-Regular.ttf);
+            /*noinspection CssUnknownTarget*/src: url(/fonts/Play/Play-Regular.ttf);
         }
         @font-face {
             font-family: PlayBold;
-            src: url(/fonts/Play/Play-Bold.ttf);
+            /*noinspection CssUnknownTarget*/src: url(/fonts/Play/Play-Bold.ttf);
         }
         * {
             margin: 0; 
@@ -28,14 +29,14 @@ addComponentCSS({
         }
         
         body {
-            background: #212121;
+            background: #311B92;
         }
 
         button, input, a {
-            /*background: none;*/
-            /*border: none;*/
-            /*outline: none;*/
-            /*text-decoration: none;*/
+            background: none;
+            border: none;
+            outline: none;
+            text-decoration: none;
             cursor: pointer;
         }
         
