@@ -6,6 +6,14 @@ addComponentCSS({
     //language=CSS
     default: `
         @font-face {
+            font-family: PalanquinDark;
+            /*noinspection CssUnknownTarget*/src: url(/fonts/PalanquinDark/PalanquinDark-Regular.ttf);
+        }
+        @font-face {
+            font-family: CarroisGothic;
+            /*noinspection CssUnknownTarget*/src: url(/fonts/CarroisGothic/CarroisGothicSC-Regular.ttf);
+        }
+        @font-face {
             font-family: PlayfairRegular;
             /*noinspection CssUnknownTarget*/src: url(/fonts/PlayfairDisplay/PlayfairDisplaySC-Black.ttf);
         }
@@ -24,7 +32,7 @@ addComponentCSS({
         * {
             margin: 0; 
             padding: 0;
-            font-family: PlayRegular, 'arial', sans-serif;
+            font-family: PalanquinDark, 'arial', sans-serif;
             -webkit-appearance: none;
         }
         
@@ -42,6 +50,11 @@ addComponentCSS({
         
         p {
             margin: 2vh 0;
+        }
+        
+        h1, h2, h3, h4 {
+            font-family: CarroisGothic, 'arial', sans-serif;
+            color: #fafafa;
         }
         
         code, pre {

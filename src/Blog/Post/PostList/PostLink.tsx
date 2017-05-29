@@ -24,28 +24,19 @@ interface IProps extends IProperties, ICallbacks {
 interface IState extends IProperties, ICallbacks {
     isMounted?: boolean
     isHovering?: boolean
-    isMini?: boolean
-    animateCount?: number
 }
 
 export class PostLink extends React.Component<IProps, IState> {
-
-    containerEl: HTMLDivElement;
-    animateId;
-    scroll;
 
     public constructor(props?: any, context?: any) {
         super(props, context);
         this.state = {
             isMounted: false,
-            isHovering: false,
-            isMini: false,
-            animateCount: 0
+            isHovering: false
         }
     }
 
     componentDidMount() {
-        let { activeViewIndex } = this.props;
         setTimeout(() => {
             this.setState({isMounted: true})
         }, 0);
@@ -60,30 +51,57 @@ export class PostLink extends React.Component<IProps, IState> {
     }
 
     render(): JSX.Element {
-        let { isMounted, isMini } = this.state;
-        let { post, activeViewIndex } = this.props;
-        const isFirstView = activeViewIndex===-1;
-
+        let { isMounted } = this.state;
+        let { post } = this.props;
 
         let styles = {
             post: {
                 display: "inline-block",
-                borderBottom: "1px solid #212121",
-                width: "80%",
+                width: "calc(100% - 20px)",
+                padding: 10,
                 color: "#fafafa",
                 opacity: isMounted ? 1 : 0,
-                background: isFirstView ? `linear-gradient(to bottom, rgba(0,0,0, 0.22), rgba(0,0,0, 0.88)), url(${post.image})` : "#455A64",
+                background: `linear-gradient(to top, rgba(0,0,0, 0.44), rgba(0,0,0, 0.66)), url(${post.image})`,
                 backgroundSize: "cover"
+            },
+            post__name: {
+                display: "inline-block",
+                verticalAlign: "top",
+                width: "72%",
+                textAlign: "left"
+            },
+            post__date: {
+                display: "inline-block",
+                verticalAlign: "top",
+                fontSize: 12,
+                width: "28%",
+                textAlign: "right"
+            },
+            post__category: {
+                display: "inline-block",
+                verticalAlign: "top",
+                fontSize: 12,
+                borderTop: "1px solid #fafafa",
+                marginTop: 10,
+                paddingTop: 10,
+                width: "100%",
             }
         };
         return (
             <Link style={styles.post}
                   to={`/blog/${post.path}`}
-                  ref={el => this.containerEl = el}
                   onMouseEnter={() => this.handleMouseEnter()}
                   onMouseLeave={() => this.handleMouseLeave()}
             >
-                {post.name}
+                <div style={styles.post__name}>
+                    {post.name}
+                </div>
+                <div style={styles.post__date}>
+                    {post.date}
+                </div>
+                <div style={styles.post__category}>
+                    {post.category}
+                </div>
             </Link>
         );
     }

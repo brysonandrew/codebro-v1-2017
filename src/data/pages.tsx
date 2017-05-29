@@ -3,11 +3,10 @@ import { nameToPath } from "./helpers/nameToPath";
 import { Link } from 'react-router';
 import { IPageLink } from "./models";
 import { blogPosts } from "./blog/blogPosts";
-import { Philosophy } from "../Philosophy/Philosophy";
+import { PhilosophyFromStore } from "../Philosophy/Philosophy";
 import { BlogFromStore } from "../Blog/Blog";
 
 const linkStyle = {
-    fontFamily: "PlayfairBold, 'arial', sans-serif",
     color: "#fafafa",
     fontSize: 22
 };
@@ -25,11 +24,11 @@ function InternalPageLink(name, content, component) {
 function ExternalPageLink(name, link) {
     this.path = nameToPath(name); // unused but required so it doesn't return undefined when changing home params
     this.linkComponent = <a style={linkStyle}
-                        href={link}>{name}</a>
+                            href={link}>{name}</a>
 }
 ///EXPORTS
 export const pageLinks: IPageLink[] = [
-    new InternalPageLink("Philosophy", [], <Philosophy/>),
+    new InternalPageLink("Philosophy", [], <PhilosophyFromStore/>),
     new ExternalPageLink("Work", "http://showroom.codebro.io"),
     new InternalPageLink("Blog", blogPosts, <BlogFromStore/>),
 ];

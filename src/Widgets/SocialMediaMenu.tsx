@@ -30,12 +30,14 @@ export class SocialMediaMenu extends React.Component<IProps, IState> {
     render(): JSX.Element {
         const styles = {
             socialMediaMenu: {
-                width: 40
+                position: "relative",
+                width: 28,
+                height: "100%"
             },
             socialMediaMenu__item: {
-                width: 40,
-                marginBottom: 20,
-                height: "auto",
+                position: "absolute",
+                width: 28,
+                height: 28,
                 cursor: "hover",
                 transition: "opacity 200ms"
             }
@@ -43,13 +45,17 @@ export class SocialMediaMenu extends React.Component<IProps, IState> {
         return (
             <div style={ styles.socialMediaMenu }>
                 {socialMediaLinks.map((link, i) =>
-                <a key={i} href={link.link} target="_blank"
+                <a  key={i}
+                    style={ Object.assign({}, styles.socialMediaMenu__item, {
+                        opacity: (this.state.isHoveredIndex===i) ? 0.8 : 1,
+                        top:`${i * 100}%`,
+                        background: `url(${link.iconPath})`,
+                        backgroundSize: "28px 28px",
+                        backgroundRepeat: "no-repeat",
+                    }) }
+                    href={link.link} target="_blank"
                     onMouseEnter={() => this.handleMouseEnter(i)}
                     onMouseLeave={() => this.handleMouseLeave()}>
-                    <img style={ Object.assign({}, styles.socialMediaMenu__item, {
-                        opacity: (this.state.isHoveredIndex===i) ? 0.8 : 1
-                    }) }
-                         src={link.iconPath}/>
                 </a>)}
             </div>
         );

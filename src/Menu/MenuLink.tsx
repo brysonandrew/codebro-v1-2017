@@ -1,15 +1,27 @@
 import * as React from 'react';
-import {IPageLink} from "../data/models";
-import {pageLinks} from "../data/pages";
+import { connect } from 'react-redux';
+import { IStoreState } from '../redux/main_reducer';
+import { setTransitionScreen } from '../Home/HomeActionCreators';
+import { IPageLink } from "../data/models";
+import { pageLinks } from "../data/pages";
 
-interface IProps {
-    index: number
-    page: IPageLink
-    width: number
-    height: number
+interface IProperties {
+    activePageIndex?: number
+    width?: number
+    height?: number
 }
 
-interface IState {
+interface ICallbacks {
+    onChangeMenuIndex?: (menuIndex: number) => void
+    onSetTransitionScreen?: (isScreenUp: boolean) => void
+}
+
+interface IProps extends IProperties, ICallbacks {
+    index: number
+    page: IPageLink
+}
+
+interface IState extends IProperties, ICallbacks {
     isHovered: boolean
 }
 
@@ -30,16 +42,26 @@ export class MenuLink extends React.Component<IProps, IState> {
         this.setState({ isHovered: false });
     }
 
+    handleClick() {
+        this.props.onSetTransitionScreen(true);
+    }
+
     render(): JSX.Element {
         const { index, page, width, height } = this.props;
         const radiansFactor = ((Math.PI * 2) / pageLinks.length);
         const startingIndex = 0;
+        const menuLinkStyle = {
+            position: "absolute",
+            left: "50%",
+            top: "50%"
+        };
         return (
             <div key={index}
-                 style={ Object.assign( {},
+                 onClick={() => this.handleClick()}
+                 style={ Object.assign( {}, menuLinkStyle,
                             {
-                                transform : `translate( calc(${Math.sin(radiansFactor * (index + startingIndex)) * width * 0.25}px),
-                                                        calc(${Math.cos(radiansFactor * (index + startingIndex)) * height * 0.25}px))`
+                                transform : `translate( calc(${Math.sin(radiansFactor * (index + startingIndex)) * width * 0.25}px - 50%),
+                                                        calc(${Math.cos(radiansFactor * (index + startingIndex)) * height * 0.25}px - 50%))`
                             }
                         )}>
                 {page.linkComponent}
@@ -47,3 +69,27 @@ export class MenuLink extends React.Component<IProps, IState> {
         );
     }
 }
+
+
+// ------------ redux mappers -------------
+
+function mapStateToProps(state: IStoreState, ownProps: IProps): IProperties {
+    return {
+        width: state.homeStore.width,
+        height: state.homeStore.height
+    };
+
+}
+
+function mapDispatchToProps(dispatch, ownProps: IProps): ICallbacks {
+    return {
+        onSetTransitionScreen: (isScreenUp) => {
+            dispatch(setTransitionScreen(isScreenUp));
+        }
+    }
+}
+
+export let MenuLinkFromStore = connect(
+    mapStateToProps, mapDispatchToProps
+)(MenuLink);
+

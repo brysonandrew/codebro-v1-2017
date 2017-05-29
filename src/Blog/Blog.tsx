@@ -68,15 +68,16 @@ export class Blog extends React.Component<IProps, IState> {
 
         const styles = {
             blog: {
+                position: "relative",
+                width: "100%",
                 textAlign: "center",
-                transform: `scale(${isMounted ? 1 : 0})`,
-                transition: "200ms",
+                transform: `scale(${isMounted ? 1 : 0}) translateY(${isMounted ? 100 : 0}px)`,
+                transition: "transform 200ms",
                 transitionDelay: "1000ms"
             }
         };
         return (
             <div style={styles.blog}
-                 ref={(el) => this.postsRef = el}
                  onMouseEnter={() => this.handleMouseEnter()}
                  onMouseLeave={() => this.handleMouseLeave()}>
                 {isFirstView

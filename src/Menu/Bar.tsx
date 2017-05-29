@@ -30,26 +30,32 @@ export class Bar extends React.Component<IBarProps, IBarState> {
                 top: "50%",
                 width: barLength,
                 height: 14,
-                fontSize: 10,
-                padding: "2px 0",
                 background: "rgba(0,0,0, 0.1)",
             },
             bar__quantity: {
+                display: "block",
                 background: colors.hi,
                 height: 14,
-                paddingLeft: 10,
+                fontSize: 10,
+                padding: "0 0 0 10px",
                 color: "#fafafa",
                 textAlign: "left",
                 width: `${bar.quantity}%`,
-                transform: `scale(${this.props.isBarChartMounted ? 1 : 0}) translateX(${this.props.isBarChartMounted ? "0%" : "-50%"})`,
+                transform: `scaleX(${this.props.isBarChartMounted ? 1 : 0}) translateX(${this.props.isBarChartMounted ? "0%" : "-50%"})`,
                 transition: "transform 500ms"
+            },
+            bar__text: {
+                position: "absolute",
+                top: -4
             }
         };
 
         return (
             <div style= {Object.assign({}, styles.bar, {transform: `${translateStyle} ${rotateStyle}`}) }>
                 <div style={ styles.bar__quantity }>
-                    {bar.heading}
+                    <span style={ styles.bar__text }>
+                        {bar.heading}
+                    </span>
                 </div>
             </div>
         );

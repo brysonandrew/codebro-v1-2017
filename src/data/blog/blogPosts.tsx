@@ -4,6 +4,7 @@ import { nameToPath } from "../helpers/nameToPath";
 
 function Post(name, date, category, link, content, image) {
     this.name = name;
+    this.date = date;
     this.link = link;
     this.path = nameToPath(name); // unused but required so it doesn't return undefined when changing home params
     this.category = category;
@@ -40,30 +41,24 @@ export let blogPosts: IPost[] = [
     ),
     new Post(
         "Some useful Object manipulation without libraries",
+        "27 Apr 2017",
         "Web Development",
         "https://developer.mozilla.org/pl/docs/Web/JavaScript/Referencje/Obiekty/Object",
-        "27 Apr 2017",
         [
             "Libraries such as lodash and underscore provide some nice, out-of-the-box methods for manipulating Objects",
             "But what if you don't feel like installing these?",
             "Here are some ways to still do cool stuff with Objects",
             <div>
-                {tag("h2", "Are two Objects the same?")}
-                tag("code", "
-                    const isObjectsEqual = JSON.stringify(obj1)===JSON.stringify(obj2);
-                ")
+                {tag("h4", "Are two Objects the same?")},
+                {tag("code", "const isObjectsEqual = JSON.stringify(obj1)===JSON.stringify(obj2);")}
             </div>,
             <div>
-                {tag("h2", "Is Object empty?")}
-                tag("code", "
-                    {"const isObjectEmpty = Object.keys(obj).length === 0 && obj.constructor === Object;"}
-                ")
+                {tag("h4", "Is Object empty?")},
+                {tag("code", "const isObjectEmpty = Object.keys(obj).length === 0 && obj.constructor === Object;")}
             </div>,
             <div>
-                {tag("h2", "Does a specific key exist in an Object?")}
-                tag("code", "
-                    const isKey = key in obj;
-                ")
+                {tag("h4", "Does a specific key exist in an Object?")},
+                {tag("code", "const isKey = key in obj;")}
             </div>
 
         ],
@@ -71,15 +66,15 @@ export let blogPosts: IPost[] = [
     ),
     new Post(
         "Regular expressions and whitespace",
+        "18 Apr 2017",
         "Web Development",
         "https://developer.mozilla.org/en/docs/Web/JavaScript/Guide/Regular_Expressions",
-        "18 Apr 2017",
         [
             "Quick test: If you see a string with ",
             tag("code", "\"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\""),
             "how would you convert this to",
             <div>
-                tag("code", ""SPACESPACETABTABSPACETABSPACE"")
+                {tag("code", "SPACESPACETABTABSPACETABSPACE")}
                 <span>?</span>
             </div>,
             "The answer is with regular expressions.",
@@ -98,21 +93,21 @@ export let blogPosts: IPost[] = [
     ),
     new Post(
         "Linux tools for Windows",
+        "8 Apr 2017",
         "Web Development",
         "http://www.linux.org/",
-        "8 Apr 2017",
         [
             "The Linux operating system has the reputation for being programmer-friendly. It provides shell-access to the terminal and a range of useful commands for a superior terminal user-interface.",
             "The built-in Windows terminal is the \"Command prompt\" which lacks many if not most of the Linux terminal commands.",
             "To bridge this gap we must use certain tools to make Windows perform certain tasks.",
-            tag("h2", "Linux on Windows"),
+            tag("h4", "Linux on Windows"),
             "Firstly I should mention that the silver-bullet here is to dual-boot Windows and Linux, which basically means installing Linux into Windows. Although this sounds great it still comes with its downsides.",
             <ul style={{listStyleType: "decimal"}}>
                 <li>Extra storage required for the additional OS</li>
                 <li>System storage is mapped differently for both OS meaning you may need to manually transfer files from one OS to the other.</li>
                 <li>It takes time to shut down one OS and reboot the other.</li>
             </ul>,
-            tag("h2", "Linux tools for Windows"),
+            tag("h4", "Linux tools for Windows"),
             <h4>PuTTy</h4>,
             "A terminal emulator that allows SSH access to connect to other machines. Very easy to set up and large community.",
             <h4>Cygwin</h4>,
@@ -125,9 +120,9 @@ export let blogPosts: IPost[] = [
     ),
     new Post(
         "Screenshots with Phantomjs and Slimerjs",
+        "29 Mar 2017",
         "Web Development",
         "https://phantomjs.org/",
-        "29 Mar 2017",
         [
             <span>Although this is pretty much a copy / paste from the phantomjs website <a href="http://phantomjs.org/screen-capture.html">see here</a> I thought it was a really cool feature that is worth knowing about.</span>,
             "Here are step by step instructions to take a screenshot with phantomjs.",
@@ -162,26 +157,18 @@ phantom.exit();
             tag("code", "slimerjs screenshot.js"),
             "Slimerjs, however, isn't headless so you will see a browser window appear when you run the code and your screen shot produced."
         ],
-        "/images/blogPosts/phantomjsScreenshots/phantomjs.pn"
+        "/images/blogPosts/phantomjsScreenshots/phantomjs.png"
     ),
     new Post(
         "Living for the moment with Momentjs",
+        "14 Mar 2017",
         "Web Development",
         "https://momentjs.com/",
-        "14 Mar 2017",
-        [],
-        ""
-    ),
-    new Post(
-        "",
-        "",
-        "",
-        "",
         [
             "Moment.js is a library that helps us handle and display time in JavaScript.",
             "You could look at it like a more user-friendly version of the Javascript \"Date\" instance",
             "I've used it recently to create a date-picker, but it could also be used to show user session, booking and payment info.",
-            tag("h2", "To get you started I'll show you how to create the perfect moment"),
+            tag("h4", "To get you started I'll show you how to create the perfect moment"),
             "Firstly you could simply create the current moment like so: ",
                 tag("code", "moment()"),
             "To edit this moment, it is as easy as doing something like this: ",
@@ -204,9 +191,9 @@ console.log(m.format("DD")) //log to console "16"`}
     ),
     new Post(
         "The ultimate webpage build",
+        "26 Feb 2017",
         "Web Development",
         "https://github.com/brysonandrew/isomorphic-react-redux-typescript",
-        "26 Feb 2017",
         [
             <span>Before talking about the details I should give a shout out to
                 <a href="https://porizi.com">
@@ -218,7 +205,7 @@ console.log(m.format("DD")) //log to console "16"`}
             </a>,
             "When creating and developing a website I use the following technology:",
             "Javascript/HTML/CSS (obviously but I feel remiss if I didn’t mention them)",
-            tag("h2", "F  R  O  N  T  E  N  D"),
+            tag("h4", "F  R  O  N  T  E  N  D"),
             <h4>L O G I C</h4>,
             <ul>
                 <li>React.js</li>
@@ -227,7 +214,7 @@ console.log(m.format("DD")) //log to console "16"`}
             </ul>,
             <h4>S T Y L E</h4>,
             "Nothing! Just React.js inline styles with a component CSS util where pseudo classes are necessary (hardly ever)",
-            tag("h2", "B  A  C  K  E  N  D"),
+            tag("h4", "B  A  C  K  E  N  D"),
             <ul>
                 <li>Node.js</li>
                 <li>MongoDB</li>
@@ -243,9 +230,9 @@ console.log(m.format("DD")) //log to console "16"`}
     ),
     new Post(
         "THREEjs essentials",
+        "24 Feb 2017",
         "Web Development",
         "https://threejs.org/examples/misc_controls_orbit.html",
-        "24 Feb 2017",
         [
             "As web developers used to working in two dimensions there is one thing that is easy to take for granted when working with a third dimension - space. The good news is that THREE.js has a ton of built in controls and helpers that can give us some control over this.",
             "My favorite tools for helping navigate the third dimension are Orbit Controls and Camera Helper.",
@@ -257,18 +244,19 @@ console.log(m.format("DD")) //log to console "16"`}
             "THREE.CameraHelper shows you a kind of cone that shows what your camera is looking at. The camera shows in red the \"near\" limitation you set and the cone stretches out to your \"far\" limitation. The cone is as wide as your \"fov\".",
             "The CameraHelper especially helped because I found my shadow's weren't rendering because my \"far\" limitation, although initially set far enough, was mysteriously changing after render…",
             "To add these controls you simply include this line in your code. Notice they both take your camera object and must be added to the scene to work.",
-            tag("code", "Import * as THREE from 'three';"),
-            tag("code", "const controls = new THREE.OrbitControls(camera);"),
-            tag("code", "const cameraHelper = THREE.CameraHelper(camera);"),
-            tag("code", "scene.add(cameraHelper);")
+            tag("pre",
+`Import * as THREE from 'three';
+const controls = new THREE.OrbitControls(camera);
+const cameraHelper = THREE.CameraHelper(camera);
+scene.add(cameraHelper);`),
         ],
         "/images/blogPosts/threejsEssentials/threejs.jpg"
     ),
     new Post(
         "Planning a webpage design for a client",
+        "7 Feb 2017",
         "Web Development",
         "",
-        "7 Feb 2017",
         [
             "A basic issue facing web developers is reading the mind of the client. Here are some basic dos and don’ts when it comes to creating a web page from a design perspective for a client.",
             "Do listen carefully and take seriously all and every issue the client has in terms of the way they want to website to be presented. ",

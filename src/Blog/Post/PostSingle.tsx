@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { IStoreState } from '../../redux/main_reducer';
 import { IPost } from '../../data/models';
 import { changePageIndex } from '../../Home/HomeActionCreators';
-import { Link } from 'react-router';
+import { colors } from "../../data/themeOptions";
 
 interface IProperties {
     activePageIndex?: number
@@ -25,31 +25,52 @@ interface IProps extends IProperties, ICallbacks {
 interface IState extends IProperties, ICallbacks {
     isMounted?: boolean
     isHovering?: boolean
-    isMini?: boolean
-    animateCount?: number
+    postWidth?: string
 }
 
 export class PostSingle extends React.Component<IProps, IState> {
 
-    containerEl: HTMLDivElement;
-    animateId;
-    scroll;
+    breakPoints = {
+        min: 800,
+        mid: 1200,
+        max: 1400
+    };
+    timeoutId;
 
     public constructor(props?: any, context?: any) {
         super(props, context);
         this.state = {
             isMounted: false,
             isHovering: false,
-            isMini: false,
-            animateCount: 0
+            postWidth: "calc(50% - 44px)"
         }
     }
 
     componentDidMount() {
-        let { activeViewIndex, viewIndex, postsRef } = this.props;
-        setTimeout(() => {
-            this.setState({isMounted: true})
-        }, 0);
+        if (this.props.width < this.breakPoints.min) {
+            this.setState({ postWidth: "calc(100% - 44px)"})
+        } else if (this.props.width < this.breakPoints.mid) {
+            this.setState({ postWidth: "calc(75% - 44px)"})
+        } else {
+            this.setState({ postWidth: "calc(50% - 44px)"})
+        }
+        this.timeoutId = setTimeout(() =>  this.setState({ isMounted: true }), 0)
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.width !== this.props.width) {
+            if (nextProps.width < this.breakPoints.min) {
+                this.setState({ postWidth: "calc(100% - 44px)"})
+            } else if (nextProps.width < this.breakPoints.mid) {
+                this.setState({ postWidth: "calc(75% - 44px)"})
+            } else {
+                this.setState({ postWidth: "calc(50% - 44px)"})
+            }
+        }
+    }
+
+    componentWillUnmount() {
+        clearTimeout(this.timeoutId);
     }
 
     handleMouseEnter() {
@@ -61,62 +82,85 @@ export class PostSingle extends React.Component<IProps, IState> {
     }
 
     render(): JSX.Element {
-        let { isMounted, isMini } = this.state;
-        let { post, activeViewIndex } = this.props;
+        const { post, activeViewIndex, height } = this.props;
+        const { isMounted } = this.state;
         const isFirstView = activeViewIndex===-1;
-
 
         let styles = {
             post: {
                 display: "inline-block",
-                borderBottom: "1px solid #212121",
-                width: "80%",
+                width: this.state.postWidth,
+                borderLeft: "1px solid #fafafa",
+                borderRight: "1px solid #fafafa",
+                padding: 20,
+                color: "#000000",
+                transform: `translateY(${isMounted ? 0 : height}px)`,
+                transition: "transform 400ms"
+            },
+            post__name: {
                 color: "#fafafa",
-                opacity: isMounted ? 1 : 0,
-                background: "#455A64",
-                backgroundSize: "cover"
-            },
-            post__picContainer: {
+                fontSize: 28,
                 display: "inline-block",
                 verticalAlign: "top",
-                width: isMini ? "50%" :"20%",
-            },
-            post__heading: {
-                display: "inline-block",
-                verticalAlign: "top",
-                width: isMini ? "100%" :"60%",
+                width: "100%",
+                textAlign: "center"
             },
             post__date: {
+                color: "#fafafa",
+                fontSize: 16,
                 display: "inline-block",
                 verticalAlign: "top",
-                width: isMini ? "50%" :"20%",
+                width: "100%",
+                textAlign: "right"
+            },
+            post__category: {
+                display: "inline-block",
+                verticalAlign: "top",
+                color: "#fafafa",
+                background: "transparent",
+                fontSize: 12,
+                borderTop: `1px solid ${colors.std}`,
+                marginTop: 10,
+                marginBottom: 10,
+                paddingTop: 10,
+                paddingBottom: 10,
+                width: "100%",
+            },
+            post__paragraphs: {
             },
             post__paragraph: {
+                marginTop: 10,
+                paddingTop: 10,
+                width: "100%",
                 textAlign: "left",
-                margin: "10px 0"
+                margin: "10px 0",
+                color: colors.hi,
+                fontSize: 24
             }
         };
         return (
-            <Link style={styles.post}
-                  to={`/blog/${post.path}`}
-                  ref={el => this.containerEl = el}
+            <div style={styles.post}
                   onMouseEnter={() => this.handleMouseEnter()}
                   onMouseLeave={() => this.handleMouseLeave()}
             >
-                <h2 style={styles.post__heading}>
-                    {post.name}
-                </h2>
                 <div style={styles.post__date}>
                     {post.date}
                 </div>
-                <div>{!isFirstView && post.content.map((paragraph, i) =>
+                <h2 style={styles.post__name}>
+                    {post.name}
+                </h2>
+                <div style={styles.post__category}>
+                    {post.category.toUpperCase()}
+                </div>
+                <div style={styles.post__paragraphs}>
+                    {!isFirstView && post.content.map((paragraph, i) =>
                     <div key={i}
                          style={styles.post__paragraph}>
                         {paragraph}
                     </div>
                 )}
                 </div>
-            </Link>
+            </div>
         );
     }
 }

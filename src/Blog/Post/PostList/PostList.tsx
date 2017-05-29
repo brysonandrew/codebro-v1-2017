@@ -15,6 +15,13 @@ interface IState {
 
 export class PostList extends React.Component<IProps, IState> {
 
+    timeoutId;
+    breakPoints = {
+        min: 800,
+        mid: 1200,
+        max: 1400
+    };
+
     public constructor(props?: any, context?: any) {
         super(props, context);
         this.state = {
@@ -24,36 +31,33 @@ export class PostList extends React.Component<IProps, IState> {
     }
 
     componentDidMount() {
-        const breakPoints = {
-            min: 800,
-            mid: 1200,
-            max: 1400
-        };
-        if (this.props.width < breakPoints.min) {
+        if (this.props.width < this.breakPoints.min) {
             this.setState({ linkWidth: "calc(100% - 22px)"})
-        } else if (this.props.width < breakPoints.mid) {
+        } else if (this.props.width < this.breakPoints.mid) {
             this.setState({ linkWidth: "calc(50% - 22px)"})
-        } else if (this.props.width < breakPoints.max) {
+        } else {
             this.setState({ linkWidth: "calc(25% - 22px)"})
         }
-        setTimeout(() =>  this.setState({ isMounted: true }), 0)
+        this.timeoutId = setTimeout(() => this.setState({ isMounted: true }), 0)
     }
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.width !== this.props.width) {
-            const breakPoints = {
-                min: 800,
-                mid: 1200,
-                max: 1400
-            };
-            if (nextProps.width < breakPoints.min) {
+            if (nextProps.width < this.breakPoints.min) {
                 this.setState({ linkWidth: "calc(100% - 22px)"})
-            } else if (nextProps.width < breakPoints.mid) {
+            } else if (nextProps.width < this.breakPoints.mid) {
                 this.setState({ linkWidth: "calc(50% - 22px)"})
             } else {
                 this.setState({ linkWidth: "calc(25% - 22px)"})
             }
         }
+        if (nextProps.activePageIndex !== this.props.activePageIndex && nextProps.activePageIndex===-1) {
+            this.setState({ isMounted: false });
+        }
+    }
+
+    componentWillUnmount() {
+        clearTimeout(this.timeoutId);
     }
 
 
@@ -62,9 +66,9 @@ export class PostList extends React.Component<IProps, IState> {
             postList: {
                 display: "inline-block",
                 width: "80%",
-                opacity: this.state.isMounted ? 1 : 0,
+                transform: `scale(${this.state.isMounted ? 1 : 0})`,
                 textAlign: "left",
-                transition: "opacity 200ms"
+                transition: "transform 200ms"
             },
             postList__link: {
                 display: "inline-block",
@@ -75,13 +79,12 @@ export class PostList extends React.Component<IProps, IState> {
             }
         };
         return (
-            <div style={styles.postList}>
+            this.state.isMounted
+            && <div style={styles.postList}>
                 {pageLinks[this.props.activePageIndex].content.map((post, i) =>
                     <div key={i} style={styles.postList__link}>
-                        <PostDescriptionFromStore   post={post}
-                                                    index={i} />
-                        <PostLinkFromStore      post={post}
-                                                index={i} />
+                        <PostLinkFromStore post={post}
+                                           index={i} />
                     </div>
                 )}
             </div>

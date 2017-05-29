@@ -1,7 +1,9 @@
 import {
     UPDATE__PAGE_INDEX,
     UPDATE__VIEW_INDEX,
-    UPDATE__VIEWPORT_DIMENSIONS
+    UPDATE__VIEWPORT_DIMENSIONS,
+    SET__TRANSITION__SCREEN,
+    SET__VIEW__MODE
 } from "./HomeActions";
 import { createAction } from "../redux/utils/actions";
 
@@ -32,3 +34,25 @@ export function changeViewIndex(activeViewIndex) {
         }));
     }
 }
+
+export function setTransitionScreen(isScreenUp) {
+    return dispatch => {
+        // We dispatch the init action before fetching the data
+        dispatch(createAction<SET__TRANSITION__SCREEN>(SET__TRANSITION__SCREEN.type, {
+            isScreenUp: isScreenUp
+        }));
+    }
+}
+
+
+export function setViewMode(isTabletMode) {
+    return dispatch => {
+        // We dispatch the init action before fetching the data
+        dispatch(createAction<SET__VIEW__MODE>(SET__VIEW__MODE.type, {
+            isTabletMode: isTabletMode
+        }));
+    }
+}
+
+
+
