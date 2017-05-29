@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IStoreState } from '../redux/main_reducer';
-import { PostFromStore } from './Post';
+import { PostSingleFromStore } from './Post/PostSingle';
 import { pageLinks } from "../data/pages";
 import { changeViewIndex } from '../Home/HomeActionCreators';
+import {PostList} from "./Post/PostList/PostList";
 
 interface IProperties {
     activePageIndex?: number
@@ -20,7 +21,7 @@ interface IProps extends IProperties, ICallbacks {}
 
 interface IState extends IProperties, ICallbacks {
     isMounted?: boolean
-    isHovering?: boolean
+    isHovered?: boolean
 }
 
 export class Blog extends React.Component<IProps, IState> {
@@ -32,26 +33,27 @@ export class Blog extends React.Component<IProps, IState> {
         super(props, context);
         this.state = {
             isMounted: false,
-            isHovering: false
+            isHovered: false
         };
     }
 
     componentDidMount() {
-        if (this.props.activeViewIndex===-1) {
-            this.props.onViewIndexSelect(0);
-        }
         this.timerId = setTimeout(() => {
             this.setState({isMounted: true});
             window.scrollTo(0,0);
         }, 0);
     }
 
+    componentWillUnmount() {
+        clearTimeout(this.timerId);
+    }
+
     handleMouseEnter() {
-        this.setState({isHovering: true})
+        this.setState({isHovered: true})
     }
 
     handleMouseLeave() {
-        this.setState({isHovering: false})
+        this.setState({isHovered: false})
     }
 
     handleSelectorClick(i) {
@@ -59,51 +61,34 @@ export class Blog extends React.Component<IProps, IState> {
     }
 
     render(): JSX.Element {
-        const { isHovering, isMounted } = this.state;
+        const { isHovered, isMounted } = this.state;
+        const { activePageIndex, activeViewIndex, width } = this.props;
+        const isFirstView = activeViewIndex===-1;
+
 
         const styles = {
             blog: {
-                position: "absolute",
-                top: "calc(8% + 40px)",
-                left: "6vw",
-                width: "94vw",
-                height: "80vh",
-                textAlign: "center"
-
-            },
-            blog__content: {
-                display: "inline-block",
-                width: "88vw",
-                height: "100%",
-                overflowY: "scroll",
-                borderRadius: 8,
-                zIndex: 1
-            },
-            blog__verticalMenu: {
-                display: "inline-block",
-                verticalAlign: "top",
-                width: "6vw",
-                height: "100%",
-                zIndex: 2
+                textAlign: "center",
+                transform: `scale(${isMounted ? 1 : 0})`,
+                transition: "200ms",
+                transitionDelay: "1000ms"
             }
         };
-console.log(this.props.activePageIndex);
         return (
-            <div style={styles.blog}>
-                <div style={styles.blog__content}
-                     ref={(el) => this.postsRef = el}
-                     onMouseEnter={() => this.handleMouseEnter()}
-                     onMouseLeave={() => this.handleMouseLeave()}
-                >
-                    {this.state.isMounted && pageLinks[this.props.activePageIndex].content.map((post, i) =>
-                        <PostFromStore
-                            key={i}
-                            viewIndex={i}
-                            post={post}
-                            postsRef={this.postsRef}
+            <div style={styles.blog}
+                 ref={(el) => this.postsRef = el}
+                 onMouseEnter={() => this.handleMouseEnter()}
+                 onMouseLeave={() => this.handleMouseLeave()}>
+                {isFirstView
+                    ?   <PostList
+                            width={width}
+                            activePageIndex={activePageIndex}
                         />
-                    )}
-                </div>
+                    :   <PostSingleFromStore
+                            viewIndex={activeViewIndex}
+                            post={pageLinks[activePageIndex].content[activeViewIndex]}
+                            postsRef={this.postsRef}
+                        />}
             </div>
         );
     }

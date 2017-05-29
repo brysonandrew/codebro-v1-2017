@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { IStoreState } from '../redux/main_reducer';
-import { IPost } from '../data/models';
-import { changePageIndex } from '../Home/HomeActionCreators';
+import { IStoreState } from '../../redux/main_reducer';
+import { IPost } from '../../data/models';
+import { changePageIndex } from '../../Home/HomeActionCreators';
+import { Link } from 'react-router';
 
 interface IProperties {
     activePageIndex?: number
@@ -28,7 +29,7 @@ interface IState extends IProperties, ICallbacks {
     animateCount?: number
 }
 
-export class Post extends React.Component<IProps, IState> {
+export class PostSingle extends React.Component<IProps, IState> {
 
     containerEl: HTMLDivElement;
     animateId;
@@ -49,50 +50,6 @@ export class Post extends React.Component<IProps, IState> {
         setTimeout(() => {
             this.setState({isMounted: true})
         }, 0);
-        const isSelectedView = activeViewIndex===viewIndex;
-        if (isSelectedView) {
-            this.scroll = {
-                y: postsRef.scrollTop
-            };
-            this.animate();
-        }
-    }
-
-    componentWillReceiveProps(nextProps) {
-        let { width, activeViewIndex, viewIndex, postsRef } = this.props;
-
-        if (nextProps.width !== width) {
-            if (nextProps.width < 720) {
-                this.setState({ isMini: true })
-            } else {
-                this.setState({ isMini: false })
-            }
-        }
-        const isSelectedView = nextProps.activeViewIndex===viewIndex;
-        if (isSelectedView) {
-            this.scroll = {
-                y: postsRef.scrollTop
-            };
-            this.animate();
-        }
-    }
-
-    animate() {
-        const { animateCount } = this.state;
-        const { postsRef } = this.props;
-        this.animateId = requestAnimationFrame( this.animate.bind(this) );
-        if (animateCount <= 20) {
-            postsRef.scrollTop = this.scroll.y
-                                    //current scroll pos
-                                    + (this.containerEl.offsetTop - this.scroll.y) * animateCount
-                                    //scroll distance to travel
-                                    / 20;
-                                    //animation factor
-            this.setState({ animateCount: animateCount + 1 });
-        } else {
-            this.setState({ animateCount: 0 });
-            cancelAnimationFrame(this.animateId);
-        }
     }
 
     handleMouseEnter() {
@@ -105,26 +62,24 @@ export class Post extends React.Component<IProps, IState> {
 
     render(): JSX.Element {
         let { isMounted, isMini } = this.state;
-        let { post } = this.props;
+        let { post, activeViewIndex } = this.props;
+        const isFirstView = activeViewIndex===-1;
+
 
         let styles = {
             post: {
-                width: "96%",
-                padding: "2%",
+                display: "inline-block",
                 borderBottom: "1px solid #212121",
-                marginBottom: 10,
+                width: "80%",
+                color: "#fafafa",
                 opacity: isMounted ? 1 : 0,
-                color: "#212121",
-                background: "#eeeeee"
+                background: "#455A64",
+                backgroundSize: "cover"
             },
             post__picContainer: {
                 display: "inline-block",
                 verticalAlign: "top",
                 width: isMini ? "50%" :"20%",
-            },
-            post__pic: {
-                height: 60,
-                width: "auto"
             },
             post__heading: {
                 display: "inline-block",
@@ -142,27 +97,26 @@ export class Post extends React.Component<IProps, IState> {
             }
         };
         return (
-            <div style={styles.post}
-                 ref={el => this.containerEl = el}
-                 onMouseEnter={() => this.handleMouseEnter()}
-                 onMouseLeave={() => this.handleMouseLeave()}
+            <Link style={styles.post}
+                  to={`/blog/${post.path}`}
+                  ref={el => this.containerEl = el}
+                  onMouseEnter={() => this.handleMouseEnter()}
+                  onMouseLeave={() => this.handleMouseLeave()}
             >
-                <a href={(post.link.length > 0) ? post.link : null}
-                   target="_blank">
-                    <div style={styles.post__picContainer} >
-                        <img style={styles.post__pic} src={post.image}/>
-                    </div>
-                    <h2 style={styles.post__heading}>{post.name}</h2>
-                    <div style={styles.post__date}>{post.date}</div>
-                </a>
-                <div>{post.content.map((paragraph, i) =>
+                <h2 style={styles.post__heading}>
+                    {post.name}
+                </h2>
+                <div style={styles.post__date}>
+                    {post.date}
+                </div>
+                <div>{!isFirstView && post.content.map((paragraph, i) =>
                     <div key={i}
                          style={styles.post__paragraph}>
                         {paragraph}
                     </div>
                 )}
                 </div>
-            </div>
+            </Link>
         );
     }
 }
@@ -186,6 +140,6 @@ function mapDispatchToProps(dispatch, ownProps: IProps): ICallbacks {
     }
 }
 
-export let PostFromStore = connect(
+export let PostSingleFromStore = connect(
     mapStateToProps, mapDispatchToProps
-)(Post);
+)(PostSingle);

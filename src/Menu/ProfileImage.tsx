@@ -11,6 +11,8 @@ interface IState {
 
 export class ProfileImage extends React.Component<IProps, IState> {
 
+    setTimeoutId;
+
     public constructor(props?: any, context?: any) {
         super(props, context);
         this.state = {
@@ -20,11 +22,13 @@ export class ProfileImage extends React.Component<IProps, IState> {
     }
 
     componentDidMount() {
-        setTimeout(() => {
-            this.setState({
-                isMounted: true
-            })
+        this.setTimeoutId = setTimeout(() => {
+            this.setState({isMounted: true})
         }, 0)
+    }
+
+    componentWillUnmount() {
+        clearTimeout(this.setTimeoutId);
     }
 
     handleMouseEnter() {

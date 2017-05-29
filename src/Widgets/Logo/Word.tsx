@@ -5,7 +5,6 @@ import {Letter} from "./Letter";
 interface IProps {
     word: string
     isLogoHovered: boolean
-    isDarkTheme?: boolean
 }
 
 interface IState {
@@ -29,7 +28,6 @@ export class Word extends React.Component<IProps, IState> {
                         key={i}
                         letter={letter}
                         isLogoHovered={this.props.isLogoHovered}
-                        isDarkTheme={this.props.isDarkTheme}
                     />)}
             </div>
         );

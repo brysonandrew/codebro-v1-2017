@@ -7,6 +7,7 @@ import { browserHistory, Link } from 'react-router';
 import { Word } from '../Widgets/Logo/Word';
 import { ProfileImage } from "./ProfileImage";
 import { Centerpiece } from "./Centerpiece";
+import { MenuLink } from "./MenuLink";
 
 interface IProperties {
     activePageIndex?: number
@@ -22,25 +23,29 @@ interface IProps extends IProperties, ICallbacks {}
 
 interface IState extends IProperties, ICallbacks {
     isMounted?: boolean
-    hoveringIndex?: number
     isHoverSwitched?: boolean
 }
 
 export class Menu extends React.Component<IProps, IState> {
 
+    setTimeoutId;
+
     public constructor(props?: any, context?: any) {
         super(props, context);
         this.state = {
             isMounted: false,
-            hoveringIndex: -1,
             isHoverSwitched: false
         }
     }
 
     componentDidMount() {
-        setTimeout(() => {
+        this.setTimeoutId = setTimeout(() => {
             this.setState({isMounted: true})
         }, 0)
+    }
+
+    componentWillUnmount() {
+        clearTimeout(this.setTimeoutId);
     }
 
     handleOpenClick(i, path) {
@@ -53,18 +58,8 @@ export class Menu extends React.Component<IProps, IState> {
         this.props.onChangeMenuIndex(-1);
     }
 
-    handleMouseEnter(i) {
-        this.setState({hoveringIndex: i});
-    }
-
-    handleMouseLeave() {
-        this.setState({
-            hoveringIndex: -1
-        });
-    }
-
     render(): JSX.Element {
-        let { hoveringIndex, isMounted } = this.state;
+        let { isMounted } = this.state;
         let { activePageIndex, width, height } = this.props;
 
         let styles = {
@@ -80,22 +75,19 @@ export class Menu extends React.Component<IProps, IState> {
                 position: "absolute",
             }
         };
-        const radiansFactor = ((Math.PI * 2) / pageLinks.length);
-        const startingIndex = 0;
+
         return (
             <div style={styles.menu}>
                 <Centerpiece/>
                 <div>
                     {pageLinks.map((page, i) =>
-                        <div key={i}
-                             style={ Object.assign( {},
-                            {
-                                transform : `translate( calc(${Math.sin(radiansFactor * (i + startingIndex)) * width * 0.25}px),
-                                                        calc(${Math.cos(radiansFactor * (i + startingIndex)) * height * 0.25}px))`
-                            }
-                        )}>
-                            {page.linkComponent}
-                        </div>
+                        <MenuLink
+                            key={i}
+                            index={i}
+                            page={page}
+                            width={width}
+                            height={height}
+                        />
                     )}
                 </div>
             </div>

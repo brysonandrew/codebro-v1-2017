@@ -30,15 +30,19 @@ interface IProps extends IProperties, ICallbacks {
 interface IState extends IProperties, ICallbacks {
     isMini?: boolean
     isScreenUp?: boolean
+    isMounted?: boolean
 }
 
 export class Home extends React.Component<IProps, IState> {
+
+    setTimeoutId;
 
     public constructor(props?: any, context?: any) {
         super(props, context);
         this.state = {
             isMini: false,
-            isScreenUp: this.props.activePageIndex > -1
+            isScreenUp: this.props.activePageIndex > -1,
+            isMounted: false
         };
     }
 
@@ -53,8 +57,8 @@ export class Home extends React.Component<IProps, IState> {
         if (activePageIndex > -1) {
             /////SET VIEW
             let activeViewIndex = Immutable.List(pageLinks[activePageIndex].viewPaths)
-                                           .findIndex(item =>
-                                                item === params.activeViewPath);
+                .findIndex(item =>{console.log( item===params.activeViewPath);
+                    return  item === params.activeViewPath});
             onViewIndexSelect(activeViewIndex);
         }
         //responsive on window resize
@@ -62,6 +66,13 @@ export class Home extends React.Component<IProps, IState> {
             , () => onResizeViewport(window.innerWidth, window.innerHeight));
         window.addEventListener("load"
             , () => onResizeViewport(window.innerWidth, window.innerHeight));
+        this.setTimeoutId = setTimeout(() => {
+            this.setState({isMounted: true})
+        }, 0)
+    }
+
+    componentWillUnmount() {
+        clearTimeout(this.setTimeoutId);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -86,16 +97,18 @@ export class Home extends React.Component<IProps, IState> {
             if (nextProps.params.activeViewPath !== params.activeViewPath){
                 /////SET VIEW
                 let activeViewIndex = Immutable.List(pageLinks[nextProps.activePageIndex].viewPaths)
-                                               .findIndex(item =>
-                                                    item === nextProps.params.activeView);
+                                               .findIndex(item =>{console.log( item===nextProps.params.activeViewPath)
+                                                  return  item === nextProps.params.activeViewPath});
                 onViewIndexSelect(activeViewIndex);
             }
         }
     }
 
     public render(): JSX.Element {
-        const {isScreenUp} = this.state;
-        const { activePageIndex } = this.props;
+        const { isScreenUp, isMounted } = this.state;
+        const { activePageIndex, activeViewIndex, params } = this.props;
+        const isFrontPage = activePageIndex===-1;
+
         let styles = {
             home: {
                 position: "relative",
@@ -118,8 +131,9 @@ export class Home extends React.Component<IProps, IState> {
             },
             home__logo: {
                 position: "absolute",
-                top: this.state.isMini && (this.props.activePageIndex===-1)
-                        ? "85.5vh" : "4.5vh",
+                top: this.state.isMini
+                        && isFrontPage
+                            ? "85.5vh" : "4.5vh",
                 left: "2vw",
                 width: "100%",
                 textAlign: "left",
@@ -154,14 +168,14 @@ export class Home extends React.Component<IProps, IState> {
                 height: "100vh"
             }
         };
-        const isFrontPage = activePageIndex===-1;
         const screenColors = isScreenUp ? Object.keys(colors) : Object.keys(colors).reverse();
-        console.log(activePageIndex)
         return (
             <div style={styles.home}>
                 <div style={styles.home__logo}>
                     <Logo
                         activePageIndex={activePageIndex}
+                        activeViewIndex={activeViewIndex}
+                        params={params}
                     />
                 </div>
                 {isFrontPage

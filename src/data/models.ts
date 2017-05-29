@@ -14,11 +14,10 @@ export interface IPageLink {
 export interface IPost {
     name: string
     category: string
+    path: string
     link: string
-    status: string
     date: string
     content: any[]
-    parts?: string[]
     image: string
 }
 

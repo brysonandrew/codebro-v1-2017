@@ -1,10 +1,12 @@
 import * as React from 'react';
 import { Word } from './Word';
 import { Link } from 'react-router';
+import {IParams} from "../../data/models";
 
 interface ILogoProps {
-    isDarkTheme?: boolean
     activePageIndex?: number
+    activeViewIndex?: number
+    params: IParams
 }
 
 interface ILogoState {
@@ -33,18 +35,26 @@ export class Logo extends React.Component<ILogoProps, ILogoState> {
     }
 
     render(): JSX.Element {
+        const { activePageIndex, activeViewIndex, params } = this.props;
 
-        const isFrontPage = this.props.activePageIndex===-1;
+        const isFrontPage = activePageIndex===-1;
+        const isFrontView = activeViewIndex===-1;
+
         const style = {
             display: "inline-block",
             cursor: "pointer",
             transition: "opacity 200ms"
         };
-        const words = isFrontPage ? ["c", "b"] : ["x"];
+        const words = (isFrontPage && isFrontView) ? ["c", "b"] : ["x"];
+        const nextPath = isFrontPage
+                            ?   null
+                            :   isFrontView
+                                    ?   ``
+                                    :   `/${params.activePagePath}`;
 
         return (
             <Link style={style}
-                  to={isFrontPage ? null : ''}
+                  to={nextPath}
                   onMouseEnter={() => this.handleMouseEnter()}
                   onMouseLeave={() => this.handleMouseLeave()}
             >
@@ -52,7 +62,6 @@ export class Logo extends React.Component<ILogoProps, ILogoState> {
                     <Word
                         key={i}
                         word={word}
-                        isDarkTheme={this.props.isDarkTheme}
                         isLogoHovered={this.state.isHovered}
                     />)}
             </Link>
