@@ -5,6 +5,7 @@ interface IProps {
     isScreenUp: boolean
     colorKey: string
     index: number
+    onTransitionEnd: () => void
 }
 
 interface IState {}
@@ -13,6 +14,10 @@ export class PageTransitionScreen extends React.Component<IProps, IState> {
 
     public constructor(props?: any, context?: any) {
         super(props, context);
+    }
+
+    handleTransitionEnd() {
+        this.props.onTransitionEnd();
     }
 
     render(): JSX.Element {
@@ -28,9 +33,13 @@ export class PageTransitionScreen extends React.Component<IProps, IState> {
         };
         return (
             <div
+                onTransitionEnd={() => this.handleTransitionEnd()}
                 style={Object.assign({}, styles.pageTransitionScreen,
                                 {
                                     background: colors[colorKey],
+                                    MozTransform: `scaleY(${isScreenUp ? 1 : 0})`,
+                                    MozTransition: "transform 600ms",
+                                    MozTransitionDelay: `${400 * index}ms`,
                                     transform: `scaleY(${isScreenUp ? 1 : 0})`,
                                     transition: "transform 600ms",
                                     transitionDelay: `${400 * index}ms`,

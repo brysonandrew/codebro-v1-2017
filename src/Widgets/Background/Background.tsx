@@ -23,7 +23,6 @@ export class Background extends React.Component<IProps, IState> {
             isAnimating: false,
             backgroundIndex: 2 //safest background version - works on all browsers
         }
-
     }
 
     componentDidMount() {

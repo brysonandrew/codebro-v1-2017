@@ -5,11 +5,18 @@ import { IPageLink } from "./models";
 import { blogPosts } from "./blog/blogPosts";
 import { PhilosophyFromStore } from "../Philosophy/Philosophy";
 import { BlogFromStore } from "../Blog/Blog";
+import {leavePage, changePageIndex} from "../Home/HomeActionCreators";
+import { store } from '../redux/store';
 
 const linkStyle = {
     color: "#fafafa",
     fontSize: 22
 };
+
+function handleExternalLinkClick(index) {
+    store.dispatch(leavePage(true));
+    store.dispatch(changePageIndex(index));
+}
 
 ///CONSTRUCTORS
 function InternalPageLink(name, content, component) {
@@ -21,14 +28,15 @@ function InternalPageLink(name, content, component) {
                            to={nameToPath(name)}>{name}</Link>;
 }
 
-function ExternalPageLink(name, link) {
+function ExternalPageLink(name, link, index) {
     this.path = nameToPath(name); // unused but required so it doesn't return undefined when changing home params
     this.linkComponent = <a style={linkStyle}
+                            onClick={() => handleExternalLinkClick(index)}
                             href={link}>{name}</a>
 }
 ///EXPORTS
 export const pageLinks: IPageLink[] = [
     new InternalPageLink("Philosophy", [], <PhilosophyFromStore/>),
-    new ExternalPageLink("Work", "http://showroom.codebro.io"),
+    new ExternalPageLink("Work", "http://showroom.codebro.io", 1),
     new InternalPageLink("Blog", blogPosts, <BlogFromStore/>),
 ];

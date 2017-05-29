@@ -54,7 +54,7 @@ export class PostSingle extends React.Component<IProps, IState> {
         } else {
             this.setState({ postWidth: "calc(50% - 44px)"})
         }
-        this.timeoutId = setTimeout(() =>  this.setState({ isMounted: true }), 0)
+        this.timeoutId = setTimeout(() => this.setState({ isMounted: true }), 0)
     }
 
     componentWillReceiveProps(nextProps) {
@@ -90,11 +90,16 @@ export class PostSingle extends React.Component<IProps, IState> {
             post: {
                 display: "inline-block",
                 width: this.state.postWidth,
+                height: "100vh",
+            },
+            post__inner: {
+                display: "block",
                 borderLeft: "1px solid #fafafa",
                 borderRight: "1px solid #fafafa",
                 padding: 20,
-                color: "#000000",
-                transform: `translateY(${isMounted ? 0 : height}px)`,
+                MozTransform: `translate3d(0, ${isMounted ? 0 : height}px, 0)`,
+                transform: `translate3d(0, ${isMounted ? 0 : height}px, 0)`,
+                MozTransition: "transform 400ms",
                 transition: "transform 400ms"
             },
             post__name: {
@@ -143,22 +148,24 @@ export class PostSingle extends React.Component<IProps, IState> {
                   onMouseEnter={() => this.handleMouseEnter()}
                   onMouseLeave={() => this.handleMouseLeave()}
             >
-                <div style={styles.post__date}>
-                    {post.date}
-                </div>
-                <h2 style={styles.post__name}>
-                    {post.name}
-                </h2>
-                <div style={styles.post__category}>
-                    {post.category.toUpperCase()}
-                </div>
-                <div style={styles.post__paragraphs}>
-                    {!isFirstView && post.content.map((paragraph, i) =>
-                    <div key={i}
-                         style={styles.post__paragraph}>
-                        {paragraph}
+                <div style={styles.post__inner}>
+                    <div style={styles.post__date}>
+                        {post.date}
                     </div>
-                )}
+                    <h2 style={styles.post__name}>
+                        {post.name}
+                    </h2>
+                    <div style={styles.post__category}>
+                        {post.category.toUpperCase()}
+                    </div>
+                    <div style={styles.post__paragraphs}>
+                        {!isFirstView && post.content.map((paragraph, i) =>
+                            <div key={i}
+                                 style={styles.post__paragraph}>
+                                {paragraph}
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         );

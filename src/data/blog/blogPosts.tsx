@@ -133,9 +133,9 @@ export let blogPosts: IPost[] = [
                     <li>Add the following code
                         <pre>
 {`var page = require('webpage').create();
-page.open('http://codebro.io', function() {
-page.render('codebro.png');
-phantom.exit();
+    page.open('http://codebro.io', function() {
+    page.render('codebro.png');
+    phantom.exit();
 });`}
                         </pre>
                     </li>
@@ -195,7 +195,7 @@ console.log(m.format("DD")) //log to console "16"`}
         "Web Development",
         "https://github.com/brysonandrew/isomorphic-react-redux-typescript",
         [
-            <span>Before talking about the details I should give a shout out to
+            <span>{"Before talking about the details I should give a shout out to "}
                 <a href="https://porizi.com">
                     Porizi Technologies
                 </a> for developing this build. So setting up webpack, typescript and isomorphic behaviour is all down to them and their open source project that can be found here.
@@ -229,7 +229,7 @@ console.log(m.format("DD")) //log to console "16"`}
         "/images/blogPosts/webpageBuild/github-logo.jpg"
     ),
     new Post(
-        "THREEjs essentials",
+        "THREE.js essentials",
         "24 Feb 2017",
         "Web Development",
         "https://threejs.org/examples/misc_controls_orbit.html",

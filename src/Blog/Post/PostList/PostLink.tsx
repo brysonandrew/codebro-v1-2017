@@ -23,7 +23,7 @@ interface IProps extends IProperties, ICallbacks {
 
 interface IState extends IProperties, ICallbacks {
     isMounted?: boolean
-    isHovering?: boolean
+    isHovered?: boolean
 }
 
 export class PostLink extends React.Component<IProps, IState> {
@@ -32,7 +32,7 @@ export class PostLink extends React.Component<IProps, IState> {
         super(props, context);
         this.state = {
             isMounted: false,
-            isHovering: false
+            isHovered: false
         }
     }
 
@@ -43,16 +43,16 @@ export class PostLink extends React.Component<IProps, IState> {
     }
 
     handleMouseEnter() {
-        this.setState({isHovering: true})
+        this.setState({isHovered: true})
     }
 
     handleMouseLeave() {
-        this.setState({isHovering: false})
+        this.setState({isHovered: false})
     }
 
     render(): JSX.Element {
-        let { isMounted } = this.state;
-        let { post } = this.props;
+        let { isMounted, isHovered } = this.state;
+        let { post, index } = this.props;
 
         let styles = {
             post: {
@@ -60,9 +60,20 @@ export class PostLink extends React.Component<IProps, IState> {
                 width: "calc(100% - 20px)",
                 padding: 10,
                 color: "#fafafa",
-                opacity: isMounted ? 1 : 0,
+                opacity: isHovered ? 0.77 : 1,
+                border: "1px solid #fafafa",
+                WebkitBoxShadow: "0 15px 18px rgba(0,0,0,0.34)",
+                MozBoxShadow: "0 15px 18px rgba(0,0,0,0.34)",
+                boxShadow: "0 15px 18px rgba(0,0,0,0.34)",
                 background: `linear-gradient(to top, rgba(0,0,0, 0.44), rgba(0,0,0, 0.66)), url(${post.image})`,
-                backgroundSize: "cover"
+                backgroundSize: "cover",
+                MozTransform: `scale(${isMounted ? 1 : 0})`,
+                MozTransition: "transform 200ms cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+                MozTransitionDelay: `${100 * index + 1000}ms`,
+                transform: `scale(${isMounted ? 1 : 0})`,
+                transition: "transform 200ms cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+                transitionDelay: `${100 * index + 1000}ms`
+
             },
             post__name: {
                 display: "inline-block",

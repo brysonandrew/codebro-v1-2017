@@ -133,8 +133,6 @@ export class BinaryCluster {
         }
         this.count++;
 
-        console.log(this.clusters.children.length)
-
         this.clusters.children.forEach(cluster => {
             cluster.rotation.y += 0.01;
             cluster.position.x = Math.sin(cluster.rotation.y) * 50;

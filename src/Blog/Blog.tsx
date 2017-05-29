@@ -61,7 +61,7 @@ export class Blog extends React.Component<IProps, IState> {
     }
 
     render(): JSX.Element {
-        const { isHovered, isMounted } = this.state;
+        const { isMounted } = this.state;
         const { activePageIndex, activeViewIndex, width } = this.props;
         const isFirstView = activeViewIndex===-1;
 
@@ -70,10 +70,7 @@ export class Blog extends React.Component<IProps, IState> {
             blog: {
                 position: "relative",
                 width: "100%",
-                textAlign: "center",
-                transform: `scale(${isMounted ? 1 : 0}) translateY(${isMounted ? 100 : 0}px)`,
-                transition: "transform 200ms",
-                transitionDelay: "1000ms"
+                textAlign: "center"
             }
         };
         return (

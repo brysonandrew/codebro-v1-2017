@@ -1,7 +1,7 @@
 import thunk from 'redux-thunk';
 import {createStore, applyMiddleware} from 'redux';
-import {reducer, IStoreState} from "../main_reducer";
-import {isBrowser} from '../../utils/isomorphic_utils';
+import {reducer, IStoreState} from "./main_reducer";
+import {isBrowser} from '../utils/isomorphic_utils';
 import {Middleware} from "redux";
 const createLogger = require('redux-logger');
 

@@ -1,15 +1,26 @@
 import * as React from 'react';
-import {findLetter} from "./Letters/letters";
+import { findLetter } from "./Letters/letters";
+import { addComponentCSS } from '../../utils/css_styler';
+
+addComponentCSS({
+    //language=CSS
+    default: `
+        @keyframes fade {
+          0%   { opacity: 1; }
+          50%   { opacity: 0.1; }
+          100% { opacity: 1; }
+        }
+    `
+});
 
 interface IProps {
     letter: string
+    index: number
+    isAnimating: boolean
     isLogoHovered: boolean
 }
 
-interface IState {
-}
-
-export class Letter extends React.Component<IProps, IState> {
+export class Letter extends React.Component<IProps, any> {
 
     columns = Array.apply(null, new Array(4));
     rows = Array.apply(null, new Array(4));
@@ -22,6 +33,7 @@ export class Letter extends React.Component<IProps, IState> {
     isEqual(a, b) { return a===b };
 
     render(): JSX.Element {
+        const { isLogoHovered, letter, isAnimating } = this.props;
         let styles = {
             letter: {
                 display: "inline-block",
@@ -44,8 +56,9 @@ export class Letter extends React.Component<IProps, IState> {
                 borderRadius: 4,
                 height: "160%",
                 background: "#eeeeee",
-                transform: `translate(-50%, -50%) rotate(${this.props.isLogoHovered ? "90deg" : "45deg"})`,
-                transition: "all 400ms"
+                transform: `translate(-50%, -50%) rotate(${isLogoHovered ? "90deg" : "45deg"})`,
+                animation: isAnimating ? "fade 2000ms infinite" : null,
+                transition: "transform 400ms"
             },
             letter__strokeBackward: {
                 position: "absolute",
@@ -55,14 +68,15 @@ export class Letter extends React.Component<IProps, IState> {
                 borderRadius: 4,
                 height: "160%",
                 background: "#eeeeee",
-                transform: `translate(-50%, -50%) rotate(${this.props.isLogoHovered ? "90deg" : "-45deg"})`,
+                transform: `translate(-50%, -50%) rotate(${isLogoHovered ? "90deg" : "-45deg"})`,
+                animation: isAnimating ? "fade 2000ms infinite" : null,
                 transition: "all 400ms"
             }
         };
         return (
             <div style={ styles.letter }>
                 {this.columns.map((_, columnIndex) => {
-                    const isColumnEmpty = findLetter(this.props.letter).filter(stroke => stroke.columnIndex===columnIndex).length === 0;
+                    const isColumnEmpty = findLetter(letter).filter(stroke => stroke.columnIndex===columnIndex).length === 0;
                     if (!isColumnEmpty) {
                         return <div key={columnIndex}
                                     style={ Object.assign({}, styles.letter__column,
@@ -74,12 +88,16 @@ export class Letter extends React.Component<IProps, IState> {
                                                     return this.isEqual(stroke.columnIndex, columnIndex)
                                                         && this.isEqual(stroke.rowIndex, rowIndex)
                                                         && <div key={strokeIndex}
-                                                                style={ styles.letter__strokeForward }/>
+                                                                style={ Object.assign({}, styles.letter__strokeForward, {
+                                                                    animationDelay: `${1000 * rowIndex * columnIndex}ms`,
+                                                                }) }/>
                                                 } else if (this.isEqual(stroke.type, "backward")) {
                                                     return this.isEqual(stroke.columnIndex, columnIndex)
                                                         && this.isEqual(stroke.rowIndex, rowIndex)
                                                         && <div key={strokeIndex}
-                                                                style={ styles.letter__strokeBackward }/>
+                                                                style={ Object.assign({}, styles.letter__strokeBackward, {
+                                                                    animationDelay: `${1000 * rowIndex * columnIndex + 500}ms`,
+                                                                }) }/>
                                                 }
                                             })}
                                         </div>)}

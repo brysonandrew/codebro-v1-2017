@@ -1,19 +1,10 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IStoreState } from '../../../redux/main_reducer';
-import { addComponentCSS } from '../../../utils/css_styler';
 import { IParticle } from "../../../data/models";
 import { Particle } from "./particle";
 import {changeViewportDimensions} from "../../../Home/HomeActionCreators";
-
-addComponentCSS({
-    //language=CSS
-    default: `
-    .empty {
-    }
-    `
-});
-
+import {colors} from "../../../data/themeOptions";
 
 interface IProperties {
     activePageIndex?: number
@@ -93,7 +84,8 @@ export class DOMBackground extends React.Component<IProps, IState> {
                             position: "absolute",
                             fontSize: particle.size,
                             background: "transparent",
-                            color: `hsla(${5}, 80%, 60%, ${particle.opacity})`,
+                            color: colors.hi,
+                            opacity: particle.opacity,
                             borderStyle: "none",
                             transform: `translate(${particle.x}px, ${particle.y}px)`
                     }}>

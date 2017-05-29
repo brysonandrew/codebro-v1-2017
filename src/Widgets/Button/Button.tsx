@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {colors} from "../../data/themeOptions";
 
 interface IProps {
     text: string
@@ -34,11 +35,11 @@ export class Button extends React.Component<IProps, any> {
     render(): JSX.Element {
         let styles = {
             button: {
-                background: "#F44336",
+                background: colors.hi,
                 color: "#eeeeee",
                 border: "1px solid #eeeeee",
                 padding: "10px 20px",
-                width: "100%",
+                width: "auto",
                 height: "100%",
                 opacity: (this.state.isHovering || this.props.isDisabled) ? 0.85 : 1,
                 cursor: this.props.isDisabled ? "not-allowed" : "pointer",

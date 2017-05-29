@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { PostDescriptionFromStore } from "./PostDescription";
 import { pageLinks } from "../../../data/pages";
 import { PostLinkFromStore } from "./PostLink";
 
@@ -11,6 +10,7 @@ interface IProps {
 interface IState {
     linkWidth?: string
     isMounted?: boolean
+    isDestroyed?: boolean
 }
 
 export class PostList extends React.Component<IProps, IState> {
@@ -26,7 +26,8 @@ export class PostList extends React.Component<IProps, IState> {
         super(props, context);
         this.state = {
             linkWidth: "calc(25% - 22px)",
-            isMounted:  false
+            isMounted:  false,
+            isDestroyed: false
         }
     }
 
@@ -51,8 +52,9 @@ export class PostList extends React.Component<IProps, IState> {
                 this.setState({ linkWidth: "calc(25% - 22px)"})
             }
         }
-        if (nextProps.activePageIndex !== this.props.activePageIndex && nextProps.activePageIndex===-1) {
-            this.setState({ isMounted: false });
+        if (nextProps.activePageIndex !== this.props.activePageIndex && nextProps.activePageIndex===-1) { // additional cleanup needed
+            clearTimeout(this.timeoutId);
+            this.setState({ isDestroyed: true }); //necessary due to compoenent living beyond unmount
         }
     }
 
@@ -65,22 +67,22 @@ export class PostList extends React.Component<IProps, IState> {
         const styles = {
             postList: {
                 display: "inline-block",
-                width: "80%",
-                transform: `scale(${this.state.isMounted ? 1 : 0})`,
                 textAlign: "left",
+                width: "80%",
+                MozTransform: `scale(${this.state.isMounted ? 1 : 0})`,
+                transform: `scale(${this.state.isMounted ? 1 : 0})`,
+                MozTransition: "transform 200ms",
                 transition: "transform 200ms"
             },
             postList__link: {
                 display: "inline-block",
                 verticalAlign: "top",
-                border: "1px solid #ffffff",
                 margin: 10,
                 width: this.state.linkWidth
             }
         };
         return (
-            this.state.isMounted
-            && <div style={styles.postList}>
+            !this.state.isDestroyed && <div style={styles.postList}>
                 {pageLinks[this.props.activePageIndex].content.map((post, i) =>
                     <div key={i} style={styles.postList__link}>
                         <PostLinkFromStore post={post}

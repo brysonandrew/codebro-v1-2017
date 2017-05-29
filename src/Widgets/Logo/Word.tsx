@@ -1,10 +1,10 @@
 import * as React from 'react';
-import THREE = require('three');
 import {Letter} from "./Letter";
 
 interface IProps {
     word: string
-    isLogoHovered: boolean
+    isAnimating: boolean
+    isHovered: boolean
 }
 
 interface IState {
@@ -26,8 +26,10 @@ export class Word extends React.Component<IProps, IState> {
                 {word.map((letter, i) =>
                     <Letter
                         key={i}
+                        index={i}
                         letter={letter}
-                        isLogoHovered={this.props.isLogoHovered}
+                        isAnimating={this.props.isAnimating}
+                        isLogoHovered={this.props.isHovered}
                     />)}
             </div>
         );

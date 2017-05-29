@@ -39,3 +39,11 @@ export module SET__VIEW__MODE {
 export interface SET__VIEW__MODE {
     isTabletMode: boolean
 }
+
+export module SET__PAGE_STATUS__LEAVE {
+    export let type = "SET__PAGE_STATUS__LEAVE";
+}
+
+export interface SET__PAGE_STATUS__LEAVE {
+    isLoadingExternalLink: boolean
+}

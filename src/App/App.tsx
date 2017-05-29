@@ -37,10 +37,16 @@ addComponentCSS({
         }
         
         body {
+            position: relative;
+            min-width: 320px;
             background: #311B92;
+            padding-bottom: 20px;
+            border: 1px solid transparent;
         }
 
         button, input, a {
+            color: #fafafa;
+            opacity: 1;
             background: none;
             border: none;
             outline: none;

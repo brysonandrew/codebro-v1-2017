@@ -76,16 +76,24 @@ export class Philosophy extends React.Component<IProps, IState> {
     }
 
     render(): JSX.Element {
-        let { isMounted } = this.state;
+        const { isMounted } = this.state;
+        const { height } = this.props;
 
-        let styles = {
+        const styles = {
             philosophy: {
                 display: "inline-block",
                 width: this.state.postWidth,
+                height: "100vh",
+            },
+            philosophy__inner: {
+                display: "block",
                 borderLeft: "1px solid #fafafa",
                 borderRight: "1px solid #fafafa",
                 padding: 20,
-                transform: `translateY(${isMounted ? 0 : this.props.height}px)`,
+                MozTransform: `translate3d(0, ${isMounted ? 0 : height}px, 0)`,
+                MozTransition: "transform 400ms",
+                MozTransitionDelay: "1000ms",
+                transform: `translate3d(0, ${isMounted ? 0 : height}px, 0)`,
                 transition: "transform 400ms",
                 transitionDelay: "1000ms"
             },
@@ -104,7 +112,7 @@ export class Philosophy extends React.Component<IProps, IState> {
             philosophy__spacedText: {
                 // fontFamily: "PlayfairBold, 'arial', sans-serif",
                 color: "#fafafa",
-                background: "transparent",
+                background: "transparent", //default override
                 fontSize: 12
             }
         };
@@ -113,32 +121,34 @@ export class Philosophy extends React.Component<IProps, IState> {
                   onMouseEnter={() => this.handleMouseEnter()}
                   onMouseLeave={() => this.handleMouseLeave()}
             >
-                <h1 style={styles.philosophy__mainHeading}>
-                    A holistic approach to design and code.
-                </h1>
-                <div style={styles.philosophy__section}>
+                <div style={styles.philosophy__inner}>
+                    <h1 style={styles.philosophy__mainHeading}>
+                        A holistic approach to design and code.
+                    </h1>
+                    <div style={styles.philosophy__section}>
                     <pre style={styles.philosophy__spacedText}>
                       O P E R A T E   H O L I S T I C A L L Y
                     </pre>
-                    <p style={styles.philosophy__description}>
-                        A website is both its function and its design. React.js combines Javascript, HTML and CSS allowing the power of inline styles and better balance between function and design.
-                    </p>
-                </div>
-                <div style={styles.philosophy__section}>
+                        <p style={styles.philosophy__description}>
+                            A website is both its function and its design. React.js combines Javascript, HTML and CSS allowing the power of inline styles and better balance between function and design.
+                        </p>
+                    </div>
+                    <div style={styles.philosophy__section}>
                     <pre style={styles.philosophy__spacedText}>
                       S T R A T E G I Z E   H O L I S T I C A L L Y
                     </pre>
-                    <p style={styles.philosophy__description}>
-                        You have about 15 seconds with your user when they visit your page (if you are lucky). Their experience must efficiently provide them with a consistent and simple message.
-                    </p>
-                </div>
-                <div style={styles.philosophy__section}>
+                        <p style={styles.philosophy__description}>
+                            You have about 15 seconds with your user when they visit your page (if you are lucky). Their experience must efficiently provide them with a consistent and simple message.
+                        </p>
+                    </div>
+                    <div style={styles.philosophy__section}>
                     <pre style={styles.philosophy__spacedText}>
                       G R O W   H O L I S T I C A L L Y
                     </pre>
-                    <p style={styles.philosophy__description}>
-                        Staying dedicated to regular blog entries and video uploads to my Youtube channel isn't only for a community that has helped me so much, but also for me. These activities provide me with a live record of progress and growth.
-                    </p>
+                        <p style={styles.philosophy__description}>
+                            Staying dedicated to regular blog entries and video uploads to my Youtube channel isn't only for a community that has helped me so much, but also for me. These activities provide me with a live record of progress and growth.
+                        </p>
+                    </div>
                 </div>
             </div>
         );

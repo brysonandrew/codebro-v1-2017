@@ -39,7 +39,7 @@ export class CloseCross extends React.Component<IProps, IState> {
 
         let styles = {
             closeCross: {
-                display: "inline-block",
+                display: "block",
                 position: "relative",
                 cursor: "pointer"
             },

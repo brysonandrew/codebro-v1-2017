@@ -4,7 +4,8 @@ import {
     UPDATE__VIEW_INDEX,
     UPDATE__VIEWPORT_DIMENSIONS,
     SET__TRANSITION__SCREEN,
-    SET__VIEW__MODE
+    SET__VIEW__MODE,
+    SET__PAGE_STATUS__LEAVE
 } from "./HomeActions";
 import {createReducer} from "../redux/utils/reducers";
 
@@ -15,6 +16,7 @@ export interface IHomeState {
     height: number
     isScreenUp: boolean
     isTabletMode: boolean
+    isLoadingExternalLink: boolean
 }
 
 let initialState : IHomeState = {
@@ -23,7 +25,8 @@ let initialState : IHomeState = {
     width: 1920,
     height: 1080,
     isScreenUp: false,
-    isTabletMode: false
+    isTabletMode: false,
+    isLoadingExternalLink: false
 };
 
 export let homeReducer = createReducer<IHomeState>(initialState, [
@@ -65,6 +68,14 @@ export let homeReducer = createReducer<IHomeState>(initialState, [
         handler: function (state: IHomeState, action: SET__VIEW__MODE) {
             return Immutable.fromJS(state)
                 .setIn(['isTabletMode'], action.isTabletMode)
+                .toJS();
+        }
+    },
+    {
+        action: SET__PAGE_STATUS__LEAVE,
+        handler: function (state: IHomeState, action: SET__PAGE_STATUS__LEAVE) {
+            return Immutable.fromJS(state)
+                .setIn(['isLoadingExternalLink'], action.isLoadingExternalLink)
                 .toJS();
         }
     }

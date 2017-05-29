@@ -3,9 +3,6 @@ import { connect } from 'react-redux';
 import { IStoreState } from '../redux/main_reducer';
 import {changePageIndex, setTransitionScreen} from '../Home/HomeActionCreators';
 import { pageLinks } from '../data/pages';
-import { browserHistory, Link } from 'react-router';
-import { Word } from '../Widgets/Logo/Word';
-import { ProfileImage } from "./ProfileImage";
 import { Centerpiece } from "./Centerpiece";
 import { MenuLinkFromStore } from "./MenuLink";
 
@@ -13,6 +10,7 @@ interface IProperties {
     activePageIndex?: number
     width?: number
     height?: number
+    isScreenTransitionFinished?: boolean
 }
 
 interface ICallbacks {
@@ -29,8 +27,6 @@ interface IState extends IProperties, ICallbacks {
 
 export class Menu extends React.Component<IProps, IState> {
 
-    setTimeoutId;
-
     public constructor(props?: any, context?: any) {
         super(props, context);
         this.state = {
@@ -39,41 +35,11 @@ export class Menu extends React.Component<IProps, IState> {
         }
     }
 
-    componentDidMount() {
-        this.setTimeoutId = setTimeout(() => {
-            this.setState({isMounted: true})
-        }, 0)
-    }
-
-    componentWillUnmount() {
-        clearTimeout(this.setTimeoutId);
-    }
-
-    handleOpenClick(i, path) {
-        browserHistory.push(path);
-        this.props.onChangeMenuIndex(i);
-    }
-
-    handleCloseClick() {
-        browserHistory.push("");
-        this.props.onChangeMenuIndex(-1);
-    }
-
     render(): JSX.Element {
-        let { isMounted } = this.state;
-        let { activePageIndex, width, height } = this.props;
 
         let styles = {
             menu: {
                 position: "relative",
-            },
-            menu__selectors: {
-                position: "absolute",
-                top: 0,
-                left: 0
-            },
-            menu__selector: {
-                position: "absolute",
             }
         };
 
@@ -86,6 +52,7 @@ export class Menu extends React.Component<IProps, IState> {
                             key={i}
                             index={i}
                             page={page}
+                            isScreenTransitionFinished={this.props.isScreenTransitionFinished}
                         />
                     )}
                 </div>

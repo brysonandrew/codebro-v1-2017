@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { IStoreState } from '../redux/main_reducer';
 import {
     changePageIndex, changeViewIndex, changeViewportDimensions, setViewMode,
-    setTransitionScreen
+    setTransitionScreen, leavePage
 } from './HomeActionCreators';
 import { MenuFromStore } from '../Menu/Menu';
 import { Background } from "../Widgets/Background/Background";
@@ -12,17 +12,19 @@ import { Logo } from "../Widgets/Logo/Logo";
 import { pageLinks } from "../data/pages";
 import { IParams } from "../data/models";
 import { colors } from "../data/themeOptions";
-import {PageTransitionScreen} from "../Widgets/PageTransitionScreen";
-import {SocialMediaMenu} from "../Widgets/SocialMediaMenu";
-import {CloseCross} from "../Widgets/CloseCross/CloseCross";
+import { PageTransitionScreen } from "../Widgets/PageTransitionScreen";
+import { SocialMediaMenu } from "../Widgets/SocialMediaMenu";
+import { Button } from "../Widgets/Button/Button";
+import { ContactMessage } from "../Widgets/ContactMessage";
 
 interface IProperties {
     activePageIndex?: number
     activeViewIndex?: number
     width?: number
     height?: number
-    isScreenUp?: boolean,
+    isScreenUp?: boolean
     isTabletMode?: boolean
+    isLoadingExternalLink?: boolean
 }
 
 interface ICallbacks {
@@ -30,6 +32,7 @@ interface ICallbacks {
     onViewIndexSelect?: (viewIndex: number) => void
     onPageIndexSelect?: (pageIndex: number) => void
     onSetTransitionScreen?: (isScreenUp: boolean) => void
+    onReEnterPage?: (isLeaving: boolean) => void
 }
 
 interface IProps extends IProperties, ICallbacks {
@@ -39,6 +42,7 @@ interface IProps extends IProperties, ICallbacks {
 interface IState extends IProperties, ICallbacks {
     isMounted?: boolean
     isContactOpen?: boolean
+    isScreenTransitionFinished?: boolean
 }
 
 export class Home extends React.Component<IProps, IState> {
@@ -50,7 +54,8 @@ export class Home extends React.Component<IProps, IState> {
         super(props, context);
         this.state = {
             isMounted: false,
-            isContactOpen: false
+            isContactOpen: false,
+            isScreenTransitionFinished: true
         };
     }
 
@@ -75,7 +80,7 @@ export class Home extends React.Component<IProps, IState> {
         window.addEventListener("load"
             , () => onResizeViewport(window.innerWidth, window.innerHeight, window.innerWidth < this.viewBreakPoint));
         this.setTimeoutId = setTimeout(() => {
-            this.setState({isMounted: true})
+            this.setState({ isMounted: true });
         }, 0)
     }
 
@@ -88,6 +93,11 @@ export class Home extends React.Component<IProps, IState> {
 
         if (nextProps.activePageIndex !== this.props.activePageIndex && nextProps.activePageIndex === -1) {
             this.props.onSetTransitionScreen(false);
+            if (this.props.activePageIndex===1) { //triggers if coming back from showroom
+                this.props.onReEnterPage(false);
+            }
+        } else if (nextProps.activePageIndex !== this.props.activePageIndex && nextProps.activePageIndex > -1) {
+            this.setState({ isScreenTransitionFinished: false });
         }
         if (JSON.stringify(nextProps.params) !== JSON.stringify(params)) {
             if (nextProps.params.activePagePath !== params.activePagePath){
@@ -105,6 +115,14 @@ export class Home extends React.Component<IProps, IState> {
         }
     }
 
+    handleScreenTransitionEnd() {
+        if (this.props.activePageIndex === -1 && !this.state.isScreenTransitionFinished) {
+            this.setState({
+                isScreenTransitionFinished: true
+            })
+        }
+    }
+
     handleContactClick(isContactOpen) {
         this.setState({
             isContactOpen: isContactOpen
@@ -112,52 +130,26 @@ export class Home extends React.Component<IProps, IState> {
     }
 
     public render(): JSX.Element {
-        const { isMounted, isContactOpen } = this.state;
-        const { isScreenUp, activePageIndex, activeViewIndex, params, isTabletMode } = this.props;
+        const { isContactOpen, isScreenTransitionFinished, isMounted } = this.state;
+        const { isScreenUp, activePageIndex, activeViewIndex, params, isTabletMode, height, isLoadingExternalLink } = this.props;
         const isFrontPage = activePageIndex===-1;
+        const isReadyToDisplayFront = isFrontPage && !isScreenUp && isScreenTransitionFinished;
+        const isLogoCentered = isLoadingExternalLink;
 
         let styles = {
             home: {
                 position: "relative",
                 width: "100%",
-                height: "100vh",
+                height: "100vh"
             },
             home__frontPage: {
                 position: "absolute",
                 width: "100%",
                 height: "100%",
-                textAlign: "center",
-                zIndex: 2
-            },
-            home__message: {
-                position: "relative",
-                display: "inline-block",
-                width: isContactOpen ? "64%" : "20%",
-                margin: 20,
-                padding: 20,
-                borderRadius: 4,
-                color: "#fafafa",
-                fontSize: 16,
-                background: colors.hi,
-                border: `${colors.hi} 1px solid`,
-                zIndex: 10
+                textAlign: "center"
             },
             home__contactButton: {
-                position: "relative",
-                margin: 10,
-                padding: "4px 10px",
-                borderRadius: 4,
-                color: "#fafafa",
-                fontSize: 16,
-                background: colors.hi,
-                border: `${colors.hi} 1px solid`,
-                cursor: "pointer"
-            },
-            home__contactCloseCross: {
-                position: "absolute",
-                top: 0,
-                right: -10,
-                cursor: "pointer"
+                margin: 10
             },
             home__content: {
                 position: "absolute",
@@ -168,13 +160,16 @@ export class Home extends React.Component<IProps, IState> {
             },
             home__logo: {
                 position: "absolute",
-                top: "4.5vh",
-                left: "2vw",
+                top: isLogoCentered ? "50%" : "4.5vh",
+                left: isLogoCentered ? "50%" : "2vw",
                 width: "auto",
+                transform: isLogoCentered ? `translate(-50%, -50%)` : null,
                 zIndex: 8
             },
             home__background: {
                 position: "fixed",
+                left: 0,
+                top: 0,
                 background: "transparent",
                 textAlign: "left"
             },
@@ -182,7 +177,10 @@ export class Home extends React.Component<IProps, IState> {
                 position: "absolute",
                 top: "50%",
                 left: "50%",
-                transform: "translate(-50%, -50%)"
+                transform: `translate3d(-50%, -50%, 0)`,
+                transition: "transform 400ms",
+                transitionDelay: `${200}ms`,
+                zIndex: isReadyToDisplayFront ? 10 : 2
             },
             home__socialMedia: {
                 position: "absolute",
@@ -196,6 +194,14 @@ export class Home extends React.Component<IProps, IState> {
                 position: "absolute",
                 top: "2vh",
                 right: "4vw",
+            },
+            home__contact: {
+                MozTransform: isMounted
+                                ?  "scale(1)"
+                                :  "scale(0)",
+                transform: isMounted
+                                ?  "scale(1)"
+                                :  "scale(0)",
             }
         };
         const screenColors = isScreenUp
@@ -208,6 +214,7 @@ export class Home extends React.Component<IProps, IState> {
                         activePageIndex={activePageIndex}
                         activeViewIndex={activeViewIndex}
                         params={params}
+                        isAnimating={isLoadingExternalLink}
                     />
                 </div>
                 {isFrontPage
@@ -216,27 +223,22 @@ export class Home extends React.Component<IProps, IState> {
                     </div>}
                 {isFrontPage
                     ?   <div style={styles.home__frontPage}>
-                            {!isTabletMode || isContactOpen
-                                ?   <h1 style={styles.home__message}
-                                        onClick={() => this.handleContactClick(false)}>
-                                        {isContactOpen
-                                            ?   <div style={styles.home__contactCloseCross}>
-                                                    <CloseCross
-                                                        size={20}
-                                                        onClick={() => this.handleContactClick(false)}
-                                                    />
-                                                </div>
-                                            :   null}
-                                        {"Hey, Welcome, I'm a web-developer make yourself and home and if you have any questions write to me at "}
-                                        <span>{"andrew@codebro.io"}</span>
-                                    </h1>
-                                :   <button
-                                        style={styles.home__contactButton}
-                                        onClick={() => this.handleContactClick(true)}>
-                                        contact
-                                    </button>}
+                            <div style={styles.home__contact}>
+                                {(!isTabletMode || isContactOpen)
+                                    ?   <ContactMessage
+                                        isContactOpen={isContactOpen}
+                                        isReady={isReadyToDisplayFront}
+                                        onClick={this.handleContactClick.bind(this)}
+                                    />
+                                    :   <div style={styles.home__contactButton}>
+                                        <Button text="contact" onClick={() => this.handleContactClick(true)}/>
+                                    </div>
+                                }
+                            </div>
                             <div style={styles.home__menu}>
-                                <MenuFromStore/>
+                                <MenuFromStore
+                                    isScreenTransitionFinished={true}
+                                />
                             </div>
                         </div>
                     :   <div style={styles.home__content}>
@@ -248,6 +250,7 @@ export class Home extends React.Component<IProps, IState> {
                         index={i}
                         colorKey={key}
                         isScreenUp={isScreenUp}
+                        onTransitionEnd={this.handleScreenTransitionEnd.bind(this)}
                     />)}
                 <div style={styles.home__background}>
                     <Background/>
@@ -266,7 +269,8 @@ function mapStateToProps(state: IStoreState, ownProps: IProps): IProperties {
         activePageIndex: state.homeStore.activePageIndex,
         activeViewIndex: state.homeStore.activeViewIndex,
         isScreenUp: state.homeStore.isScreenUp,
-        isTabletMode: state.homeStore.isTabletMode
+        isTabletMode: state.homeStore.isTabletMode,
+        isLoadingExternalLink: state.homeStore.isLoadingExternalLink
     };
 }
 
@@ -284,6 +288,9 @@ function mapDispatchToProps(dispatch, ownProps: IProps): ICallbacks {
         },
         onSetTransitionScreen: (isScreenUp) => {
             dispatch(setTransitionScreen(isScreenUp));
+        },
+        onReEnterPage: (isLeaving) => {
+            dispatch(leavePage(isLeaving));
         }
     }
 }

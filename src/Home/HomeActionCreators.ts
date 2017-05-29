@@ -3,7 +3,8 @@ import {
     UPDATE__VIEW_INDEX,
     UPDATE__VIEWPORT_DIMENSIONS,
     SET__TRANSITION__SCREEN,
-    SET__VIEW__MODE
+    SET__VIEW__MODE,
+    SET__PAGE_STATUS__LEAVE
 } from "./HomeActions";
 import { createAction } from "../redux/utils/actions";
 
@@ -53,6 +54,16 @@ export function setViewMode(isTabletMode) {
         }));
     }
 }
+
+export function leavePage(isLeaving) {
+    return dispatch => {
+        // We dispatch the init action before fetching the data
+        dispatch(createAction<SET__PAGE_STATUS__LEAVE>(SET__PAGE_STATUS__LEAVE.type, {
+            isLoadingExternalLink: isLeaving
+        }));
+    }
+}
+
 
 
 

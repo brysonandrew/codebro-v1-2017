@@ -4,7 +4,7 @@ import * as React from 'react';
 import * as ReactDOMServer from 'react-dom/server';
 import { Router, RouterContext, match } from 'react-router';
 import { getAllComponentsCSS } from './utils/css_styler';
-import { store } from "./redux/stores/store";
+import { store } from "./redux/store";
 import { Provider } from 'react-redux';
 import routes from './routes';
 

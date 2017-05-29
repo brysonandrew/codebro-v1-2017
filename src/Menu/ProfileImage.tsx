@@ -59,12 +59,20 @@ export class ProfileImage extends React.Component<IProps, IState> {
                 height: photoSize,
                 width: photoSize,
                 borderRadius: "50%",
+                MozTransform: isHovered
+                                ? "scale(1.025)"
+                                : isMounted
+                                    ? "scale(1)"
+                                    : "scale(0)",
                 transform: isHovered
                             ? "scale(1.025)"
                             : isMounted
                                 ? "scale(1)"
                                 : "scale(0)",
                 cursor: "pointer",
+                MozTransition: isMounted
+                                ? "transform 200ms"
+                                : "transform 400ms",
                 transition: isMounted
                                 ? "transform 200ms"
                                 : "transform 400ms",
