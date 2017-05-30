@@ -76,6 +76,7 @@ export class ProfileImage extends React.Component<IProps, IState> {
                 transition: isMounted
                                 ? "transform 200ms"
                                 : "transform 400ms",
+                transitionDelay: `${1000}ms`,
                 background: "url(/images/personal/profSquare200.jpg)",
                 backgroundSize: "cover",
                 backgroundRepeat: "no-repeat"
