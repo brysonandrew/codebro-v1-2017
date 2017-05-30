@@ -13,9 +13,8 @@ const linkStyle = {
     fontSize: 22
 };
 
-function handleExternalLinkClick(index) {
+function handleExternalLinkClick() {
     store.dispatch(leavePage(true));
-    store.dispatch(changePageIndex(index));
 }
 
 ///CONSTRUCTORS
@@ -28,15 +27,15 @@ function InternalPageLink(name, content, component) {
                            to={nameToPath(name)}>{name}</Link>;
 }
 
-function ExternalPageLink(name, link, index) {
+function ExternalPageLink(name, link) {
     this.path = nameToPath(name); // unused but required so it doesn't return undefined when changing home params
     this.linkComponent = <a style={linkStyle}
-                            onClick={() => handleExternalLinkClick(index)}
+                            onClick={() => handleExternalLinkClick()}
                             href={link}>{name}</a>
 }
 ///EXPORTS
 export const pageLinks: IPageLink[] = [
     new InternalPageLink("Philosophy", [], <PhilosophyFromStore/>),
-    new ExternalPageLink("Work", "http://showroom.codebro.io", 1),
+    new ExternalPageLink("Work", "http://showroom.codebro.io"),
     new InternalPageLink("Blog", blogPosts, <BlogFromStore/>),
 ];

@@ -89,28 +89,28 @@ export class Home extends React.Component<IProps, IState> {
     }
 
     componentWillReceiveProps(nextProps) {
-        const { onPageIndexSelect, onViewIndexSelect, params } = this.props;
+        const { activePageIndex, onPageIndexSelect, onViewIndexSelect, onReEnterPage, params, isLoadingExternalLink } = this.props;
 
-        if (nextProps.activePageIndex !== this.props.activePageIndex && nextProps.activePageIndex === -1) {
+        if (nextProps.activePageIndex !== activePageIndex && nextProps.activePageIndex === -1) {
             this.props.onSetTransitionScreen(false);
-            if (this.props.activePageIndex===1) { //triggers if coming back from showroom
-                this.props.onReEnterPage(false);
+            if (isLoadingExternalLink && nextProps.activePageIndex === -1) {
+                onReEnterPage(false);
             }
-        } else if (nextProps.activePageIndex !== this.props.activePageIndex && nextProps.activePageIndex > -1) {
+        } else if (nextProps.activePageIndex !== activePageIndex && nextProps.activePageIndex > -1) {
             this.setState({ isScreenTransitionFinished: false });
         }
         if (JSON.stringify(nextProps.params) !== JSON.stringify(params)) {
             if (nextProps.params.activePagePath !== params.activePagePath){
-                let activePageIndex = Immutable.List(pageLinks)
+                const nextActivePageIndex = Immutable.List(pageLinks)
                                                .findIndex(item =>
                                                     item.path === nextProps.params.activePagePath);
-                onPageIndexSelect(activePageIndex);
+                onPageIndexSelect(nextActivePageIndex);
             }
             if (nextProps.params.activeViewPath !== params.activeViewPath){
                 /////SET VIEW
-                let activeViewIndex = Immutable.List(pageLinks[nextProps.activePageIndex].viewPaths)
+                const nextActiveViewIndex = Immutable.List(pageLinks[nextProps.activePageIndex].viewPaths)
                                                .findIndex(item => item === nextProps.params.activeViewPath);
-                onViewIndexSelect(activeViewIndex);
+                onViewIndexSelect(nextActiveViewIndex);
             }
         }
     }
@@ -226,10 +226,10 @@ export class Home extends React.Component<IProps, IState> {
                             <div style={styles.home__contact}>
                                 {(!isTabletMode || isContactOpen)
                                     ?   <ContactMessage
-                                        isContactOpen={isContactOpen}
-                                        isReady={isReadyToDisplayFront}
-                                        onClick={this.handleContactClick.bind(this)}
-                                    />
+                                            isContactOpen={isContactOpen}
+                                            isReady={isReadyToDisplayFront}
+                                            onClick={this.handleContactClick.bind(this)}
+                                        />
                                     :   <div style={styles.home__contactButton}>
                                         <Button text="contact" onClick={() => this.handleContactClick(true)}/>
                                     </div>
