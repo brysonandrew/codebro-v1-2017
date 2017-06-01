@@ -94,8 +94,7 @@ export class Philosophy extends React.Component<IProps, IState> {
                 MozTransition: "transform 400ms",
                 MozTransitionDelay: "1000ms",
                 transform: `translate3d(0, ${isMounted ? 0 : height}px, 0)`,
-                transition: "transform 400ms",
-                transitionDelay: "1000ms"
+                transition: "transform 400ms"
             },
             philosophy__section: {
                 marginTop: 60

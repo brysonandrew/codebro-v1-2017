@@ -8,7 +8,6 @@ import { pageLinks } from "../data/pages";
 interface IProperties {
     width?: number
     height?: number
-    isScreenTransitionFinished?: boolean
 }
 
 interface ICallbacks {
@@ -62,7 +61,7 @@ export class MenuLink extends React.Component<IProps, IState> {
 
     render(): JSX.Element {
         const { isMounted } = this.state;
-        const { index, page, width, height, isScreenTransitionFinished } = this.props;
+        const { index, page, width, height } = this.props;
         const radiansFactor = ((Math.PI * 2) / pageLinks.length);
         const startingIndex = 0;
 
@@ -73,10 +72,10 @@ export class MenuLink extends React.Component<IProps, IState> {
                 top: "50%"
             },
             menuLink__text: {
-                MozTransform: `scale(${isMounted || !isScreenTransitionFinished ? 1 : 0})`,
+                MozTransform: `scale(${isMounted ? 1 : 0})`,
                 MozTransition: "transform 600ms cubic-bezier(0.175, 0.885, 0.32, 1.275)",
                 MozTransitionDelay: `${400 * index + 400}ms`,
-                transform: `scale(${isMounted || !isScreenTransitionFinished ? 1 : 0})`,
+                transform: `scale(${isMounted ? 1 : 0})`,
                 transition: "transform 600ms cubic-bezier(0.175, 0.885, 0.32, 1.275)",
                 transitionDelay: `${400 * index + 400}ms`
             }

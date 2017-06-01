@@ -5,42 +5,10 @@ import {colors} from "../data/themeOptions";
 addComponentCSS({
     //language=CSS
     default: `
-        @font-face {
-            font-family: PalanquinDark;
-            /*noinspection CssUnknownTarget*/src: url(/fonts/PalanquinDark/PalanquinDark-Regular.ttf);
-        }
-        @font-face {
-            font-family: PalanquinDark_IE;
-            /*noinspection CssUnknownTarget*/src: url(/fonts/PalanquinDark/PalanquinDark-Regular.eot);
-        }
-        @font-face {
-            font-family: CarroisGothic;
-            /*noinspection CssUnknownTarget*/src: url(/fonts/CarroisGothic/CarroisGothicSC-Regular.ttf);
-        }
-        @font-face {
-            font-family: CarroisGothic_IE;
-            /*noinspection CssUnknownTarget*/src: url(/fonts/CarroisGothic/CarroisGothicSC-Regular.eot);
-        }
-        @font-face {
-            font-family: PlayfairRegular;
-            /*noinspection CssUnknownTarget*/src: url(/fonts/PlayfairDisplay/PlayfairDisplaySC-Black.ttf);
-        }
-        @font-face {
-            font-family: PlayfairBold;
-            /*noinspection CssUnknownTarget*/src: url(/fonts/PlayfairDisplay/PlayfairDisplaySC-Bold.ttf);
-        }
-        @font-face {
-            font-family: PlayRegular;
-            /*noinspection CssUnknownTarget*/src: url(/fonts/Play/Play-Regular.ttf);
-        }
-        @font-face {
-            font-family: PlayBold;
-            /*noinspection CssUnknownTarget*/src: url(/fonts/Play/Play-Bold.ttf);
-        }
         * {
             margin: 0; 
             padding: 0;
-            font-family: PalanquinDark, PalanquinDark_IE, 'arial', sans-serif;
+            font-family: 'Palanquin Dark', 'arial', sans-serif;
             -webkit-appearance: none;
         }
         
@@ -67,7 +35,7 @@ addComponentCSS({
         }
         
         h1, h2, h3, h4 {
-            font-family: CarroisGothic, CarroisGothic_IE, 'arial', sans-serif;
+            font-family: 'Carrois Gothic', 'arial', sans-serif;
             color: #fafafa;
         }
         

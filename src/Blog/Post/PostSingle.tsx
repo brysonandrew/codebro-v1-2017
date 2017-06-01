@@ -25,6 +25,7 @@ interface IProps extends IProperties, ICallbacks {
 interface IState extends IProperties, ICallbacks {
     isMounted?: boolean
     isHovering?: boolean
+    isAnimationDelayed?: boolean
     postWidth?: string
 }
 
@@ -42,6 +43,7 @@ export class PostSingle extends React.Component<IProps, IState> {
         this.state = {
             isMounted: false,
             isHovering: false,
+            isAnimationDelayed: false,
             postWidth: "calc(50% - 44px)"
         }
     }

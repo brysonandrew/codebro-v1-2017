@@ -8,8 +8,6 @@ import { Link } from 'react-router';
 interface IProperties {
     activePageIndex?: number
     activeViewIndex?: number
-    width?: number
-    height?: number
 }
 
 interface ICallbacks {
@@ -51,10 +49,10 @@ export class PostLink extends React.Component<IProps, IState> {
     }
 
     render(): JSX.Element {
-        let { isMounted, isHovered } = this.state;
-        let { post, index } = this.props;
+        const { isMounted, isHovered } = this.state;
+        const { post, index } = this.props;
 
-        let styles = {
+        const styles = {
             post: {
                 display: "inline-block",
                 width: "calc(100% - 20px)",
@@ -69,10 +67,10 @@ export class PostLink extends React.Component<IProps, IState> {
                 backgroundSize: "cover",
                 MozTransform: `scale(${isMounted ? 1 : 0})`,
                 MozTransition: "transform 200ms cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-                MozTransitionDelay: `${100 * index + 1000}ms`,
+                MozTransitionDelay: `${100 * index}ms`,
                 transform: `scale(${isMounted ? 1 : 0})`,
                 transition: "transform 200ms cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-                transitionDelay: `${100 * index + 1000}ms`
+                transitionDelay: `${100 * index}ms`
 
             },
             post__name: {
@@ -123,9 +121,7 @@ export class PostLink extends React.Component<IProps, IState> {
 function mapStateToProps(state: IStoreState, ownProps: IProps): IProperties {
     return {
         activePageIndex: state.homeStore.activePageIndex,
-        activeViewIndex: state.homeStore.activeViewIndex,
-        width: state.homeStore.width,
-        height: state.homeStore.height
+        activeViewIndex: state.homeStore.activeViewIndex
     };
 }
 
@@ -137,6 +133,6 @@ function mapDispatchToProps(dispatch, ownProps: IProps): ICallbacks {
     }
 }
 
-export let PostLinkFromStore = connect(
+export const PostLinkFromStore = connect(
     mapStateToProps, mapDispatchToProps
 )(PostLink);

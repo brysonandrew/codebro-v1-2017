@@ -10,6 +10,7 @@ interface IProps {
 interface IState {
     linkWidth?: string
     isMounted?: boolean
+    isAnimationDelayed?: boolean
     isDestroyed?: boolean
 }
 
@@ -27,6 +28,7 @@ export class PostList extends React.Component<IProps, IState> {
         this.state = {
             linkWidth: "calc(25% - 22px)",
             isMounted:  false,
+            isAnimationDelayed: false,
             isDestroyed: false
         }
     }
@@ -52,9 +54,12 @@ export class PostList extends React.Component<IProps, IState> {
                 this.setState({ linkWidth: "calc(25% - 22px)"})
             }
         }
-        if (nextProps.activePageIndex !== this.props.activePageIndex && nextProps.activePageIndex===-1) { // additional cleanup needed
-            clearTimeout(this.timeoutId);
-            this.setState({ isDestroyed: true }); //necessary due to compoenent living beyond unmount
+        if (nextProps.activePageIndex !== this.props.activePageIndex) { // additional cleanup needed
+            const isGoingToFrontPage = nextProps.activePageIndex===-1;
+            if (isGoingToFrontPage) {
+                clearTimeout(this.timeoutId);
+                this.setState({ isDestroyed: true }); //necessary due to component living beyond unmount
+            }
         }
     }
 
@@ -64,13 +69,15 @@ export class PostList extends React.Component<IProps, IState> {
 
 
     render(): JSX.Element {
+        const { isMounted, linkWidth } = this.state;
+
         const styles = {
             postList: {
                 display: "inline-block",
                 textAlign: "left",
                 width: "80%",
-                MozTransform: `scale(${this.state.isMounted ? 1 : 0})`,
-                transform: `scale(${this.state.isMounted ? 1 : 0})`,
+                MozTransform: `scale(${isMounted ? 1 : 0})`,
+                transform: `scale(${isMounted ? 1 : 0})`,
                 MozTransition: "transform 200ms",
                 transition: "transform 200ms"
             },
@@ -78,7 +85,7 @@ export class PostList extends React.Component<IProps, IState> {
                 display: "inline-block",
                 verticalAlign: "top",
                 margin: 10,
-                width: this.state.linkWidth
+                width: linkWidth
             }
         };
         return (

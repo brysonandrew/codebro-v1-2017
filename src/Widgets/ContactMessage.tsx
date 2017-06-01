@@ -4,7 +4,6 @@ import {colors} from "../data/themeOptions";
 
 interface IProps {
     isContactOpen?: boolean
-    isReady?: boolean
     onClick?: (isOpen: boolean) => void
 }
 
@@ -38,7 +37,7 @@ export class ContactMessage extends React.Component<IProps, IState> {
     }
 
     render(): JSX.Element {
-        const { isContactOpen, isReady } = this.props;
+        const { isContactOpen } = this.props;
 
         const styles = {
             contactMessage: {
@@ -55,7 +54,7 @@ export class ContactMessage extends React.Component<IProps, IState> {
                 WebkitBoxShadow: "0 15px 18px rgba(0,0,0,0.34)",
                 MozBoxShadow: "0 15px 18px rgba(0,0,0,0.34)",
                 boxShadow: "0 15px 18px rgba(0,0,0,0.34)",
-                transform: `translateY(${this.state.isMounted && isReady ? 0 : -220}px)`,
+                transform: `translateY(${this.state.isMounted ? 0 : -220}px)`,
                 transition: "transform 200ms",
                 zIndex: 10
             },
@@ -72,13 +71,12 @@ export class ContactMessage extends React.Component<IProps, IState> {
             <h1 style={styles.contactMessage}
                 onClick={() => this.handleClick(false)}>
                 {isContactOpen
-                    ?   <div style={styles.contactMessage__cross}>
+                    &&   <div style={styles.contactMessage__cross}>
                             <CloseCross
                                 size={20}
                                 onClick={() => this.handleClick(false)}
                             />
-                        </div>
-                    :   null}
+                        </div>}
                 {"Hey, Welcome, I'm a web-developer, make yourself and home and if you have any questions write to me at "}
                 <span>{"andrew@codebro.io"}</span>
             </h1>

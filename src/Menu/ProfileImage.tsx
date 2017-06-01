@@ -24,7 +24,7 @@ export class ProfileImage extends React.Component<IProps, IState> {
     componentDidMount() {
         this.setTimeoutId = setTimeout(() => {
             this.setState({isMounted: true})
-        }, 0)
+        }, 400); //reliable transition delay
     }
 
     componentWillUnmount() {
@@ -59,24 +59,11 @@ export class ProfileImage extends React.Component<IProps, IState> {
                 height: photoSize,
                 width: photoSize,
                 borderRadius: "50%",
-                MozTransform: isHovered
-                                ? "scale(1.025)"
-                                : isMounted
-                                    ? "scale(1)"
-                                    : "scale(0)",
-                transform: isHovered
-                            ? "scale(1.025)"
-                            : isMounted
-                                ? "scale(1)"
-                                : "scale(0)",
+                MozTransform: `scale(${isHovered ? 1.025 : isMounted ? 1 : 0})`,
+                transform: `scale(${isHovered ? 1.025 : isMounted ? 1 : 0})`,
                 cursor: "pointer",
-                MozTransition: isMounted
-                                ? "transform 200ms"
-                                : "transform 400ms",
-                transition: isMounted
-                                ? "transform 200ms"
-                                : "transform 400ms",
-                transitionDelay: `${1000}ms`,
+                MozTransition: `transform ${isMounted ? 200 : 400}ms`,
+                transition: `transform ${isMounted ? 200 : 400}ms`,
                 background: "url(/images/personal/profSquare200.jpg)",
                 backgroundSize: "cover",
                 backgroundRepeat: "no-repeat"

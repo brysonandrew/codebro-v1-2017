@@ -10,7 +10,6 @@ interface IProperties {
     activePageIndex?: number
     width?: number
     height?: number
-    isScreenTransitionFinished?: boolean
 }
 
 interface ICallbacks {
@@ -52,7 +51,6 @@ export class Menu extends React.Component<IProps, IState> {
                             key={i}
                             index={i}
                             page={page}
-                            isScreenTransitionFinished={this.props.isScreenTransitionFinished}
                         />
                     )}
                 </div>

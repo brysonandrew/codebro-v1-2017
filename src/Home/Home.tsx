@@ -31,7 +31,7 @@ interface ICallbacks {
     onResizeViewport?: (width: number, height: number, isTabletMode: boolean) => void
     onViewIndexSelect?: (viewIndex: number) => void
     onPageIndexSelect?: (pageIndex: number) => void
-    onSetTransitionScreen?: (isScreenUp: boolean) => void
+    onSetTransitionScreenPosition?: (isScreenUp: boolean) => void
     onReEnterPage?: (isLeaving: boolean) => void
 }
 
@@ -60,7 +60,7 @@ export class Home extends React.Component<IProps, IState> {
     }
 
     componentDidMount() {
-        const { params, onResizeViewport, onPageIndexSelect, onViewIndexSelect, onSetTransitionScreen } = this.props;
+        const { params, onResizeViewport, onPageIndexSelect, onViewIndexSelect, onSetTransitionScreenPosition } = this.props;
         //routing
         /////SET PAGE
         let activePageIndex = Immutable.List(pageLinks)
@@ -72,7 +72,7 @@ export class Home extends React.Component<IProps, IState> {
             let activeViewIndex = Immutable.List(pageLinks[activePageIndex].viewPaths)
                                            .findIndex(item => item === params.activeViewPath);
             onViewIndexSelect(activeViewIndex);
-            onSetTransitionScreen(true);
+            onSetTransitionScreenPosition(true);
         }
         //responsive on window resize
         window.addEventListener("resize"
@@ -89,15 +89,18 @@ export class Home extends React.Component<IProps, IState> {
     }
 
     componentWillReceiveProps(nextProps) {
-        const { activePageIndex, onPageIndexSelect, onViewIndexSelect, onReEnterPage, params, isLoadingExternalLink } = this.props;
+        const { onPageIndexSelect, onViewIndexSelect, onReEnterPage, onSetTransitionScreenPosition, params, isLoadingExternalLink, activePageIndex, } = this.props;
 
-        if (nextProps.activePageIndex !== activePageIndex && nextProps.activePageIndex === -1) {
-            this.props.onSetTransitionScreen(false);
+        if (nextProps.activePageIndex !== activePageIndex) {
+            this.setState({ isScreenTransitionFinished: false });
+
+        if (nextProps.activePageIndex === -1) {
+            onSetTransitionScreenPosition(false);
             if (isLoadingExternalLink && nextProps.activePageIndex === -1) {
                 onReEnterPage(false);
             }
-        } else if (nextProps.activePageIndex !== activePageIndex && nextProps.activePageIndex > -1) {
-            this.setState({ isScreenTransitionFinished: false });
+        }
+
         }
         if (JSON.stringify(nextProps.params) !== JSON.stringify(params)) {
             if (nextProps.params.activePagePath !== params.activePagePath){
@@ -116,11 +119,9 @@ export class Home extends React.Component<IProps, IState> {
     }
 
     handleScreenTransitionEnd() {
-        if (this.props.activePageIndex === -1 && !this.state.isScreenTransitionFinished) {
-            this.setState({
-                isScreenTransitionFinished: true
-            })
-        }
+        this.setState({
+            isScreenTransitionFinished: true
+        })
     }
 
     handleContactClick(isContactOpen) {
@@ -131,12 +132,15 @@ export class Home extends React.Component<IProps, IState> {
 
     public render(): JSX.Element {
         const { isContactOpen, isScreenTransitionFinished, isMounted } = this.state;
-        const { isScreenUp, activePageIndex, activeViewIndex, params, isTabletMode, height, isLoadingExternalLink } = this.props;
+        const { isScreenUp, activePageIndex, activeViewIndex, params, isTabletMode, isLoadingExternalLink } = this.props;
         const isFrontPage = activePageIndex===-1;
-        const isReadyToDisplayFront = isFrontPage && !isScreenUp && isScreenTransitionFinished;
         const isLogoCentered = isLoadingExternalLink;
+        const screenColors = isScreenUp
+            ?   Object.keys(colors)
+            :   Object.keys(colors).reverse();
+        console.log(isScreenTransitionFinished);
 
-        let styles = {
+        const styles = {
             home: {
                 position: "relative",
                 width: "100%",
@@ -163,7 +167,7 @@ export class Home extends React.Component<IProps, IState> {
                 top: isLogoCentered ? "50%" : "4.5vh",
                 left: isLogoCentered ? "50%" : "2vw",
                 width: "auto",
-                transform: isLogoCentered ? `translate(-50%, -50%)` : null,
+                transform: isLogoCentered && `translate(-50%, -50%)`,
                 zIndex: 8
             },
             home__background: {
@@ -180,7 +184,7 @@ export class Home extends React.Component<IProps, IState> {
                 transform: `translate3d(-50%, -50%, 0)`,
                 transition: "transform 400ms",
                 transitionDelay: `${200}ms`,
-                zIndex: isReadyToDisplayFront ? 10 : 2
+                zIndex: isScreenTransitionFinished ? 10 : 2
             },
             home__socialMedia: {
                 position: "absolute",
@@ -196,17 +200,11 @@ export class Home extends React.Component<IProps, IState> {
                 right: "4vw",
             },
             home__contact: {
-                MozTransform: isMounted
-                                ?  "scale(1)"
-                                :  "scale(0)",
-                transform: isMounted
-                                ?  "scale(1)"
-                                :  "scale(0)",
+                MozTransform:`scale(${isMounted ? 1 : 0})`,
+                transform: `scale(${isMounted ? 1 : 0})`
             }
         };
-        const screenColors = isScreenUp
-                                ?   Object.keys(colors)
-                                :   Object.keys(colors).reverse();
+
         return (
             <div style={styles.home}>
                 <div style={styles.home__logo}>
@@ -218,16 +216,17 @@ export class Home extends React.Component<IProps, IState> {
                     />
                 </div>
                 {isFrontPage
+                && isScreenTransitionFinished
                 && <div style={styles.home__socialMedia}>
                         <SocialMediaMenu/>
                     </div>}
                 {isFrontPage
-                    ?   <div style={styles.home__frontPage}>
+                    ?   isScreenTransitionFinished
+                        && <div style={styles.home__frontPage}>
                             <div style={styles.home__contact}>
                                 {(!isTabletMode || isContactOpen)
                                     ?   <ContactMessage
                                             isContactOpen={isContactOpen}
-                                            isReady={isReadyToDisplayFront}
                                             onClick={this.handleContactClick.bind(this)}
                                         />
                                     :   <div style={styles.home__contactButton}>
@@ -236,14 +235,13 @@ export class Home extends React.Component<IProps, IState> {
                                 }
                             </div>
                             <div style={styles.home__menu}>
-                                <MenuFromStore
-                                    isScreenTransitionFinished={true}
-                                />
+                               <MenuFromStore/>
                             </div>
                         </div>
-                    :   <div style={styles.home__content}>
-                            {pageLinks[activePageIndex].component}
-                        </div>}
+                    :   isScreenTransitionFinished
+                        &&  <div style={styles.home__content}>
+                                {pageLinks[activePageIndex].component}
+                            </div>}
                 {screenColors.map((key, i) =>
                     <PageTransitionScreen
                         key={i}
@@ -286,7 +284,7 @@ function mapDispatchToProps(dispatch, ownProps: IProps): ICallbacks {
         onViewIndexSelect: (activeViewIndex) => {
             dispatch(changeViewIndex(activeViewIndex));
         },
-        onSetTransitionScreen: (isScreenUp) => {
+        onSetTransitionScreenPosition: (isScreenUp) => {
             dispatch(setTransitionScreen(isScreenUp));
         },
         onReEnterPage: (isLeaving) => {
@@ -295,6 +293,6 @@ function mapDispatchToProps(dispatch, ownProps: IProps): ICallbacks {
     }
 }
 
-export let HomeFromStore = connect(
+export const HomeFromStore = connect(
     mapStateToProps, mapDispatchToProps
 )(Home);
