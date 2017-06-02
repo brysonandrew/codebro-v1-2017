@@ -136,8 +136,8 @@ export class Home extends React.Component<IProps, IState> {
         const isFrontPage = activePageIndex===-1;
         const isLogoCentered = isLoadingExternalLink;
         const screenColors = isScreenUp
-            ?   Object.keys(colors)
-            :   Object.keys(colors).reverse();
+            ?   Object.keys(colors).slice(0,2)
+            :   Object.keys(colors).slice(0,2).reverse();
 
         const styles = {
             home: {

@@ -60,10 +60,14 @@ export class MenuLink extends React.Component<IProps, IState> {
     }
 
     render(): JSX.Element {
-        const { isMounted } = this.state;
+        const { isMounted, isHovered } = this.state;
         const { index, page, width, height } = this.props;
         const radiansFactor = ((Math.PI * 2) / pageLinks.length);
         const startingIndex = 0;
+        const transformScale = isMounted ? (isHovered ? 1.125 : 1) : 0;
+        const transformDelay = isMounted ? 0 : (400 * index + 400);
+        const translatePositionX = Math.sin(radiansFactor * (index + startingIndex)) * width * 0.25;
+        const translatePositionY = Math.cos(radiansFactor * (index + startingIndex)) * height * 0.25;
 
         const styles = {
             menuLink: {
@@ -72,23 +76,27 @@ export class MenuLink extends React.Component<IProps, IState> {
                 top: "50%"
             },
             menuLink__text: {
-                MozTransform: `scale(${isMounted ? 1 : 0})`,
-                MozTransition: "transform 600ms cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-                MozTransitionDelay: `${400 * index + 400}ms`,
-                transform: `scale(${isMounted ? 1 : 0})`,
+                transform: `scale(${transformScale})`,
+                MozTransform: `scale(${transformScale})`,
                 transition: "transform 600ms cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-                transitionDelay: `${400 * index + 400}ms`
+                MozTransition: "transform 600ms cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+                transitionDelay: `${transformDelay}ms`,
+                MozTransitionDelay: `${transformDelay}ms`
             }
         };
         return (
             <div onClick={() => this.handleClick()}
+                 onMouseEnter={() => this.handleMouseEnter()}
+                 onMouseLeave={() => this.handleMouseLeave()}
                  style={ Object.assign( {}, styles.menuLink,
                             {
-                                transform : `translate( calc(${Math.sin(radiansFactor * (index + startingIndex)) * width * 0.25}px - 50%),
-                                                        calc(${Math.cos(radiansFactor * (index + startingIndex)) * height * 0.25}px - 50%))`
+                                transform : `translate( calc(${translatePositionX}px - 50%),
+                                                        calc(${translatePositionY}px - 50%))`
                             }
                         )}>
-                <h2 style={styles.menuLink__text}>{page.linkComponent}</h2>
+                <h2 style={styles.menuLink__text}>
+                    {page.linkComponent}
+                </h2>
             </div>
         );
     }

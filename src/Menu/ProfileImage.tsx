@@ -1,23 +1,28 @@
 import * as React from 'react';
 import { skills } from "../data/skills";
 import { Bar } from "./Bar";
+import {colors} from "../data/themeOptions";
 
 interface IProps {}
 
 interface IState {
     isHovered?: boolean
     isMounted?: boolean
+    isBackgroundLoaded?: boolean
 }
 
 export class ProfileImage extends React.Component<IProps, IState> {
 
     setTimeoutId;
+    profileImageURL = "/images/personal/profSquare200.jpg";
+
 
     public constructor(props?: any, context?: any) {
         super(props, context);
         this.state = {
             isHovered: false,
-            isMounted: false
+            isMounted: false,
+            isBackgroundLoaded: false
         }
     }
 
@@ -25,6 +30,7 @@ export class ProfileImage extends React.Component<IProps, IState> {
         this.setTimeoutId = setTimeout(() => {
             this.setState({isMounted: true})
         }, 400); //reliable transition delay
+        this.handleLoadBackgroundImage();
     }
 
     componentWillUnmount() {
@@ -43,10 +49,21 @@ export class ProfileImage extends React.Component<IProps, IState> {
         })
     }
 
+    handleLoadBackgroundImage() {
+        const backgroundImage = new Image();
+        backgroundImage.onload = () => {
+            this.setState({
+                isBackgroundLoaded: true
+            });
+        };
+
+        backgroundImage.src = this.profileImageURL;
+    }
+
     radToDeg(n) { return n * 180 / Math.PI}
 
     render(): JSX.Element {
-        const { isHovered, isMounted } = this.state;
+        const { isHovered, isMounted, isBackgroundLoaded } = this.state;
         const photoSize = 140;
         const barLength = 100;
         const radiusFactor = 1.1;
@@ -61,12 +78,12 @@ export class ProfileImage extends React.Component<IProps, IState> {
                 borderRadius: "50%",
                 MozTransform: `scale(${isHovered ? 1.025 : isMounted ? 1 : 0})`,
                 transform: `scale(${isHovered ? 1.025 : isMounted ? 1 : 0})`,
-                cursor: "pointer",
                 MozTransition: `transform ${isMounted ? 200 : 400}ms`,
-                transition: `transform ${isMounted ? 200 : 400}ms`,
-                background: "url(/images/personal/profSquare200.jpg)",
-                backgroundSize: "cover",
-                backgroundRepeat: "no-repeat"
+                background: isBackgroundLoaded ? `url(${this.profileImageURL}) center / cover no-repeat` : colors.wht,
+                filter: isBackgroundLoaded ? "none" : "blur(5px)",
+                transition: `transform ${isMounted ? 200 : 400}ms, filter 1000ms`,
+                cursor: "pointer",
+
             },
 
         };

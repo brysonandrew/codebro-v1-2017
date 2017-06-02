@@ -47,7 +47,7 @@ export class ContactMessage extends React.Component<IProps, IState> {
                 margin: 20,
                 padding: 20,
                 borderRadius: 4,
-                color: "#fafafa",
+                color: colors.wht,
                 fontSize: 16,
                 background: colors.hi,
                 border: `${colors.hi} 1px solid`,
@@ -77,7 +77,7 @@ export class ContactMessage extends React.Component<IProps, IState> {
                                 onClick={() => this.handleClick(false)}
                             />
                         </div>}
-                {"Hey, Welcome, I'm a web-developer, make yourself and home and if you have any questions write to me at "}
+                {"Hey, welcome, I'm a web-developer, make yourself and home and if you have any questions write to me at "}
                 <span>{"andrew@codebro.io"}</span>
             </h1>
         );

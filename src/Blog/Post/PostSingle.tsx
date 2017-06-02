@@ -92,12 +92,13 @@ export class PostSingle extends React.Component<IProps, IState> {
             post: {
                 display: "inline-block",
                 width: this.state.postWidth,
-                height: "100vh",
+                height: "100%",
+                background: colors.std
             },
             post__inner: {
                 display: "block",
-                borderLeft: "1px solid #fafafa",
-                borderRight: "1px solid #fafafa",
+                borderLeft: `1px solid ${colors.wht}`,
+                borderRight: `1px solid ${colors.wht}`,
                 padding: 20,
                 MozTransform: `translate3d(0, ${isMounted ? 0 : height}px, 0)`,
                 transform: `translate3d(0, ${isMounted ? 0 : height}px, 0)`,
@@ -113,7 +114,7 @@ export class PostSingle extends React.Component<IProps, IState> {
                 textAlign: "center"
             },
             post__date: {
-                color: "#fafafa",
+                color: colors.wht,
                 fontSize: 16,
                 display: "inline-block",
                 verticalAlign: "top",
@@ -123,10 +124,10 @@ export class PostSingle extends React.Component<IProps, IState> {
             post__category: {
                 display: "inline-block",
                 verticalAlign: "top",
-                color: "#fafafa",
+                color: colors.wht,
                 background: "transparent",
                 fontSize: 12,
-                borderTop: `1px solid ${colors.std}`,
+                borderTop: `1px solid ${colors.wht}`,
                 marginTop: 10,
                 marginBottom: 10,
                 paddingTop: 10,

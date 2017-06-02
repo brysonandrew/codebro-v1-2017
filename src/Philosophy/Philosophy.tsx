@@ -76,19 +76,20 @@ export class Philosophy extends React.Component<IProps, IState> {
     }
 
     render(): JSX.Element {
-        const { isMounted } = this.state;
+        const { isMounted, postWidth } = this.state;
         const { height } = this.props;
 
         const styles = {
             philosophy: {
                 display: "inline-block",
-                width: this.state.postWidth,
-                height: "100vh",
+                width: postWidth,
+                height: "100%",
+                background: colors.std
             },
             philosophy__inner: {
                 display: "block",
-                borderLeft: "1px solid #fafafa",
-                borderRight: "1px solid #fafafa",
+                borderLeft: `1px solid ${colors.wht}`,
+                borderRight: `1px solid ${colors.wht}`,
                 padding: 20,
                 MozTransform: `translate3d(0, ${isMounted ? 0 : height}px, 0)`,
                 MozTransition: "transform 400ms",
@@ -104,13 +105,11 @@ export class Philosophy extends React.Component<IProps, IState> {
                 fontSize: 28
             },
             philosophy__description: {
-                // fontFamily: "PlayfairBold, 'arial', sans-serif",
                 color: colors.hi,
                 fontSize: 24
             },
             philosophy__spacedText: {
-                // fontFamily: "PlayfairBold, 'arial', sans-serif",
-                color: "#fafafa",
+                color: colors.wht,
                 background: "transparent", //default override
                 fontSize: 12
             }

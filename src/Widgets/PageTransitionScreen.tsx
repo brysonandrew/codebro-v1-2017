@@ -25,10 +25,10 @@ export class PageTransitionScreen extends React.Component<IProps, IState> {
         const styles = {
             pageTransitionScreen: {
                 position: "absolute",
-                bottom: 0,
+                top: "-100vh",
                 left: 0,
                 width: "100%",
-                height: "100vh"
+                height: "200vh"
             }
         };
         return (
