@@ -138,7 +138,6 @@ export class Home extends React.Component<IProps, IState> {
         const screenColors = isScreenUp
             ?   Object.keys(colors)
             :   Object.keys(colors).reverse();
-        console.log(isScreenTransitionFinished);
 
         const styles = {
             home: {
@@ -222,6 +221,7 @@ export class Home extends React.Component<IProps, IState> {
                     </div>}
                 {isFrontPage
                     ?   isScreenTransitionFinished
+                        && !isLoadingExternalLink
                         && <div style={styles.home__frontPage}>
                             <div style={styles.home__contact}>
                                 {(!isTabletMode || isContactOpen)
