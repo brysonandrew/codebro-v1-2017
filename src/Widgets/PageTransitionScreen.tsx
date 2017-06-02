@@ -25,10 +25,10 @@ export class PageTransitionScreen extends React.Component<IProps, IState> {
         const styles = {
             pageTransitionScreen: {
                 position: "absolute",
-                top: "-100vh",
-                left: 0,
-                width: "100%",
-                height: "200vh"
+                top: 0,
+                left: "-100%",
+                width: "200%",
+                height: "100vh"
             }
         };
         return (
@@ -37,10 +37,10 @@ export class PageTransitionScreen extends React.Component<IProps, IState> {
                 style={Object.assign({}, styles.pageTransitionScreen,
                                 {
                                     background: colors[colorKey],
-                                    MozTransform: `scaleY(${isScreenUp ? 1 : 0})`,
+                                    MozTransform: `scaleX(${isScreenUp ? 1 : 0})`,
                                     MozTransition: "transform 600ms",
                                     MozTransitionDelay: `${400 * index}ms`,
-                                    transform: `scaleY(${isScreenUp ? 1 : 0})`,
+                                    transform: `scaleX(${isScreenUp ? 1 : 0})`,
                                     transition: "transform 600ms",
                                     transitionDelay: `${400 * index}ms`,
                                     zIndex: isScreenUp ? (index + 4) : (4 - index)

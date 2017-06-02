@@ -13,7 +13,7 @@ import { pageLinks } from "../data/pages";
 import { IParams } from "../data/models";
 import { colors } from "../data/themeOptions";
 import { PageTransitionScreen } from "../Widgets/PageTransitionScreen";
-import { SocialMediaMenu } from "../Widgets/SocialMediaMenu";
+import { SocialMediaMenu } from "../Widgets/SocialMediaMenu/SocialMediaMenu";
 import { Button } from "../Widgets/Button/Button";
 import { ContactMessage } from "../Widgets/ContactMessage";
 
@@ -93,14 +93,8 @@ export class Home extends React.Component<IProps, IState> {
 
         if (nextProps.activePageIndex !== activePageIndex) {
             this.setState({ isScreenTransitionFinished: false });
-
-        if (nextProps.activePageIndex === -1) {
-            onSetTransitionScreenPosition(false);
-            if (isLoadingExternalLink && nextProps.activePageIndex === -1) {
-                onReEnterPage(false);
-            }
-        }
-
+            onSetTransitionScreenPosition(nextProps.activePageIndex > -1);
+            onReEnterPage(isLoadingExternalLink && nextProps.activePageIndex === -1);
         }
         if (JSON.stringify(nextProps.params) !== JSON.stringify(params)) {
             if (nextProps.params.activePagePath !== params.activePagePath){

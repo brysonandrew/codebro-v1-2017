@@ -76,14 +76,13 @@ export class ProfileImage extends React.Component<IProps, IState> {
                 height: photoSize,
                 width: photoSize,
                 borderRadius: "50%",
-                MozTransform: `scale(${isHovered ? 1.025 : isMounted ? 1 : 0})`,
-                transform: `scale(${isHovered ? 1.025 : isMounted ? 1 : 0})`,
-                MozTransition: `transform ${isMounted ? 200 : 400}ms`,
                 background: isBackgroundLoaded ? `url(${this.profileImageURL}) center / cover no-repeat` : colors.wht,
                 filter: isBackgroundLoaded ? "none" : "blur(5px)",
-                transition: `transform ${isMounted ? 200 : 400}ms, filter 1000ms`,
+                MozTransform: `scale(${isHovered ? 1.025 : isMounted ? 1 : 0})`,
+                transform: `scale(${isHovered ? 1.025 : isMounted ? 1 : 0})`,
+                MozTransition: `transform ${isMounted ? 200 : 400}ms cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 1000ms`,
+                transition: `transform ${isMounted ? 200 : 400}ms cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 1000ms`,
                 cursor: "pointer",
-
             },
 
         };
