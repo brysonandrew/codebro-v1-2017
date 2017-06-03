@@ -14,6 +14,7 @@
   },
   "author": "Andrew Bryson <andrew@codebro.io>",
   "dependencies": {
+    "compression": "^1.6.2",
     "cors": "^2.8.3",
     "css-loader": "^0.23.1",
     "ejs": "^2.4.2",
