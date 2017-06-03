@@ -14,7 +14,7 @@ interface IState {
 export class ProfileImage extends React.Component<IProps, IState> {
 
     setTimeoutId;
-    profileImageURL = "/images/personal/profSquare200.jpg";
+    profileImageURL = "/images/general/profSquare200.jpg";
 
 
     public constructor(props?: any, context?: any) {
