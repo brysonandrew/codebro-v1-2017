@@ -63,15 +63,22 @@ export class Home extends React.Component<IProps, IState> {
         const { params, onResizeViewport, onPageIndexSelect, onViewIndexSelect, onSetTransitionScreenPosition } = this.props;
         //routing
         /////SET PAGE
-        let activePageIndex = Immutable.List(pageLinks)
+        const activePageIndex = Immutable.List(pageLinks)
                                        .findIndex(item =>
                                             item.path === params.activePagePath);
-        onPageIndexSelect(activePageIndex);
+        const isActivePageIndexChanged = activePageIndex !== this.props.activePageIndex;
+        if (isActivePageIndexChanged) {
+            onPageIndexSelect(activePageIndex);
+        }
         if (activePageIndex > -1) {
             /////SET VIEW
-            let activeViewIndex = Immutable.List(pageLinks[activePageIndex].viewPaths)
+            const activeViewIndex = Immutable.List(pageLinks[activePageIndex].viewPaths)
                                            .findIndex(item => item === params.activeViewPath);
-            onViewIndexSelect(activeViewIndex);
+
+            const isActiveViewIndexChanged = activeViewIndex !== this.props.activeViewIndex;
+            if (isActiveViewIndexChanged) {
+                onViewIndexSelect(activeViewIndex);
+            }
             onSetTransitionScreenPosition(true);
         }
         //responsive on window resize
@@ -89,14 +96,17 @@ export class Home extends React.Component<IProps, IState> {
     }
 
     componentWillReceiveProps(nextProps) {
-        const { onPageIndexSelect, onViewIndexSelect, onReEnterPage, onSetTransitionScreenPosition, params, isLoadingExternalLink, activePageIndex, } = this.props;
+        const { onPageIndexSelect, onViewIndexSelect, onReEnterPage, onSetTransitionScreenPosition, params,
+            isLoadingExternalLink, activePageIndex, } = this.props;
 
-        if (nextProps.activePageIndex !== activePageIndex) {
+        const isActivePageIndexChanged = nextProps.activePageIndex !== activePageIndex;
+        if (isActivePageIndexChanged) {
             this.setState({ isScreenTransitionFinished: false });
             onSetTransitionScreenPosition(nextProps.activePageIndex > -1);
             onReEnterPage(isLoadingExternalLink && nextProps.activePageIndex === -1);
         }
-        if (JSON.stringify(nextProps.params) !== JSON.stringify(params)) {
+        const isParamsChanged = JSON.stringify(nextProps.params) !== JSON.stringify(params);
+        if (isParamsChanged) {
             if (nextProps.params.activePagePath !== params.activePagePath){
                 const nextActivePageIndex = Immutable.List(pageLinks)
                                                .findIndex(item =>
@@ -217,21 +227,21 @@ export class Home extends React.Component<IProps, IState> {
                     ?   isScreenTransitionFinished
                         && !isLoadingExternalLink
                         && <div style={styles.home__frontPage}>
-                            <div style={styles.home__contact}>
-                                {(!isTabletMode || isContactOpen)
-                                    ?   <ContactMessage
-                                            isContactOpen={isContactOpen}
-                                            onClick={this.handleContactClick.bind(this)}
-                                        />
-                                    :   <div style={styles.home__contactButton}>
-                                        <Button text="contact" onClick={() => this.handleContactClick(true)}/>
-                                    </div>
-                                }
+                                <div style={styles.home__contact}>
+                                    {(!isTabletMode || isContactOpen)
+                                        ?   <ContactMessage
+                                                isContactOpen={isContactOpen}
+                                                onClick={this.handleContactClick.bind(this)}
+                                            />
+                                        :   <div style={styles.home__contactButton}>
+                                            <Button text="contact" onClick={() => this.handleContactClick(true)}/>
+                                        </div>
+                                    }
+                                </div>
+                                <div style={styles.home__menu}>
+                                   <MenuFromStore/>
+                                </div>
                             </div>
-                            <div style={styles.home__menu}>
-                               <MenuFromStore/>
-                            </div>
-                        </div>
                     :   isScreenTransitionFinished
                         &&  <div style={styles.home__content}>
                                 {pageLinks[activePageIndex].component}
