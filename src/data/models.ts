@@ -1,14 +1,25 @@
+import {RouteComponentProps} from "react-router";
 export interface IDictionary<T> {
     [key: string]: T
 }
 
 ///NAVIGATION
+export interface IPageLinks {
+    [link: string]: IPageLink
+}
+
 export interface IPageLink {
+    name?: string
     linkComponent: JSX.Element
     path?: string
     content?: any[]
     viewPaths?: string[]
     component?: JSX.Element
+}
+
+export interface IPageRoute {
+    path: string
+    component?: React.SFC<RouteComponentProps<any> | undefined>
 }
 
 export interface IPost {

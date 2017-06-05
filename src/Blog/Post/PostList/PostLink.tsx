@@ -1,43 +1,39 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { IStoreState } from '../../../redux/main_reducer';
 import { IPost } from '../../../data/models';
-import { changePageIndex } from '../../../Home/HomeActionCreators';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 
-interface IProperties {
-    activePageIndex?: number
-    activeViewIndex?: number
-}
-
-interface ICallbacks {
-    onChangeMenuIndex?: (menuIndex: number) => void
-}
-
-interface IProps extends IProperties, ICallbacks {
+interface IProps {
     index?: number
     post?: IPost
 }
 
-interface IState extends IProperties, ICallbacks {
+interface IState {
     isMounted?: boolean
     isHovered?: boolean
 }
 
 export class PostLink extends React.Component<IProps, IState> {
 
+    timeoutId;
+
     public constructor(props?: any, context?: any) {
         super(props, context);
         this.state = {
             isMounted: false,
             isHovered: false
-        }
+        };
+        this.mountComponent = this.mountComponent.bind(this);
+        this.handleMouseEnter = this.handleMouseEnter.bind(this);
+        this.handleMouseLeave = this.handleMouseLeave.bind(this);
     }
 
     componentDidMount() {
-        setTimeout(() => {
-            this.setState({isMounted: true})
-        }, 0);
+        this.timeoutId = setTimeout(this.mountComponent, 0);
+    }
+
+    componentWillUnmount() {
+        clearTimeout(this.timeoutId);
     }
 
     handleMouseEnter() {
@@ -46,6 +42,10 @@ export class PostLink extends React.Component<IProps, IState> {
 
     handleMouseLeave() {
         this.setState({isHovered: false})
+    }
+
+    mountComponent() {
+        this.setState({isMounted: true})
     }
 
     render(): JSX.Element {
@@ -99,8 +99,8 @@ export class PostLink extends React.Component<IProps, IState> {
         return (
             <Link style={styles.post}
                   to={`/blog/${post.path}`}
-                  onMouseEnter={() => this.handleMouseEnter()}
-                  onMouseLeave={() => this.handleMouseLeave()}
+                  onMouseEnter={this.handleMouseEnter}
+                  onMouseLeave={this.handleMouseLeave}
             >
                 <div style={styles.post__name}>
                     {post.name}
@@ -115,24 +115,3 @@ export class PostLink extends React.Component<IProps, IState> {
         );
     }
 }
-
-// ------------ redux mappers -------------
-
-function mapStateToProps(state: IStoreState, ownProps: IProps): IProperties {
-    return {
-        activePageIndex: state.homeStore.activePageIndex,
-        activeViewIndex: state.homeStore.activeViewIndex
-    };
-}
-
-function mapDispatchToProps(dispatch, ownProps: IProps): ICallbacks {
-    return {
-        onChangeMenuIndex: (menuIndex) => {
-            dispatch(changePageIndex(menuIndex));
-        }
-    }
-}
-
-export const PostLinkFromStore = connect(
-    mapStateToProps, mapDispatchToProps
-)(PostLink);

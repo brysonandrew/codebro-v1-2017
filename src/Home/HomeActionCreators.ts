@@ -4,7 +4,8 @@ import {
     UPDATE__VIEWPORT_DIMENSIONS,
     SET__TRANSITION__SCREEN,
     SET__VIEW__MODE,
-    SET__PAGE_STATUS__LEAVE
+    SET__PAGE_STATUS__LEAVE,
+    SAVE__LOCATION
 } from "./HomeActions";
 import { createAction } from "../redux/utils/actions";
 
@@ -14,6 +15,16 @@ export function changeViewportDimensions(width, height) {
         dispatch(createAction<UPDATE__VIEWPORT_DIMENSIONS>(UPDATE__VIEWPORT_DIMENSIONS.type, {
             width: width,
             height: height,
+        }));
+    }
+}
+
+
+export function saveLocation(nextLocation) {
+    return dispatch => {
+        // We dispatch the init action before fetching the data
+        dispatch(createAction<SAVE__LOCATION>(SAVE__LOCATION.type, {
+            savedLocation: nextLocation
         }));
     }
 }

@@ -5,11 +5,16 @@ import {
     UPDATE__VIEWPORT_DIMENSIONS,
     SET__TRANSITION__SCREEN,
     SET__VIEW__MODE,
-    SET__PAGE_STATUS__LEAVE
+    SET__PAGE_STATUS__LEAVE,
+    SAVE__LOCATION
 } from "./HomeActions";
-import {createReducer} from "../redux/utils/reducers";
+import { createReducer } from "../redux/utils/reducers";
+import { IParams } from "../data/models";
+import { toParams } from "../data/helpers/toParams";
 
 export interface IHomeState {
+    savedLocation: Location
+    savedParams: IParams
     activePageIndex: number
     activeViewIndex: number
     width: number
@@ -20,6 +25,8 @@ export interface IHomeState {
 }
 
 let initialState : IHomeState = {
+    savedLocation: <Location>{},
+    savedParams: <IParams>{},
     activePageIndex: -1,
     activeViewIndex: -1,
     width: 1920,
@@ -30,6 +37,15 @@ let initialState : IHomeState = {
 };
 
 export let homeReducer = createReducer<IHomeState>(initialState, [
+    {
+        action: SAVE__LOCATION,
+        handler: function (state: IHomeState, action: SAVE__LOCATION) {
+            return Immutable.fromJS(state)
+                .setIn(['savedLocation'], action.savedLocation)
+                .setIn(['savedParams'], toParams(action.savedLocation.pathname))
+                .toJS();
+        }
+    },
     {
         action: UPDATE__PAGE_INDEX,
         handler: function (state: IHomeState, action: UPDATE__PAGE_INDEX) {

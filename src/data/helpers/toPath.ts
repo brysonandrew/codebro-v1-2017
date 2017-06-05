@@ -1,4 +1,4 @@
-export const nameToPath =
+export const toPath =
     (name) =>
         name.replace(/-/g, "")
             .replace(/\s/g, "-")

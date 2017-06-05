@@ -6,8 +6,6 @@ import { changePageIndex } from '../../Home/HomeActionCreators';
 import { colors } from "../../data/themeOptions";
 
 interface IProperties {
-    activePageIndex?: number
-    activeViewIndex?: number
     width?: number
     height?: number
 }
@@ -84,9 +82,8 @@ export class PostSingle extends React.Component<IProps, IState> {
     }
 
     render(): JSX.Element {
-        const { post, activeViewIndex, height } = this.props;
+        const { post, height } = this.props;
         const { isMounted } = this.state;
-        const isFirstView = activeViewIndex===-1;
 
         let styles = {
             post: {
@@ -162,7 +159,7 @@ export class PostSingle extends React.Component<IProps, IState> {
                         {post.category.toUpperCase()}
                     </div>
                     <div style={styles.post__paragraphs}>
-                        {!isFirstView && post.content.map((paragraph, i) =>
+                        {post.content.map((paragraph, i) =>
                             <div key={i}
                                  style={styles.post__paragraph}>
                                 {paragraph}
@@ -179,8 +176,6 @@ export class PostSingle extends React.Component<IProps, IState> {
 
 function mapStateToProps(state: IStoreState, ownProps: IProps): IProperties {
     return {
-        activePageIndex: state.homeStore.activePageIndex,
-        activeViewIndex: state.homeStore.activeViewIndex,
         width: state.homeStore.width,
         height: state.homeStore.height
     };

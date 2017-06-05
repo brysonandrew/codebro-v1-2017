@@ -1,3 +1,4 @@
+import * as Redux from 'redux';
 import thunk from 'redux-thunk';
 import {createStore, applyMiddleware} from 'redux';
 import {reducer, IStoreState} from "./main_reducer";

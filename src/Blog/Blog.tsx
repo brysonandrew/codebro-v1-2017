@@ -2,15 +2,15 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { IStoreState } from '../redux/main_reducer';
 import { PostSingleFromStore } from './Post/PostSingle';
-import { pageLinks } from "../data/pages";
+import { pages } from "../data/pages";
 import { changeViewIndex } from '../Home/HomeActionCreators';
-import {PostList} from "./Post/PostList/PostList";
+import { PostList } from "./Post/PostList/PostList";
+import { IParams } from "../data/models";
 
 interface IProperties {
-    activePageIndex?: number
-    activeViewIndex?: number
     width?: number
     height?: number
+    savedParams?: IParams
 }
 
 interface ICallbacks {
@@ -61,10 +61,8 @@ export class Blog extends React.Component<IProps, IState> {
     }
 
     render(): JSX.Element {
-        const { isMounted } = this.state;
-        const { activePageIndex, activeViewIndex, width } = this.props;
-        const isFirstView = activeViewIndex===-1;
-
+        const { savedParams, width } = this.props;
+        const postContent = pages[savedParams.activePagePath].content;
 
         const styles = {
             blog: {
@@ -77,14 +75,13 @@ export class Blog extends React.Component<IProps, IState> {
             <div style={styles.blog}
                  onMouseEnter={() => this.handleMouseEnter()}
                  onMouseLeave={() => this.handleMouseLeave()}>
-                {isFirstView
+                {!savedParams.activeViewPath
                     ?   <PostList
                             width={width}
-                            activePageIndex={activePageIndex}
+                            savedParams={savedParams}
                         />
                     :   <PostSingleFromStore
-                            viewIndex={activeViewIndex}
-                            post={pageLinks[activePageIndex].content[activeViewIndex]}
+                            post={postContent[savedParams.activeViewPath]}
                             postsRef={this.postsRef}
                         />}
             </div>
@@ -96,10 +93,9 @@ export class Blog extends React.Component<IProps, IState> {
 
 function mapStateToProps(state: IStoreState, ownProps: IProps): IProperties {
     return {
-        activePageIndex: state.homeStore.activePageIndex,
-        activeViewIndex: state.homeStore.activeViewIndex,
         width: state.homeStore.width,
-        height: state.homeStore.height
+        height: state.homeStore.height,
+        savedParams: state.homeStore.savedParams
     };
 }
 

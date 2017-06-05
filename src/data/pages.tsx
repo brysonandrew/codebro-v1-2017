@@ -1,41 +1,52 @@
 import * as React from 'react';
-import { nameToPath } from "./helpers/nameToPath";
-import { Link } from 'react-router';
-import { IPageLink } from "./models";
+import { toPath } from "./helpers/toPath";
+import { Link } from 'react-router-dom';
+import {IPageLink, IPageRoute, IPageLinks, IParams} from "./models";
 import { blogPosts } from "./blog/blogPosts";
 import { PhilosophyFromStore } from "../Philosophy/Philosophy";
 import { BlogFromStore } from "../Blog/Blog";
-import {leavePage, changePageIndex} from "../Home/HomeActionCreators";
+import { leavePage } from "../Home/HomeActionCreators";
 import { store } from '../redux/store';
 
 const linkStyle = {
     color: "#fafafa",
     fontSize: 22
 };
-
 function handleExternalLinkClick() {
     store.dispatch(leavePage(true));
 }
-
 ///CONSTRUCTORS
 function InternalPageLink(name, content, component) {
-    this.path = nameToPath(name);
-    this.viewPaths = content.map(content => nameToPath(content.name));
+    this.name = name;
+    this.path = toPath(name);
+    this.viewPaths = Object.keys(content).map(key => key);
     this.content = content;
     this.component = component;
-    this.linkComponent = <Link style={linkStyle}
-                           to={nameToPath(name)}>{name}</Link>;
+    this.linkComponent = <Link to={`/${toPath(name)}`}
+                               style={linkStyle}>
+                            {name}
+                        </Link>;
 }
-
 function ExternalPageLink(name, link) {
-    this.path = nameToPath(name); // unused but required so it doesn't return undefined when changing home params
+    this.name = name;
+    this.path = toPath(name); // unused but required so it doesn't return undefined when changing home params
     this.linkComponent = <a style={linkStyle}
                             onClick={() => handleExternalLinkClick()}
                             href={link}>{name}</a>
 }
+function PageLinkInfo(name, content, component) {
+    this.name = name;
+    this.content = content;
+    this.component = component;
+}
 ///EXPORTS
+export const pages: IPageLinks = {
+    philosophy: new PageLinkInfo("Philosophy", [], <PhilosophyFromStore/>),
+    blog: new PageLinkInfo("Blog", blogPosts, <BlogFromStore/>)
+};
+
 export const pageLinks: IPageLink[] = [
-    new InternalPageLink("Philosophy", [], <PhilosophyFromStore/>),
+    new InternalPageLink("Philosophy", [], PhilosophyFromStore),
     new ExternalPageLink("Work", "http://showroom.codebro.io"),
-    new InternalPageLink("Blog", blogPosts, <BlogFromStore/>),
+    new InternalPageLink("Blog", blogPosts, BlogFromStore)
 ];

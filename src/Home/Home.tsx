@@ -4,18 +4,19 @@ import { connect } from 'react-redux';
 import { IStoreState } from '../redux/main_reducer';
 import {
     changePageIndex, changeViewIndex, changeViewportDimensions, setViewMode,
-    setTransitionScreen, leavePage
+    setTransitionScreen, leavePage, saveLocation
 } from './HomeActionCreators';
 import { MenuFromStore } from '../Menu/Menu';
 import { Background } from "../Widgets/Background/Background";
 import { Logo } from "../Widgets/Logo/Logo";
-import { pageLinks } from "../data/pages";
+import { pages } from "../data/pages";
 import { IParams } from "../data/models";
 import { colors } from "../data/themeOptions";
 import { PageTransitionScreen } from "../Widgets/PageTransitionScreen";
 import { SocialMediaMenu } from "../Widgets/SocialMediaMenu/SocialMediaMenu";
 import { Button } from "../Widgets/Button/Button";
 import { ContactMessage } from "../Widgets/ContactMessage";
+import { match, Switch, Route } from "react-router-dom";
 
 interface IProperties {
     activePageIndex?: number
@@ -25,6 +26,7 @@ interface IProperties {
     isScreenUp?: boolean
     isTabletMode?: boolean
     isLoadingExternalLink?: boolean
+    savedParams?: IParams
 }
 
 interface ICallbacks {
@@ -33,10 +35,11 @@ interface ICallbacks {
     onPageIndexSelect?: (pageIndex: number) => void
     onSetTransitionScreenPosition?: (isScreenUp: boolean) => void
     onReEnterPage?: (isLeaving: boolean) => void
+    onSaveLocation?: (nextLocation: Location) => void
 }
 
 interface IProps extends IProperties, ICallbacks {
-    params: IParams
+    match: match<IParams>
 }
 
 interface IState extends IProperties, ICallbacks {
@@ -59,29 +62,17 @@ export class Home extends React.Component<IProps, IState> {
         };
     }
 
-    componentDidMount() {
-        const { params, onResizeViewport, onPageIndexSelect, onViewIndexSelect, onSetTransitionScreenPosition } = this.props;
-        //routing
-        /////SET PAGE
-        const activePageIndex = Immutable.List(pageLinks)
-                                       .findIndex(item =>
-                                            item.path === params.activePagePath);
-        const isActivePageIndexChanged = activePageIndex !== this.props.activePageIndex;
-        if (isActivePageIndexChanged) {
-            onPageIndexSelect(activePageIndex);
-        }
-        if (activePageIndex > -1) {
-            /////SET VIEW
-            const activeViewIndex = Immutable.List(pageLinks[activePageIndex].viewPaths)
-                                           .findIndex(item => item === params.activeViewPath);
+    componentWillMount() {
+        this.props.onSaveLocation(this.props["history"].location);
+    }
 
-            const isActiveViewIndexChanged = activeViewIndex !== this.props.activeViewIndex;
-            if (isActiveViewIndexChanged) {
-                onViewIndexSelect(activeViewIndex);
-            }
-            onSetTransitionScreenPosition(true);
-        }
-        //responsive on window resize
+    componentDidMount() {
+        const { onResizeViewport } = this.props;
+
+        this.props["history"].listen( location =>  {
+            this.props.onSaveLocation(location);
+        });
+
         window.addEventListener("resize"
             , () => onResizeViewport(window.innerWidth, window.innerHeight, window.innerWidth < this.viewBreakPoint));
         window.addEventListener("load"
@@ -92,34 +83,13 @@ export class Home extends React.Component<IProps, IState> {
     }
 
     componentWillUnmount() {
+        const { onResizeViewport } = this.props;
+
+        window.removeEventListener("resize"
+            , () => onResizeViewport(window.innerWidth, window.innerHeight, window.innerWidth < this.viewBreakPoint));
+        window.removeEventListener("load"
+            , () => onResizeViewport(window.innerWidth, window.innerHeight, window.innerWidth < this.viewBreakPoint));
         clearTimeout(this.setTimeoutId);
-    }
-
-    componentWillReceiveProps(nextProps) {
-        const { onPageIndexSelect, onViewIndexSelect, onReEnterPage, onSetTransitionScreenPosition, params,
-            isLoadingExternalLink, activePageIndex, } = this.props;
-
-        const isActivePageIndexChanged = nextProps.activePageIndex !== activePageIndex;
-        if (isActivePageIndexChanged) {
-            this.setState({ isScreenTransitionFinished: false });
-            onSetTransitionScreenPosition(nextProps.activePageIndex > -1);
-            onReEnterPage(isLoadingExternalLink && nextProps.activePageIndex === -1);
-        }
-        const isParamsChanged = JSON.stringify(nextProps.params) !== JSON.stringify(params);
-        if (isParamsChanged) {
-            if (nextProps.params.activePagePath !== params.activePagePath){
-                const nextActivePageIndex = Immutable.List(pageLinks)
-                                               .findIndex(item =>
-                                                    item.path === nextProps.params.activePagePath);
-                onPageIndexSelect(nextActivePageIndex);
-            }
-            if (nextProps.params.activeViewPath !== params.activeViewPath){
-                /////SET VIEW
-                const nextActiveViewIndex = Immutable.List(pageLinks[nextProps.activePageIndex].viewPaths)
-                                               .findIndex(item => item === nextProps.params.activeViewPath);
-                onViewIndexSelect(nextActiveViewIndex);
-            }
-        }
     }
 
     handleScreenTransitionEnd() {
@@ -136,18 +106,16 @@ export class Home extends React.Component<IProps, IState> {
 
     public render(): JSX.Element {
         const { isContactOpen, isScreenTransitionFinished, isMounted } = this.state;
-        const { isScreenUp, activePageIndex, activeViewIndex, params, isTabletMode, isLoadingExternalLink } = this.props;
-        const isFrontPage = activePageIndex===-1;
+        const { isScreenUp, match, isTabletMode, isLoadingExternalLink } = this.props;
         const isLogoCentered = isLoadingExternalLink;
         const screenColors = isScreenUp
             ?   Object.keys(colors).slice(0,2)
             :   Object.keys(colors).slice(0,2).reverse();
-
         const styles = {
             home: {
-                position: "relative",
-                width: "100%",
-                height: "100vh"
+                position:'"relative"',
+                width:"100%",
+                height:"100vh"
             },
             home__frontPage: {
                 position: "absolute",
@@ -212,18 +180,16 @@ export class Home extends React.Component<IProps, IState> {
             <div style={styles.home}>
                 <div style={styles.home__logo}>
                     <Logo
-                        activePageIndex={activePageIndex}
-                        activeViewIndex={activeViewIndex}
-                        params={params}
+                        params={match.params}
                         isAnimating={isLoadingExternalLink}
                     />
                 </div>
-                {isFrontPage
+                {!match.params.activePagePath
                 && isScreenTransitionFinished
                 && <div style={styles.home__socialMedia}>
                         <SocialMediaMenu/>
                     </div>}
-                {isFrontPage
+                {!match.params.activePagePath
                     ?   isScreenTransitionFinished
                         && !isLoadingExternalLink
                         && <div style={styles.home__frontPage}>
@@ -244,7 +210,7 @@ export class Home extends React.Component<IProps, IState> {
                             </div>
                     :   isScreenTransitionFinished
                         &&  <div style={styles.home__content}>
-                                {pageLinks[activePageIndex].component}
+                                {pages[match.params.activePagePath].component}
                             </div>}
                 {screenColors.map((key, i) =>
                     <PageTransitionScreen
@@ -272,7 +238,8 @@ function mapStateToProps(state: IStoreState, ownProps: IProps): IProperties {
         activeViewIndex: state.homeStore.activeViewIndex,
         isScreenUp: state.homeStore.isScreenUp,
         isTabletMode: state.homeStore.isTabletMode,
-        isLoadingExternalLink: state.homeStore.isLoadingExternalLink
+        isLoadingExternalLink: state.homeStore.isLoadingExternalLink,
+        savedParams: state.homeStore.savedParams
     };
 }
 
@@ -293,6 +260,9 @@ function mapDispatchToProps(dispatch, ownProps: IProps): ICallbacks {
         },
         onReEnterPage: (isLeaving) => {
             dispatch(leavePage(isLeaving));
+        },
+        onSaveLocation: (nextLocation) => {
+            dispatch(saveLocation(nextLocation))
         }
     }
 }

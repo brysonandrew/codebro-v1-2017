@@ -34,11 +34,16 @@ export class DOMBackground extends React.Component<IProps, IState> {
         super(props, context);
         this.state = {
             showerCount: 0
-        }
+        };
+        this.showerParticles = this.showerParticles.bind(this);
     }
 
     componentDidMount() {
         this.showerParticles();
+    }
+
+    componentWillUnmount() {
+        cancelAnimationFrame(this.animationId);
     }
 
     showerParticles() {
@@ -61,13 +66,7 @@ export class DOMBackground extends React.Component<IProps, IState> {
                 this.particles.splice(i, 1);
             }
         });
-        this.animationId = requestAnimationFrame(this.showerParticles.bind(this));
-        // } else {
-        //     this.setState({
-        //         isShowering: false
-        //     });
-        //     cancelAnimationFrame(this.animationId);
-        // }
+        this.animationId = requestAnimationFrame(this.showerParticles);
     }
 
     render(): JSX.Element {

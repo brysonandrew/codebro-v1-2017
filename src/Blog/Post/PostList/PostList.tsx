@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { pageLinks } from "../../../data/pages";
-import { PostLinkFromStore } from "./PostLink";
+import { pages } from "../../../data/pages";
+import { PostLink } from "./PostLink";
+import { IParams } from "../../../data/models";
 
 interface IProps {
     width?: number
-    activePageIndex?: number
+    savedParams?: IParams
 }
 
 interface IState {
@@ -54,22 +55,16 @@ export class PostList extends React.Component<IProps, IState> {
                 this.setState({ linkWidth: "calc(25% - 22px)"})
             }
         }
-        if (nextProps.activePageIndex !== this.props.activePageIndex) { // additional cleanup needed
-            const isGoingToFrontPage = nextProps.activePageIndex===-1;
-            if (isGoingToFrontPage) {
-                clearTimeout(this.timeoutId);
-                this.setState({ isDestroyed: true }); //necessary due to component living beyond unmount
-            }
-        }
     }
 
     componentWillUnmount() {
         clearTimeout(this.timeoutId);
     }
 
-
     render(): JSX.Element {
         const { isMounted, linkWidth } = this.state;
+        const { savedParams } = this.props;
+        const postContent = pages[savedParams.activePagePath].content;
 
         const styles = {
             postList: {
@@ -88,12 +83,13 @@ export class PostList extends React.Component<IProps, IState> {
                 width: linkWidth
             }
         };
+
         return (
-            !this.state.isDestroyed && <div style={styles.postList}>
-                {pageLinks[this.props.activePageIndex].content.map((post, i) =>
+            <div style={styles.postList}>
+                {Object.keys(postContent).map((path, i) =>
                     <div key={i} style={styles.postList__link}>
-                        <PostLinkFromStore post={post}
-                                           index={i} />
+                        <PostLink  post={postContent[path]}
+                                   index={i} />
                     </div>
                 )}
             </div>

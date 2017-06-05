@@ -16,6 +16,7 @@ interface IState {
 export class SocialMediaLink extends React.Component<IProps, IState> {
 
     setTimeoutId;
+    backgroundImage;
 
     public constructor(props?: any, context?: any) {
         super(props, context);
@@ -23,18 +24,21 @@ export class SocialMediaLink extends React.Component<IProps, IState> {
             isHovered: false,
             isMounted: false,
             isBackgroundLoaded: false
-        }
+        };
+        this.loadBackground = this.loadBackground.bind(this);
     }
 
     componentDidMount() {
         this.setTimeoutId = setTimeout(() => {
-            this.setState({isMounted: true})
+            this.setState({ isMounted: true })
         }, 0);
         this.handleLoadBackgroundImage();
     }
 
     componentWillUnmount() {
         clearTimeout(this.setTimeoutId);
+        this.backgroundImage.removeEventListener("load"
+            , this.loadBackground);
     }
 
     handleMouseEnter() {
@@ -51,14 +55,15 @@ export class SocialMediaLink extends React.Component<IProps, IState> {
 
     handleLoadBackgroundImage() {
         const { link } = this.props;
-        const backgroundImage = new Image();
-        backgroundImage.onload = () => {
-            this.setState({
-                isBackgroundLoaded: true
-            });
-        };
-        backgroundImage.src = link.iconPath;
+        this.backgroundImage = new Image();
+        this.backgroundImage.addEventListener("load"
+            , this.loadBackground);
+        this.backgroundImage.src = link.iconPath;
     }
+
+    loadBackground() {
+        this.setState({ isBackgroundLoaded: true });
+    };
 
     render(): JSX.Element {
         const { link, index } = this.props;

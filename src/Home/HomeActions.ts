@@ -7,6 +7,14 @@ export interface UPDATE__PAGE_INDEX {
     activePageIndex: number
 }
 
+export module SAVE__LOCATION {
+    export let type = "SAVE__LOCATION";
+}
+
+export interface SAVE__LOCATION {
+    savedLocation: Location
+}
+
 export module UPDATE__VIEW_INDEX {
     export let type = "UPDATE__VIEW_INDEX";
 }

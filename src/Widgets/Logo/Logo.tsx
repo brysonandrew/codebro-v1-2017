@@ -1,11 +1,9 @@
 import * as React from 'react';
 import { Word } from './Word';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import {IParams} from "../../data/models";
 
 interface IProps {
-    activePageIndex?: number
-    activeViewIndex?: number
     params: IParams
     isAnimating?: boolean
 }
@@ -36,10 +34,9 @@ export class Logo extends React.Component<IProps, IState> {
     }
 
     render(): JSX.Element {
-        const { activePageIndex, activeViewIndex, params, isAnimating } = this.props;
-
-        const isFrontPage = activePageIndex===-1;
-        const isFrontView = activeViewIndex===-1;
+        const { params, isAnimating } = this.props;
+        const isFrontPage = !params.activePagePath;
+        const isFrontView = !params.activeViewPath;
 
         const styles = {
             logo: {
@@ -60,15 +57,15 @@ export class Logo extends React.Component<IProps, IState> {
         };
         const words = (isFrontPage && isFrontView) ? ["c", "b"] : ["x"];
         const nextPath = isFrontPage
-                            ?   null
+                            ?   "/"
                             :   isFrontView
-                                    ?   ``
+                                    ?   `/`
                                     :   `/${params.activePagePath}`;
 
         return (
             <div style={styles.logo}>
-                <Link style={styles.logo__button}
-                      to={nextPath}
+                <Link to={nextPath}
+                      style={styles.logo__button}
                       onMouseEnter={() => this.handleMouseEnter()}
                       onMouseLeave={() => this.handleMouseLeave()}
                 >

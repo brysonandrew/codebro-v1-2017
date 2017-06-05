@@ -1,6 +1,7 @@
 import * as React from 'react';
-import {addComponentCSS} from '../utils/css_styler';
-import {colors} from "../data/themeOptions";
+import { addComponentCSS } from '../utils/css_styler';
+import { Switch, Route } from "react-router";
+import routes from "../routes/index";
 
 addComponentCSS({
     //language=CSS
@@ -57,11 +58,17 @@ addComponentCSS({
 
 
 export class App extends React.Component<any, any> {
+
     public render(): JSX.Element {
         return (
-            <div>
-                {this.props.children}
-            </div>
+            <Switch>
+                {routes.map((route, i) => (
+                    <Route key={i}
+                           exact
+                           path={route.path}
+                           component={route.component}/>
+                ))}
+            </Switch>
         );
     }
 }

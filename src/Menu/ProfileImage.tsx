@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { skills } from "../data/skills";
 import { Bar } from "./Bar";
-import {colors} from "../data/themeOptions";
+import { colors } from "../data/themeOptions";
 
 interface IProps {}
 
@@ -15,7 +15,7 @@ export class ProfileImage extends React.Component<IProps, IState> {
 
     setTimeoutId;
     profileImageURL = "/images/general/faceImage140.jpg";
-
+    backgroundImage;
 
     public constructor(props?: any, context?: any) {
         super(props, context);
@@ -23,7 +23,8 @@ export class ProfileImage extends React.Component<IProps, IState> {
             isHovered: false,
             isMounted: false,
             isBackgroundLoaded: false
-        }
+        };
+        this.loadBackground = this.loadBackground.bind(this);
     }
 
     componentDidMount() {
@@ -35,6 +36,8 @@ export class ProfileImage extends React.Component<IProps, IState> {
 
     componentWillUnmount() {
         clearTimeout(this.setTimeoutId);
+        this.backgroundImage.removeEventListener("load"
+            , this.loadBackground);
     }
 
     handleMouseEnter() {
@@ -50,17 +53,17 @@ export class ProfileImage extends React.Component<IProps, IState> {
     }
 
     handleLoadBackgroundImage() {
-        const backgroundImage = new Image();
-        backgroundImage.onload = () => {
-            this.setState({
-                isBackgroundLoaded: true
-            });
-        };
-
-        backgroundImage.src = this.profileImageURL;
+        this.backgroundImage = new Image();
+        this.backgroundImage.addEventListener("load"
+            , this.loadBackground);
+        this.backgroundImage.src = this.profileImageURL;
     }
 
     radToDeg(n) { return n * 180 / Math.PI}
+
+    loadBackground() {
+        this.setState({ isBackgroundLoaded: true });
+    };
 
     render(): JSX.Element {
         const { isHovered, isMounted, isBackgroundLoaded } = this.state;

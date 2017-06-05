@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { IPost } from '../models';
-import { nameToPath } from "../helpers/nameToPath";
+import {IPost, IDictionary} from '../models';
+import { toPath } from "../helpers/toPath";
 
 function Post(name, date, category, link, content, image) {
     this.name = name;
     this.date = date;
     this.link = link;
-    this.path = nameToPath(name); // unused but required so it doesn't return undefined when changing home params
+    this.path = toPath(name); // unused but required so it doesn't return undefined when changing home params
     this.category = category;
     this.content = content;
     this.image = image;
@@ -17,7 +17,7 @@ function tag(name, str) {
     return tag({}, str);
 }
 
-export let blogPosts: IPost[] = [
+const blogPostList: IPost[] = [
     new Post(
         "WeGL fallback (for THREE.js)",
         "11 May 2017",
@@ -269,3 +269,8 @@ scene.add(cameraHelper);`),
         "/images/blogPosts/howToPlanAWebpageDesign/javascriptIcon.png"
     )
 ];
+
+export const blogPosts: IDictionary<IPost> = blogPostList.reduce((acc, curr) => {
+    acc[toPath(curr.name)] = curr;
+    return acc;
+}, {});
