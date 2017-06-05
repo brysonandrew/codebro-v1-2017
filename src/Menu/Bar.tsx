@@ -48,7 +48,7 @@ export class Bar extends React.Component<IBarProps, IBarState> {
                 position: "absolute",
                 top: -4
             }
-        };
+        } as any;
 
         return (
             <div style= {Object.assign({}, styles.bar, {transform: `${translateStyle} ${rotateStyle}`}) }>

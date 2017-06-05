@@ -40,7 +40,7 @@ export class Menu extends React.Component<IProps, IState> {
             menu: {
                 position: "relative",
             }
-        };
+        } as any;
 
         return (
             <div style={styles.menu}>
