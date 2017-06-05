@@ -65,8 +65,8 @@ export class ContactMessage extends React.Component<IProps, IState> {
                 height: 22,
                 width: 22,
                 cursor: "pointer"
-            },
-        };
+            }
+        } as any;
         return (
             <h1 style={styles.contactMessage}
                 onClick={() => this.handleClick(false)}>

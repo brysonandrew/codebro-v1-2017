@@ -27,7 +27,7 @@ export class SocialMediaMenu extends React.Component<IProps, IState> {
                 cursor: "hover",
                 transition: "opacity 200ms"
             }
-        };
+        } as any;
         return (
             <div style={ styles.socialMediaMenu }>
                 {socialMediaLinks.map((link, i) =>

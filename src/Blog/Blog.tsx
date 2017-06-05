@@ -70,7 +70,7 @@ export class Blog extends React.Component<IProps, IState> {
                 width: "100%",
                 textAlign: "center"
             }
-        };
+        } as any;
         return (
             <div style={styles.blog}
                  onMouseEnter={() => this.handleMouseEnter()}

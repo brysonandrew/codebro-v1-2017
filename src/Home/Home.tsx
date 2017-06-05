@@ -113,7 +113,7 @@ export class Home extends React.Component<IProps, IState> {
             :   Object.keys(colors).slice(0,2).reverse();
         const styles = {
             home: {
-                position:'"relative"',
+                position: "relative" as "relative",
                 width:"100%",
                 height:"100vh"
             },
@@ -174,7 +174,7 @@ export class Home extends React.Component<IProps, IState> {
                 MozTransform:`scale(${isMounted ? 1 : 0})`,
                 transform: `scale(${isMounted ? 1 : 0})`
             }
-        };
+        } as any;
 
         return (
             <div style={styles.home}>

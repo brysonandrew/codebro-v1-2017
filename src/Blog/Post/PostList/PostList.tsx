@@ -82,7 +82,7 @@ export class PostList extends React.Component<IProps, IState> {
                 margin: 10,
                 width: linkWidth
             }
-        };
+        } as any;
 
         return (
             <div style={styles.postList}>

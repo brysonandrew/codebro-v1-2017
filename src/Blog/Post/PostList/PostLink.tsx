@@ -95,7 +95,7 @@ export class PostLink extends React.Component<IProps, IState> {
                 paddingTop: 10,
                 width: "100%",
             }
-        };
+        } as any;
         return (
             <Link style={styles.post}
                   to={`/blog/${post.path}`}

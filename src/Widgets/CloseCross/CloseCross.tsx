@@ -59,7 +59,7 @@ export class CloseCross extends React.Component<IProps, IState> {
                 background: this.state.isHovering ? "#eeeeee" : "#F44336",
                 transform: "rotate(45deg)"
             }
-        };
+        } as any;
         return (
             <div style={ styles.closeCross }
                  onMouseEnter={() => this.handleMouseEnter()}

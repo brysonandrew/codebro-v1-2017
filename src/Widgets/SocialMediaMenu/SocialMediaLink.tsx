@@ -89,7 +89,7 @@ export class SocialMediaLink extends React.Component<IProps, IState> {
                 filter: isBackgroundLoaded ? "none" : "blur(5px)",
                 cursor: "hover"
             }
-        };
+        } as any;
         return (
             <a  style={ styles.socialMediaLink }
                 href={link.link} target="_blank"

@@ -86,9 +86,8 @@ export class ProfileImage extends React.Component<IProps, IState> {
                 MozTransition: `transform ${isMounted ? 200 : 400}ms cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 1000ms`,
                 transition: `transform ${isMounted ? 200 : 400}ms cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 1000ms`,
                 cursor: "pointer",
-            },
-
-        };
+            }
+        } as any;
 
         const radiansFactor = ((Math.PI * 0.4)/ skills.length);
         const startingIndex = 7;

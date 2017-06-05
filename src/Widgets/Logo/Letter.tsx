@@ -72,7 +72,7 @@ export class Letter extends React.Component<IProps, any> {
                 animation: isAnimating ? "fade 2000ms infinite" : null,
                 transition: "all 400ms"
             }
-        };
+        } as any;
         return (
             <div style={ styles.letter }>
                 {this.columns.map((_, columnIndex) => {
