@@ -7,7 +7,6 @@ import { StaticRouter as Router } from 'react-router';
 import { getAllComponentsCSS } from './utils/css_styler';
 import { store } from "./redux/store";
 import { Provider } from 'react-redux';
-import routes from './routes';
 import { App } from "./App/App";
 const release = (process.env.NODE_ENV === 'production');
 const port = (parseInt(process.env.PORT, 10) || 3000) - (!release as any);
