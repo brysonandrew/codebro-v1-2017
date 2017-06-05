@@ -21,7 +21,7 @@ export class Bar extends React.Component<IBarProps, IBarState> {
     }
 
     render(): JSX.Element {
-        let { bar, index, isBarChartMounted, translateStyle, rotateStyle, barLength } = this.props;
+        let { bar, isBarChartMounted, translateStyle, rotateStyle, barLength } = this.props;
 
         let styles = {
             bar: {
