@@ -1,20 +1,17 @@
 import * as Redux from 'redux';
 import thunk from 'redux-thunk';
-import {createStore, applyMiddleware} from 'redux';
-import {reducer, IStoreState} from "./main_reducer";
-import {isBrowser} from '../utils/isomorphic_utils';
-import {Middleware} from "redux";
+import { createStore, applyMiddleware } from 'redux';
+import { reducer, IStoreState} from "./main_reducer";
+import { isBrowser } from '../utils/isomorphic_utils';
+import { Middleware } from "redux";
 const createLogger = require('redux-logger');
 
 const logger = createLogger();
 
-
-export var store : Redux.Store<IStoreState> = createStore(
+export let store : Redux.Store<IStoreState> = createStore(
     reducer,
     applyMiddleware(thunk, logger)
 );
-
-
 /**
  * Creates the public store using the given preloadedState (optional)
  *
