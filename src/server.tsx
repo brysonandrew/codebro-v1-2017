@@ -3,7 +3,7 @@ import * as express from 'express';
 import * as React from 'react';
 import * as ReactDOMServer from 'react-dom/server';
 const compression = require('compression');
-import { StaticRouter as Router } from 'react-router';
+import { StaticRouter as Router } from 'react-router-dom';
 import { getAllComponentsCSS } from './utils/css_styler';
 import { store } from "./redux/store";
 import { Provider } from 'react-redux';

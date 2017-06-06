@@ -1,40 +1,29 @@
 import * as React from 'react';
-import * as Immutable from 'immutable';
 import { connect } from 'react-redux';
 import { IStoreState } from '../redux/main_reducer';
-import {
-    changePageIndex, changeViewIndex, changeViewportDimensions, setViewMode,
-    setTransitionScreen, leavePage, saveLocation
+import { changeViewportDimensions, setViewMode, saveLocation
 } from './HomeActionCreators';
 import { MenuFromStore } from '../Menu/Menu';
 import { Background } from "../Widgets/Background/Background";
 import { Logo } from "../Widgets/Logo/Logo";
 import { pages } from "../data/pages";
 import { IParams } from "../data/models";
-import { colors } from "../data/themeOptions";
-import { PageTransitionScreen } from "../Widgets/PageTransitionScreen";
 import { SocialMediaMenu } from "../Widgets/SocialMediaMenu/SocialMediaMenu";
-import { Button } from "../Widgets/Button/Button";
-import { ContactMessage } from "../Widgets/ContactMessage";
 import { match, Switch, Route } from "react-router-dom";
+import { Contact } from "../Contact/Contact";
+import { PageTransitionScreens } from "../Widgets/PageTransitionScreens/PageTransitionScreens";
 
 interface IProperties {
-    activePageIndex?: number
-    activeViewIndex?: number
     width?: number
     height?: number
-    isScreenUp?: boolean
     isTabletMode?: boolean
     isLoadingExternalLink?: boolean
+    savedLocation?: Location
     savedParams?: IParams
 }
 
 interface ICallbacks {
     onResizeViewport?: (width: number, height: number, isTabletMode: boolean) => void
-    onViewIndexSelect?: (viewIndex: number) => void
-    onPageIndexSelect?: (pageIndex: number) => void
-    onSetTransitionScreenPosition?: (isScreenUp: boolean) => void
-    onReEnterPage?: (isLeaving: boolean) => void
     onSaveLocation?: (nextLocation: Location) => void
 }
 
@@ -44,7 +33,6 @@ interface IProps extends IProperties, ICallbacks {
 
 interface IState extends IProperties, ICallbacks {
     isMounted?: boolean
-    isContactOpen?: boolean
     isScreenTransitionFinished?: boolean
 }
 
@@ -57,7 +45,6 @@ export class Home extends React.Component<IProps, IState> {
         super(props, context);
         this.state = {
             isMounted: false,
-            isContactOpen: false,
             isScreenTransitionFinished: true
         };
     }
@@ -70,7 +57,9 @@ export class Home extends React.Component<IProps, IState> {
         const { onResizeViewport } = this.props;
 
         this.props["history"].listen( location =>  {
-            this.props.onSaveLocation(location);
+            if (location.pathname !== this.props.savedLocation.pathname) { // all i care about is the pathname
+                this.props.onSaveLocation(location);
+            }
         });
 
         window.addEventListener("resize"
@@ -98,40 +87,23 @@ export class Home extends React.Component<IProps, IState> {
         })
     }
 
-    handleContactClick(isContactOpen) {
-        this.setState({
-            isContactOpen: isContactOpen
-        })
-    }
-
     public render(): JSX.Element {
-        const { isContactOpen, isScreenTransitionFinished, isMounted } = this.state;
-        const { isScreenUp, match, isTabletMode, isLoadingExternalLink } = this.props;
+        const { isScreenTransitionFinished, isMounted } = this.state;
+        const { match, isTabletMode, isLoadingExternalLink } = this.props;
         const isLogoCentered = isLoadingExternalLink;
-        const screenColors = isScreenUp
-            ?   Object.keys(colors).slice(0,2)
-            :   Object.keys(colors).slice(0,2).reverse();
+        const isFirstPage = !(Object.keys(match.params).indexOf("activePagePath") > -1);
+
         const styles = {
             home: {
-                position: "relative" as "relative",
-                width:"100%",
-                height:"100vh"
+                position: "relative",
+                width: "100%",
+                height: "100vh"
             },
             home__frontPage: {
                 position: "absolute",
                 width: "100%",
                 height: "100%",
                 textAlign: "center"
-            },
-            home__contactButton: {
-                margin: 10
-            },
-            home__content: {
-                position: "absolute",
-                width: "100%",
-                height: "100%",
-                textAlign: "center",
-                zIndex: 6
             },
             home__logo: {
                 position: "absolute",
@@ -140,13 +112,6 @@ export class Home extends React.Component<IProps, IState> {
                 width: "auto",
                 transform: isLogoCentered && `translate(-50%, -50%)`,
                 zIndex: 8
-            },
-            home__background: {
-                position: "fixed",
-                left: 0,
-                top: 0,
-                background: "transparent",
-                textAlign: "left"
             },
             home__menu: {
                 position: "absolute",
@@ -170,14 +135,30 @@ export class Home extends React.Component<IProps, IState> {
                 top: "2vh",
                 right: "4vw",
             },
-            home__contact: {
-                MozTransform:`scale(${isMounted ? 1 : 0})`,
-                transform: `scale(${isMounted ? 1 : 0})`
+            home__content: {
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                textAlign: "center",
+                zIndex: 4
+            },
+            home__background: {
+                position: "fixed",
+                left: 0,
+                top: 0,
+                background: "transparent",
+                textAlign: "left"
             }
         } as any;
 
         return (
             <div style={styles.home}>
+                {/*<PageTransitionScreens*/}
+                    {/*isScreenUp={!isFirstPage}*/}
+                    {/*onTransitionEnd={this.handleScreenTransitionEnd.bind(this)}*/}
+                {/*/>*/}
                 <div style={styles.home__logo}>
                     <Logo
                         params={match.params}
@@ -189,20 +170,14 @@ export class Home extends React.Component<IProps, IState> {
                 && <div style={styles.home__socialMedia}>
                         <SocialMediaMenu/>
                     </div>}
-                {!match.params.activePagePath
+                {isFirstPage
                     ?   isScreenTransitionFinished
-                        && !isLoadingExternalLink
-                        && <div style={styles.home__frontPage}>
-                                <div style={styles.home__contact}>
-                                    {(!isTabletMode || isContactOpen)
-                                        ?   <ContactMessage
-                                                isContactOpen={isContactOpen}
-                                                onClick={this.handleContactClick.bind(this)}
-                                            />
-                                        :   <div style={styles.home__contactButton}>
-                                            <Button text="contact" onClick={() => this.handleContactClick(true)}/>
-                                        </div>
-                                    }
+                        &&  <div style={styles.home__frontPage}>
+                                <div>
+                                    <Contact
+                                        isTabletMode={isTabletMode}
+                                        isMounted={isMounted}
+                                    />
                                 </div>
                                 <div style={styles.home__menu}>
                                    <MenuFromStore/>
@@ -212,14 +187,7 @@ export class Home extends React.Component<IProps, IState> {
                         &&  <div style={styles.home__content}>
                                 {pages[match.params.activePagePath].component}
                             </div>}
-                {screenColors.map((key, i) =>
-                    <PageTransitionScreen
-                        key={i}
-                        index={i}
-                        colorKey={key}
-                        isScreenUp={isScreenUp}
-                        onTransitionEnd={this.handleScreenTransitionEnd.bind(this)}
-                    />)}
+
                 <div style={styles.home__background}>
                     <Background/>
                 </div>
@@ -234,9 +202,7 @@ function mapStateToProps(state: IStoreState, ownProps: IProps): IProperties {
     return {
         width: state.homeStore.width,
         height: state.homeStore.height,
-        activePageIndex: state.homeStore.activePageIndex,
-        activeViewIndex: state.homeStore.activeViewIndex,
-        isScreenUp: state.homeStore.isScreenUp,
+        savedLocation: state.homeStore.savedLocation,
         isTabletMode: state.homeStore.isTabletMode,
         isLoadingExternalLink: state.homeStore.isLoadingExternalLink,
         savedParams: state.homeStore.savedParams
@@ -248,18 +214,6 @@ function mapDispatchToProps(dispatch, ownProps: IProps): ICallbacks {
         onResizeViewport: (width, height, isTabletMode) => {
             dispatch(changeViewportDimensions(width, height));
             dispatch(setViewMode(isTabletMode));
-        },
-        onPageIndexSelect: (activePageIndex) => {
-            dispatch(changePageIndex(activePageIndex));
-        },
-        onViewIndexSelect: (activeViewIndex) => {
-            dispatch(changeViewIndex(activeViewIndex));
-        },
-        onSetTransitionScreenPosition: (isScreenUp) => {
-            dispatch(setTransitionScreen(isScreenUp));
-        },
-        onReEnterPage: (isLeaving) => {
-            dispatch(leavePage(isLeaving));
         },
         onSaveLocation: (nextLocation) => {
             dispatch(saveLocation(nextLocation))

@@ -1,6 +1,6 @@
 import * as React from 'react';
-import {CloseCross} from "./CloseCross/CloseCross";
-import {colors} from "../data/themeOptions";
+import { CloseCross } from "../Widgets/CloseCross/CloseCross";
+import { colors } from "../data/themeOptions";
 
 interface IProps {
     isContactOpen?: boolean
@@ -38,7 +38,7 @@ export class ContactMessage extends React.Component<IProps, IState> {
 
     render(): JSX.Element {
         const { isContactOpen } = this.props;
-
+        const message = `Hi, nice to meet you, make yourself and home and if you have any questions write to me at `;
         const styles = {
             contactMessage: {
                 position: "relative",
@@ -77,7 +77,7 @@ export class ContactMessage extends React.Component<IProps, IState> {
                                 onClick={() => this.handleClick(false)}
                             />
                         </div>}
-                {"Hey, welcome, I'm a web-developer, make yourself and home and if you have any questions write to me at "}
+                {message}
                 <span>{"andrew@codebro.io"}</span>
             </h1>
         );

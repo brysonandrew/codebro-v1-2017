@@ -14,7 +14,6 @@ interface IProperties {
 
 interface ICallbacks {
     onChangeMenuIndex?: (menuIndex: number) => void
-    onSetTransitionScreen?: (isScreenUp: number) => void
 }
 
 interface IProps extends IProperties, ICallbacks {}
@@ -74,9 +73,6 @@ function mapDispatchToProps(dispatch, ownProps: IProps): ICallbacks {
     return {
         onChangeMenuIndex: (activePageIndex) => {
             dispatch(changePageIndex(activePageIndex));
-        },
-        onSetTransitionScreen: (isScreenUp) => {
-            dispatch(setTransitionScreen(isScreenUp));
         }
     }
 }

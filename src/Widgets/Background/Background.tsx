@@ -14,7 +14,7 @@ interface IState {
 
 export class Background extends React.Component<IProps, IState> {
 
-    backgrounds = [];
+    backgrounds: IBackground[] = [];
 
     public constructor(props?: any, context?: any) {
         super(props, context);

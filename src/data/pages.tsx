@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { toPath } from "./helpers/toPath";
 import { Link } from 'react-router-dom';
-import {IPageLink, IPageRoute, IPageLinks, IParams} from "./models";
+import {IPageLink, IPageRoute, IPageLinks, IParams, IDictionary} from "./models";
 import { blogPosts } from "./blog/blogPosts";
 import { PhilosophyFromStore } from "../Philosophy/Philosophy";
 import { BlogFromStore } from "../Blog/Blog";
@@ -40,13 +40,13 @@ function PageLinkInfo(name, content, component) {
     this.component = component;
 }
 ///EXPORTS
-export const pages: IPageLinks = {
-    philosophy: new PageLinkInfo("Philosophy", [], <PhilosophyFromStore/>),
-    blog: new PageLinkInfo("Blog", blogPosts, <BlogFromStore/>)
-};
-
 export const pageLinks: IPageLink[] = [
-    new InternalPageLink("Philosophy", [], PhilosophyFromStore),
+    new InternalPageLink("Philosophy", [], <PhilosophyFromStore/>),
     new ExternalPageLink("Work", "http://showroom.codebro.io"),
-    new InternalPageLink("Blog", blogPosts, BlogFromStore)
+    new InternalPageLink("Blog", blogPosts, <BlogFromStore/>)
 ];
+
+export const pages: IDictionary<IPageLink> = pageLinks.reduce((acc, curr) => {
+    acc[toPath(curr.name)] = curr;
+    return acc;
+}, {});

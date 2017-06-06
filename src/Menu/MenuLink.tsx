@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { IStoreState } from '../redux/main_reducer';
-import { setTransitionScreen } from '../Home/HomeActionCreators';
 import { IPageLink } from "../data/models";
 import { pageLinks } from "../data/pages";
 
@@ -12,7 +11,6 @@ interface IProperties {
 
 interface ICallbacks {
     onChangeMenuIndex?: (menuIndex: number) => void
-    onSetTransitionScreen?: (isScreenUp: boolean) => void
 }
 
 interface IProps extends IProperties, ICallbacks {
@@ -55,10 +53,6 @@ export class MenuLink extends React.Component<IProps, IState> {
         this.setState({ isHovered: false });
     }
 
-    handleClick() {
-        this.props.onSetTransitionScreen(true);
-    }
-
     render(): JSX.Element {
         const { isMounted, isHovered } = this.state;
         const { index, page, width, height } = this.props;
@@ -85,8 +79,7 @@ export class MenuLink extends React.Component<IProps, IState> {
             }
         };
         return (
-            <div onClick={() => this.handleClick()}
-                 onMouseEnter={() => this.handleMouseEnter()}
+            <div onMouseEnter={() => this.handleMouseEnter()}
                  onMouseLeave={() => this.handleMouseLeave()}
                  style={ Object.assign( {}, styles.menuLink,
                             {
@@ -114,11 +107,7 @@ function mapStateToProps(state: IStoreState, ownProps: IProps): IProperties {
 }
 
 function mapDispatchToProps(dispatch, ownProps: IProps): ICallbacks {
-    return {
-        onSetTransitionScreen: (isScreenUp) => {
-            dispatch(setTransitionScreen(isScreenUp));
-        }
-    }
+    return {}
 }
 
 export let MenuLinkFromStore = connect(
