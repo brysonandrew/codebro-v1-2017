@@ -10,6 +10,7 @@
             "history",
             "react",
             "react-dom",
+            "react-motion",
             "react-router",
             "react-router-dom",
             "es6-shim",

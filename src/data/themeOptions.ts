@@ -1,6 +1,7 @@
 export const colors = {
     hi: "#D50000",
-    std: "#311B92",
+    blk: "#212121",
     wht: "#fafafa",
-    blk: "#212121"
+    std: "#311B92"
+
 };

@@ -11,7 +11,6 @@ import { IParams } from "../data/models";
 import { SocialMediaMenu } from "../Widgets/SocialMediaMenu/SocialMediaMenu";
 import { match, Switch, Route } from "react-router-dom";
 import { Contact } from "../Contact/Contact";
-import { PageTransitionScreens } from "../Widgets/PageTransitionScreens/PageTransitionScreens";
 
 interface IProperties {
     width?: number
@@ -33,7 +32,6 @@ interface IProps extends IProperties, ICallbacks {
 
 interface IState extends IProperties, ICallbacks {
     isMounted?: boolean
-    isScreenTransitionFinished?: boolean
 }
 
 export class Home extends React.Component<IProps, IState> {
@@ -44,8 +42,7 @@ export class Home extends React.Component<IProps, IState> {
     public constructor(props?: any, context?: any) {
         super(props, context);
         this.state = {
-            isMounted: false,
-            isScreenTransitionFinished: true
+            isMounted: false
         };
     }
 
@@ -81,17 +78,11 @@ export class Home extends React.Component<IProps, IState> {
         clearTimeout(this.setTimeoutId);
     }
 
-    handleScreenTransitionEnd() {
-        this.setState({
-            isScreenTransitionFinished: true
-        })
-    }
-
     public render(): JSX.Element {
-        const { isScreenTransitionFinished, isMounted } = this.state;
-        const { match, isTabletMode, isLoadingExternalLink } = this.props;
+        const { isMounted } = this.state;
+        const { match, isTabletMode, isLoadingExternalLink, height } = this.props;
         const isLogoCentered = isLoadingExternalLink;
-        const isFirstPage = !(Object.keys(match.params).indexOf("activePagePath") > -1);
+        const isFirstPage = !("activePagePath" in match.params);
 
         const styles = {
             home: {
@@ -120,7 +111,7 @@ export class Home extends React.Component<IProps, IState> {
                 transform: `translate3d(-50%, -50%, 0)`,
                 transition: "transform 400ms",
                 transitionDelay: `${200}ms`,
-                zIndex: isScreenTransitionFinished ? 10 : 2
+                zIndex: 2
             },
             home__socialMedia: {
                 position: "absolute",
@@ -142,7 +133,7 @@ export class Home extends React.Component<IProps, IState> {
                 width: "100%",
                 height: "100%",
                 textAlign: "center",
-                zIndex: 4
+                zIndex: 6
             },
             home__background: {
                 position: "fixed",
@@ -155,24 +146,19 @@ export class Home extends React.Component<IProps, IState> {
 
         return (
             <div style={styles.home}>
-                {/*<PageTransitionScreens*/}
-                    {/*isScreenUp={!isFirstPage}*/}
-                    {/*onTransitionEnd={this.handleScreenTransitionEnd.bind(this)}*/}
-                {/*/>*/}
+
                 <div style={styles.home__logo}>
                     <Logo
                         params={match.params}
                         isAnimating={isLoadingExternalLink}
                     />
                 </div>
-                {!match.params.activePagePath
-                && isScreenTransitionFinished
-                && <div style={styles.home__socialMedia}>
+                {isFirstPage
+                &&  <div style={styles.home__socialMedia}>
                         <SocialMediaMenu/>
                     </div>}
                 {isFirstPage
-                    ?   isScreenTransitionFinished
-                        &&  <div style={styles.home__frontPage}>
+                    ?  <div style={styles.home__frontPage}>
                                 <div>
                                     <Contact
                                         isTabletMode={isTabletMode}
@@ -183,11 +169,9 @@ export class Home extends React.Component<IProps, IState> {
                                    <MenuFromStore/>
                                 </div>
                             </div>
-                    :   isScreenTransitionFinished
-                        &&  <div style={styles.home__content}>
+                    :   <div style={styles.home__content}>
                                 {pages[match.params.activePagePath].component}
                             </div>}
-
                 <div style={styles.home__background}>
                     <Background/>
                 </div>
