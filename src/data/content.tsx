@@ -10,13 +10,13 @@ function Project(name) {
 
 export const projectList: IProject[] = [
     new Project(
-        "Excalibur"
+        "Porizi"
     ),
     new Project(
-        "WWIII"
+        "Coworkz"
     ),
     new Project(
-        "Beethoven vs Leo"
+        "Gulumjan Consulting"
     )
 ];
 

@@ -47,12 +47,11 @@ export class BottomNavigationMenu extends React.Component<IProps, IState> {
 
     findActiveIndex() {
         const { savedParams } = this.props;
-        const activePagePath = (savedParams.activePagePath.length > 0)
-                                    ?   savedParams.activePagePath
-                                    :   projectList[0].path;
+        const activePagePath = savedParams.activePagePath;
+        const activeIndex = Immutable.List(projectList)
+                                .findIndex(item => item.path === activePagePath);
 
-        return Immutable.List(projectList)
-                        .findIndex(item => item.path === activePagePath);
+        return (activeIndex > -1) ? activeIndex : 0
     }
 
     render(): JSX.Element {

@@ -51,7 +51,7 @@ export class MenuLeftItem extends React.Component<IProps, IState> {
             menuLeftItem__inner: {
                 display: "table-cell",
                 verticalAlign: "middle",
-                height: 46
+                height: 45
             },
             menuLeftItem__icon: {
                 display: "inline-block",
@@ -62,7 +62,7 @@ export class MenuLeftItem extends React.Component<IProps, IState> {
                 display: "inline-block",
                 verticalAlign: "middle",
                 paddingLeft: 10,
-                height: 46,
+                height: 45,
                 color: colors.gry
             }
         } as any;

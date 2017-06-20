@@ -8,7 +8,7 @@ addComponentCSS({
     default: `
         @keyframes fade {
           0%   { opacity: 1; }
-          50%   { opacity: 0.1; }
+          50%   { opacity: 0.4; }
           100% { opacity: 1; }
         }
     `
@@ -90,14 +90,14 @@ export class Letter extends React.Component<IProps, any> {
                                                         && this.isEqual(stroke.rowIndex, rowIndex)
                                                         && <div key={strokeIndex}
                                                                 style={ Object.assign({}, styles.letter__strokeForward, {
-                                                                    animationDelay: `${1000 * rowIndex * columnIndex}ms`,
+                                                                    animationDelay: `${1000 * rowIndex * columnIndex * Math.random()}ms`,
                                                                 }) }/>
                                                 } else if (this.isEqual(stroke.type, "backward")) {
                                                     return this.isEqual(stroke.columnIndex, columnIndex)
                                                         && this.isEqual(stroke.rowIndex, rowIndex)
                                                         && <div key={strokeIndex}
                                                                 style={ Object.assign({}, styles.letter__strokeBackward, {
-                                                                    animationDelay: `${1000 * rowIndex * columnIndex + 500}ms`,
+                                                                    animationDelay: `${1000 * rowIndex * columnIndex + 500 * Math.random()}ms`,
                                                                 }) }/>
                                                 }
                                             })}

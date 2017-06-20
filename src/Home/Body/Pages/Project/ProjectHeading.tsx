@@ -22,7 +22,7 @@ export class ProjectHeading extends React.Component<IProps, IState> {
 
         const styles = {
             helloHeading: {
-                fontSize: fontSize.XXL(isMobile, isTablet, isLaptop)
+                fontSize: fontSize.L(isMobile, isTablet, isLaptop)
             }
         } as any;
         return (

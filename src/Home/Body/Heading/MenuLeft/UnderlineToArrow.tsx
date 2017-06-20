@@ -27,10 +27,10 @@ export class UnderlineToArrow extends React.Component<IProps, IState> {
                         position: "absolute",
                         top: -1,
                         left: -10,
-                        width: sectionLength * 0.6,
+                        width: 120,
                         height: thickness,
                         background: colors.std,
-                        transform: "rotate(0deg) translate3d(80px, 28px, 0px)",
+                        transform: "rotate(0deg) translate3d(0px, 32px, 0px)",
                         transition: "transform 500ms, width 500ms"
                     }
                 :   {
@@ -40,7 +40,7 @@ export class UnderlineToArrow extends React.Component<IProps, IState> {
                         width: sectionLength,
                         height: thickness,
                         background: colors.std,
-                        transform: `rotate(0deg) translate3d(0px, 40px, 0px)`,
+                        transform: `rotate(0deg) translate3d(0px, 46px, 0px) scaleX(1)`,
                         transition: "transform 500ms, width 500ms"
                 },
             underlineToArrow__headTop:

@@ -35,13 +35,25 @@ export class Heading extends React.Component<IProps, IState> {
         const styles = {
             heading: {
                 position: "relative",
+                textAlign: "right",
                 height: 50,
                 width: "100%",
             },
+            heading__sub: {
+                position: "relative",
+                top: 50,
+            },
+            heading__logo: {
+                position: "absolute",
+                right: "2vw",
+                height: 40,
+                width: 40,
+                padding: 5,
+                transform: "scale(0.8)"
+            },
             heading__main: {
-                textAlign: "right",
-                width: "calc(100% - 20px)",
-                whiteSpace: "no-wrap",
+                position: "absolute",
+                right: "calc(2vw + 50px)",
                 color: colors.std,
                 fontSize: 24,
                 opacity: isMounted ? 1 : 0,
@@ -53,9 +65,14 @@ export class Heading extends React.Component<IProps, IState> {
             <div style={styles.heading}>
                 <MenuLeft/>
                 <h1 style={styles.heading__main}>
-                    code bro
+                    <span>code bro</span>
                 </h1>
-                <HeadingSub/>
+                <div style={styles.heading__logo}>
+                    <Logo/>
+                </div>
+                <div style={styles.heading__sub}>
+                    <HeadingSub/>
+                </div>
             </div>
         );
     }
