@@ -36,7 +36,7 @@ export class Menu extends React.Component<IProps, IState> {
                 position: "fixed",
                 right: 20,
                 top: 28,
-                zIndex: 10
+                zIndex: 0
             }
         } as any;
         return (

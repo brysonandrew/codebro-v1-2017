@@ -1,7 +1,7 @@
 import * as React from 'react';
 // import { IPage } from './models';
 import { toPath } from "./helpers/toPath";
-import {IDictionary, IProject} from "./models";
+import {IDictionary, IProject, ISocialMediaSelector} from "./models";
 
 function Project(name) {
     this.name= name;
@@ -24,3 +24,19 @@ export const projects: IDictionary<IProject> = projectList.reduce((acc, curr) =>
     acc[toPath(curr.name)] = curr;
     return acc;
 }, {});
+
+
+export const headingMenuLeft: ISocialMediaSelector[] = [
+    {
+        name: "medium link",
+        link: "https://medium.com/@codebroio",
+        icon: "/images/social media/medium.png",
+        label: "blog"
+    },
+    {
+        name: "youtube link",
+        link: "https://www.youtube.com/channel/UCF1SvsAZTJL4Bw9qj0hdNLA",
+        icon: "/images/social media/youtube.png",
+        label: "vlog"
+    }
+];

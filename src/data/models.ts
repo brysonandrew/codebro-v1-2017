@@ -25,3 +25,10 @@ export interface IProject {
     name: string
     path: string
 }
+
+export interface ISocialMediaSelector {
+    name: string
+    link: string
+    icon: string
+    label: string
+}

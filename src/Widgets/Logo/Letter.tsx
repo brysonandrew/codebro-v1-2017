@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { findLetter } from "./Letters/letters";
 import { addComponentCSS } from '../../utils/css_styler';
+import {colors} from "../../data/themeOptions";
 
 addComponentCSS({
     //language=CSS
@@ -55,7 +56,7 @@ export class Letter extends React.Component<IProps, any> {
                 width: 6,
                 borderRadius: 4,
                 height: "160%",
-                background: "#eeeeee",
+                background: colors.std,
                 transform: `translate(-50%, -50%) rotate(${isLogoHovered ? "90deg" : "45deg"})`,
                 animation: isAnimating ? "fade 2000ms infinite" : null,
                 transition: "transform 400ms"
@@ -67,10 +68,10 @@ export class Letter extends React.Component<IProps, any> {
                 width: 6,
                 borderRadius: 4,
                 height: "160%",
-                background: "#eeeeee",
+                background: colors.std,
                 transform: `translate(-50%, -50%) rotate(${isLogoHovered ? "90deg" : "-45deg"})`,
                 animation: isAnimating ? "fade 2000ms infinite" : null,
-                transition: "all 400ms"
+                transition: "transform 400ms"
             }
         } as any;
         return (

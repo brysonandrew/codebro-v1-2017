@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as Immutable from 'immutable';
 import * as history from 'history';
 import { connect } from 'react-redux';
 import { IStoreState } from '../../../redux/main_reducer';
@@ -7,7 +8,7 @@ import { IParams, IDictionary } from "../../../data/models";
 import { toggleScrollAnimation, toggleWheel, saveParams } from "../../HomeActionCreators";
 import { toParams} from "../../../data/helpers/toParams";
 import { MotionScroll } from "../../../Widgets/MotionScroll/MotionScroll";
-import { Project } from "./Project/Project";
+import { ProjectFromStore } from "./Project/Project";
 
 interface IProperties {
     height?: number
@@ -97,7 +98,7 @@ export class Pages extends React.Component<IProps, IState> {
         const approachingPageBuffer = 200;
         const pagesScrolledPastOffsets = this.pageOffsetList.filter(offset => (offset - approachingPageBuffer) < window.scrollY);
 
-        const currentIndex = (pagesScrolledPastOffsets.length > 0)
+        const currentIndex = pagesScrolledPastOffsets.length > 0
                                 ?   pagesScrolledPastOffsets.length - 1
                                 :   -1;
 
@@ -108,9 +109,13 @@ export class Pages extends React.Component<IProps, IState> {
         }
     }
 
+    calcWidthMarginFactor(isMobile, isTablet, isLaptop) {
+        return (isMobile ? 0 : isTablet ? 0.1 : isLaptop ? 0.2 : 0.3);
+    }
+
     render(): JSX.Element {
         const { docScroll, isMounted } = this.state;
-        const { onAnimationEnd, savedParams, isAnimating, width, height } = this.props;
+        const { onAnimationEnd, savedParams, isAnimating, width, height, isMobile, isTablet, isLaptop } = this.props;
         const isSelected = "activePagePath" in savedParams;
         const isOffsetsReady = (this.pageOffsets != null);
         const isScrollReady = (isSelected && isOffsetsReady);
@@ -121,27 +126,29 @@ export class Pages extends React.Component<IProps, IState> {
             return acc;
         }, {});
 
-        const widthFactor = 0.75;
-
         const scrollHeight = width * (projectList.length - 1);
+        const widthMarginFactor = this.calcWidthMarginFactor(isMobile, isTablet, isLaptop);
+        const widthMargin = widthMarginFactor * width;
+        const adjustedWidth = width - widthMargin * 2;
+        const adjustedScroll = docScroll - (widthMarginFactor * docScroll * 2);
 
         const styles = {
             pages: {
                 position: "relative",
-                height: height + scrollHeight * widthFactor
+                height: height + scrollHeight
             },
             pages__projects: {
                 position: "fixed",
-                left: 0,
+                left: widthMargin,
                 top: 0,
-                width: projectList.length * width * widthFactor,
+                width: projectList.length * adjustedWidth,
             },
             pages__project: {
                 display: "inline-block",
                 position: "relative",
-                width: width * widthFactor,
+                width: adjustedWidth,
                 height: height,
-                transform: `translate3d(${-docScroll * widthFactor}px, 0px, 0px)`
+                transform: `translate3d(${-adjustedScroll}px, 0px, 0px)`
             }
         } as any;
 
@@ -149,15 +156,15 @@ export class Pages extends React.Component<IProps, IState> {
             <div style={ styles.pages }>
                 <div style={ styles.pages__projects }>
                     {isScrollReady &&   <MotionScroll
-                        docScroll={docScroll}
-                        isAnimating={isAnimating}
-                        scrollTarget={this.pageOffsets[savedParams.activePagePath]}
-                        onRest={onAnimationEnd}
-                    />}
+                                            docScroll={docScroll}
+                                            isAnimating={isAnimating}
+                                            scrollTarget={this.pageOffsets[savedParams.activePagePath]}
+                                            onRest={onAnimationEnd}
+                                        />}
                     {projectList.map((project, i) =>
                         <div key={i}
                              style={ styles.pages__project }>
-                            <Project
+                            <ProjectFromStore
                                 index={i}
                                 project={project}
                             />

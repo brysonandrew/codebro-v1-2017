@@ -4,8 +4,6 @@ import { Link } from 'react-router-dom';
 import {IParams} from "../../data/models";
 
 interface IProps {
-    params: IParams
-    isAnimating?: boolean
 }
 
 interface IState {
@@ -34,55 +32,30 @@ export class Logo extends React.Component<IProps, IState> {
     }
 
     render(): JSX.Element {
-        const { params, isAnimating } = this.props;
-        const isFrontPage = !params.activePagePath;
-        const isFrontView = !params.activeViewPath;
+        const { isHovered } = this.state;
 
         const styles = {
             logo: {
-                textAlign: "center",
-            },
-            logo__button: {
-                display: "inline-block",
-                width: isAnimating ? "100%" : "auto",
+                position: "relative",
+                width: "100%",
+                height: "100%",
                 cursor: "pointer",
-                transition: "opacity 200ms"
-            },
-            logo__loading: {
-                display: "inline-block",
-                color: "#fafafa",
-                background: "transparent",
-                fontSize: 12
             }
-        };
-        const words = (isFrontPage && isFrontView) ? ["c", "b"] : ["x"];
-        const nextPath = isFrontPage
-                            ?   "/"
-                            :   isFrontView
-                                    ?   `/`
-                                    :   `/${params.activePagePath}`;
-
+        } as any;
+        const words = ["c", "b"];
         return (
-            <div style={styles.logo}>
-                <Link to={nextPath}
-                      style={styles.logo__button}
-                      onMouseEnter={() => this.handleMouseEnter()}
-                      onMouseLeave={() => this.handleMouseLeave()}
-                >
-                    {words.map((word, i ) =>
-                        <Word
-                            key={i}
-                            word={word}
-                            isHovered={this.state.isHovered}
-                            isAnimating={isAnimating}
-                        />)}
-                </Link>
-               {isAnimating
-               &&   <pre style={styles.logo__loading}>
-                        L O A D I N G . . .
-                    </pre>}
+            <div style={styles.logo}
+                 onMouseEnter={() => this.handleMouseEnter()}
+                 onMouseLeave={() => this.handleMouseLeave()}
+            >
+                {words.map((word, i ) =>
+                    <Word
+                        key={i}
+                        word={word}
+                        isHovered={false}
+                        isAnimating={isHovered}
+                    />)}
             </div>
-
         );
     }
 }

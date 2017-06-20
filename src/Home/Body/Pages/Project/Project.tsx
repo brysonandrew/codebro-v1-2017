@@ -32,7 +32,8 @@ export class Project extends React.Component<IProps, IState> {
     }
 
     render(): JSX.Element {
-        const { isMobile, isTablet, isLaptop, project, index } = this.props;
+        const { isMobile, isTablet, isLaptop, project, index, savedParams } = this.props;
+        const isActive = project.path===savedParams.activePagePath || (!savedParams.activePagePath && index===0);
 
         const styles = {
             project: {
@@ -47,7 +48,12 @@ export class Project extends React.Component<IProps, IState> {
                 width: "calc(100% - 20px)",
                 padding: "0px 10px",
                 height: "auto",
-                transform: "translateY(-50%)"
+                transform: "translateY(-50%)",
+                WebkitFilter: `grayscale(${isActive ? 0 : 100}%)`,
+                MozFilter: `grayscale(${isActive ? 0 : 100}%)`,
+                filter: `grayscale(${isActive ? 0 : 100}%)`,
+                opacity: isActive ? 1 : 0.2,
+                transition: "opacity 400ms, filter 400ms"
             },
             project__inner: {
                 position: "absolute",

@@ -7,8 +7,8 @@ import { changeViewportDimensions, saveLocation, saveParams, toggleScrollAnimati
 import { toParams } from "../data/helpers/toParams";
 import { MenuFromStore } from "./ProjectsMenu/Menu";
 import { PagesFromStore } from "./Body/Pages/Pages";
-import {Heading} from "./Body/Heading/Heading";
-import {BottomNavigationMenu} from "./BottomNavigationMenu/BottomNavigationMenu";
+import { Heading } from "./Body/Heading/Heading";
+import { BottomNavigationMenu } from "./BottomNavigationMenu/BottomNavigationMenu";
 
 interface IProperties {
     savedParams?: IParams
@@ -21,6 +21,7 @@ interface ICallbacks {
     onLoad?: (nextLocation: history.Location, nextParams: IParams) => void
     onAnimationStart?: () => void
     onResizeViewport?: (width: number, height: number) => void
+    onArrowNavigate?: (nextParams: IParams) => void
 }
 
 interface IProps extends IProperties, ICallbacks {
@@ -48,6 +49,10 @@ export class Home extends React.Component<IProps, IState> {
 
         const params = toParams(history.location.pathname);
 
+        if (params.activePagePath.length > 0) {
+            onAnimationStart();
+        }
+
         this.props.onLoad(
             history.location,
             params
@@ -62,7 +67,7 @@ export class Home extends React.Component<IProps, IState> {
     }
 
     render(): JSX.Element {
-        const { height } = this.props;
+        const { height, savedParams, onArrowNavigate } = this.props;
         const styles = {
             home: {
                 position: "relative",
@@ -72,7 +77,10 @@ export class Home extends React.Component<IProps, IState> {
             home__heading: {
                 position: "fixed",
                 top: 0,
-                right: 0,
+                left: 0,
+                width: "100%",
+                zIndex: 4
+
             },
             home__bottomNav: {
                 position: "fixed",
@@ -91,7 +99,10 @@ export class Home extends React.Component<IProps, IState> {
                     />
                 </div>
                 <div style={ styles.home__bottomNav }>
-                    <BottomNavigationMenu/>
+                    <BottomNavigationMenu
+                        onArrowNavigation={onArrowNavigate}
+                        savedParams={savedParams}
+                    />
                 </div>
             </div>
         );
@@ -120,6 +131,10 @@ function mapDispatchToProps(dispatch, ownProps: IProps): ICallbacks {
         },
         onResizeViewport: (width, height) => {
             dispatch(changeViewportDimensions(width, height));
+        },
+        onArrowNavigate: (nextParams) => {
+            dispatch(saveParams(nextParams));
+            dispatch(toggleScrollAnimation(true));
         }
     }
 }
