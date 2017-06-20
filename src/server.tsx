@@ -4,7 +4,7 @@ import * as React from 'react';
 const compression = require('compression');
 import { getAllComponentsCSS } from './utils/css_styler';
 import { Provider } from 'react-redux';
-import {renderIndexView} from "./server/renderIndexView";
+import { renderIndexView } from "./server/renderIndexView";
 const release = (process.env.NODE_ENV === 'production');
 const port = (parseInt(process.env.PORT, 10) || 3000) - (!release as any);
 const app = express();

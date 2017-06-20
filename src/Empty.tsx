@@ -1,13 +1,4 @@
 import * as React from 'react';
-import {addComponentCSS} from './utils/css_styler';
-
-addComponentCSS({
-    //language=CSS
-    default: `
-    .empty {
-    }
-    `
-});
 
 interface IProps {}
 

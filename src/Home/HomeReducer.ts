@@ -1,98 +1,93 @@
-import * as Immutable from "immutable";
 import {
-    UPDATE__PAGE_INDEX,
-    UPDATE__VIEW_INDEX,
-    UPDATE__VIEWPORT_DIMENSIONS,
-    SET__TRANSITION__SCREEN,
-    SET__VIEW__MODE,
-    SET__PAGE_STATUS__LEAVE,
-    SAVE__LOCATION
+    // r o u t i n g
+    UPDATE__LOCATION,
+    UPDATE__PARAMS,
+    // s c r o l l i n g
+    UPDATE__SCROLL_TYPE,
+    UPDATE__WHEEL_EVENT,
+    // v i e w s
+    OPEN__MENU,
+    UPDATE__VIEWPORT_DIMENSIONS
 } from "./HomeActions";
 import { createReducer } from "../redux/utils/reducers";
 import { IParams } from "../data/models";
-import { toParams } from "../data/helpers/toParams";
+import { breakPointTests } from "../data/helpers/breakPoints";
+import {AsyncGet} from "../redux/utils/async_get";
 
 export interface IHomeState {
+    content: AsyncGet<any>
     savedLocation: Location
     savedParams: IParams
-    activePageIndex: number
-    activeViewIndex: number
     width: number
     height: number
-    isScreenUp: boolean
-    isTabletMode: boolean
-    isLoadingExternalLink: boolean
+    isAnimating: boolean
+    isWheel: boolean
+    isMenuOpen: boolean
+    isMobile: boolean
+    isTablet: boolean
+    isLaptop: boolean
 }
 
-let initialState : IHomeState = {
+const initialState : IHomeState = {
+    content: AsyncGet.init(null),
     savedLocation: <Location>{},
-    savedParams: <IParams>{},
-    activePageIndex: -1,
-    activeViewIndex: -1,
-    width: 1920,
-    height: 1080,
-    isScreenUp: false,
-    isTabletMode: false,
-    isLoadingExternalLink: false
+    savedParams: {},
+    isAnimating: false,
+    isWheel: false,
+    isMenuOpen: false,
+    width: 1024,
+    height: 720,
+    isMobile: false,
+    isTablet: false,
+    isLaptop: false,
 };
 
-export let homeReducer = createReducer<IHomeState>(initialState, [
+export const homeReducer = createReducer<IHomeState>(initialState, [
+// r o u t i n g
     {
-        action: SAVE__LOCATION,
-        handler: function (state: IHomeState, action: SAVE__LOCATION) {
-            return Immutable.fromJS(state)
-                .setIn(['savedLocation'], action.savedLocation)
-                .setIn(['savedParams'], toParams(action.savedLocation.pathname))
-                .toJS();
+        action: UPDATE__LOCATION,
+        handler: function (state: IHomeState, action: UPDATE__LOCATION) {
+            return {...state, savedLocation: action.location};
         }
     },
     {
-        action: UPDATE__PAGE_INDEX,
-        handler: function (state: IHomeState, action: UPDATE__PAGE_INDEX) {
-            return Immutable.fromJS(state)
-                .setIn(['activePageIndex'], action.activePageIndex)
-                .toJS();
+        action: UPDATE__PARAMS,
+        handler: function (state: IHomeState, action: UPDATE__PARAMS) {
+            return {...state, savedParams: action.savedParams};
+        }
+    },
+// s c r o l l i n g
+    {
+        action: UPDATE__SCROLL_TYPE,
+        handler: function (state: IHomeState, action: UPDATE__SCROLL_TYPE) {
+            return {...state, isAnimating: action.isAnimating};
         }
     },
     {
-        action: UPDATE__VIEW_INDEX,
-        handler: function (state: IHomeState, action: UPDATE__VIEW_INDEX) {
-            return Immutable.fromJS(state)
-                .setIn(['activeViewIndex'], action.activeViewIndex)
-                .toJS();
+        action: UPDATE__WHEEL_EVENT,
+        handler: function (state: IHomeState, action: UPDATE__WHEEL_EVENT) {
+            return {...state, isWheel: action.isWheel};
+        }
+    },
+// v i e w s
+    {
+        action: OPEN__MENU,
+        handler: function (state: IHomeState, action: OPEN__MENU) {
+            return {...state, isMenuOpen: action.isMenuOpen};
         }
     },
     {
         action: UPDATE__VIEWPORT_DIMENSIONS,
         handler: function (state: IHomeState, action: UPDATE__VIEWPORT_DIMENSIONS) {
-            return Immutable.fromJS(state)
-                .setIn(['width'], action.width)
-                .setIn(['height'], action.height)
-                .toJS();
-        }
-    },
-    {
-        action: SET__TRANSITION__SCREEN,
-        handler: function (state: IHomeState, action: SET__TRANSITION__SCREEN) {
-            return Immutable.fromJS(state)
-                .setIn(['isScreenUp'], action.isScreenUp)
-                .toJS();
-        }
-    },
-    {
-        action: SET__VIEW__MODE,
-        handler: function (state: IHomeState, action: SET__VIEW__MODE) {
-            return Immutable.fromJS(state)
-                .setIn(['isTabletMode'], action.isTabletMode)
-                .toJS();
-        }
-    },
-    {
-        action: SET__PAGE_STATUS__LEAVE,
-        handler: function (state: IHomeState, action: SET__PAGE_STATUS__LEAVE) {
-            return Immutable.fromJS(state)
-                .setIn(['isLoadingExternalLink'], action.isLoadingExternalLink)
-                .toJS();
+            return {
+                ...state,
+                    isMobile: breakPointTests.isMobile(action.width),
+                    isTablet: breakPointTests.isTablet(action.width),
+                    isLaptop: breakPointTests.isLaptop(action.width),
+                    width: action.width,
+                    height: action.height
+            };
         }
     }
 ]);
+

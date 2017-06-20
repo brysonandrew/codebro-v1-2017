@@ -3,7 +3,7 @@ import * as ReactDOMServer from 'react-dom/server';
 import { StaticRouter as Router } from 'react-router-dom';
 import { store } from "../redux/store";
 import { Provider } from 'react-redux';
-import {App} from "../App/App";
+import { App } from "../App/App";
 
 export const renderIndexView = (req: any, res: any) => {
     const context = {};
@@ -12,7 +12,7 @@ export const renderIndexView = (req: any, res: any) => {
     } else {
         res.render('index', {
             renderedRoot: ReactDOMServer.renderToString(
-                <Provider store={store}>
+                <Provider store={store()}>
                     <Router
                         location={req.url}
                         context={context} >

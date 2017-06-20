@@ -1,57 +1,41 @@
-//NAVIGATION
-export module UPDATE__PAGE_INDEX {
-    export let type = "UPDATE__PAGE_INDEX";
+import {IParams} from "../data/models";
+// r o u t i n g
+export module UPDATE__LOCATION {
+    export let type = "UPDATE__LOCATION";
 }
-
-export interface UPDATE__PAGE_INDEX {
-    activePageIndex: number
+export interface UPDATE__LOCATION {
+    location: Location;
 }
-
-export module SAVE__LOCATION {
-    export let type = "SAVE__LOCATION";
+export module UPDATE__PARAMS {
+    export let type = "SAVE__PARAMS";
 }
-
-export interface SAVE__LOCATION {
-    savedLocation: Location
+export interface UPDATE__PARAMS {
+    savedParams: IParams;
 }
-
-export module UPDATE__VIEW_INDEX {
-    export let type = "UPDATE__VIEW_INDEX";
+// s c r o l l i n g
+export module UPDATE__SCROLL_TYPE {
+    export const type = "UPDATE__SCROLL_TYPE";
 }
-
-export interface UPDATE__VIEW_INDEX {
-    activeViewIndex: number
+export interface UPDATE__SCROLL_TYPE {
+    isAnimating: boolean;
 }
-//MODES
+export module UPDATE__WHEEL_EVENT {
+    export const type = "UPDATE__WHEEL_EVENT";
+}
+export interface UPDATE__WHEEL_EVENT {
+    isWheel: boolean;
+}
+// v i e w s
+export module OPEN__MENU {
+    export const type = "OPEN__MENU";
+}
+export interface OPEN__MENU {
+    isMenuOpen: boolean;
+}
 export module UPDATE__VIEWPORT_DIMENSIONS {
     export let type = "UPDATE__VIEWPORT_DIME";
 }
-
 export interface UPDATE__VIEWPORT_DIMENSIONS {
     width: number
     height: number
-}
-
-export module SET__TRANSITION__SCREEN {
-    export let type = "SET__TRANSITION__SCREEN";
-}
-
-export interface SET__TRANSITION__SCREEN {
-    isScreenUp: boolean
-}
-
-export module SET__VIEW__MODE {
-    export let type = "SET__VIEW__MODE";
-}
-
-export interface SET__VIEW__MODE {
-    isTabletMode: boolean
-}
-
-export module SET__PAGE_STATUS__LEAVE {
-    export let type = "SET__PAGE_STATUS__LEAVE";
-}
-
-export interface SET__PAGE_STATUS__LEAVE {
-    isLoadingExternalLink: boolean
 }

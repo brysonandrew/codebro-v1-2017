@@ -7,7 +7,7 @@ import { App } from "./App/App";
 
 // Render the application
 ReactDOM.render(
-    <Provider store={store}>
+    <Provider store={store()}>
         <Router>
             <App/>
         </Router>

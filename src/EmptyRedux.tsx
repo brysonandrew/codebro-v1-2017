@@ -1,15 +1,6 @@
 import * as React from 'react';
-import {connect} from 'react-redux';
-import {addComponentCSS} from './utils/css_styler';
-import {IStoreState} from './redux/main_reducer';
-
-addComponentCSS({
-    //language=CSS
-    default: `
-    .main-page__filters {
-    }
-    `
-});
+import { connect } from 'react-redux';
+import { IStoreState } from './redux/main_reducer';
 
 interface IProperties {}
 

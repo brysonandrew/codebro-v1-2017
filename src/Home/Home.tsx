@@ -1,179 +1,97 @@
 import * as React from 'react';
+import * as history from 'history';
 import { connect } from 'react-redux';
-import { IStoreState } from '../redux/main_reducer';
-import { changeViewportDimensions, setViewMode, saveLocation
-} from './HomeActionCreators';
-import { MenuFromStore } from '../Menu/Menu';
-import { Background } from "../Widgets/Background/Background";
-import { Logo } from "../Widgets/Logo/Logo";
-import { pages } from "../data/pages";
 import { IParams } from "../data/models";
-import { SocialMediaMenu } from "../Widgets/SocialMediaMenu/SocialMediaMenu";
-import { match, Switch, Route } from "react-router-dom";
-import { Contact } from "../Contact/Contact";
+import { IStoreState } from '../redux/main_reducer';
+import { changeViewportDimensions, saveLocation, saveParams, toggleScrollAnimation } from './HomeActionCreators';
+import { toParams } from "../data/helpers/toParams";
+import { MenuFromStore } from "./ProjectsMenu/Menu";
+import { PagesFromStore } from "./Body/Pages/Pages";
+import {Heading} from "./Body/Heading/Heading";
+import {BottomNavigationMenu} from "./BottomNavigationMenu/BottomNavigationMenu";
 
 interface IProperties {
+    savedParams?: IParams
+    savedLocation?: Location
     width?: number
     height?: number
-    isTabletMode?: boolean
-    isLoadingExternalLink?: boolean
-    savedLocation?: Location
-    savedParams?: IParams
 }
 
 interface ICallbacks {
-    onResizeViewport?: (width: number, height: number, isTabletMode: boolean) => void
-    onSaveLocation?: (nextLocation: Location) => void
+    onLoad?: (nextLocation: history.Location, nextParams: IParams) => void
+    onAnimationStart?: () => void
+    onResizeViewport?: (width: number, height: number) => void
 }
 
 interface IProps extends IProperties, ICallbacks {
-    match: match<IParams>
+    location: history.Location
+    history: history.History
 }
 
 interface IState extends IProperties, ICallbacks {
-    isMounted?: boolean
+    isMounted: boolean
 }
 
 export class Home extends React.Component<IProps, IState> {
 
-    setTimeoutId;
-    viewBreakPoint = 900;
+    timerId;
 
     public constructor(props?: any, context?: any) {
         super(props, context);
         this.state = {
             isMounted: false
-        };
-    }
-
-    componentWillMount() {
-        this.props.onSaveLocation(this.props["history"].location);
+        }
     }
 
     componentDidMount() {
-        const { onResizeViewport } = this.props;
+        const { onResizeViewport, onAnimationStart, history } = this.props;
 
-        this.props["history"].listen( location =>  {
-            if (location.pathname !== this.props.savedLocation.pathname) { // all i care about is the pathname
-                this.props.onSaveLocation(location);
-            }
-        });
+        const params = toParams(history.location.pathname);
+
+        this.props.onLoad(
+            history.location,
+            params
+        );
+
+        this.timerId = setTimeout(() => this.setState({ isMounted: true }), 0);
 
         window.addEventListener("resize"
-            , () => onResizeViewport(window.innerWidth, window.innerHeight, window.innerWidth < this.viewBreakPoint));
+            , () => onResizeViewport(window.innerWidth, window.innerHeight));
         window.addEventListener("load"
-            , () => onResizeViewport(window.innerWidth, window.innerHeight, window.innerWidth < this.viewBreakPoint));
-        this.setTimeoutId = setTimeout(() => {
-            this.setState({ isMounted: true });
-        }, 0)
+            , () => onResizeViewport(window.innerWidth, window.innerHeight));
     }
 
-    componentWillUnmount() {
-        const { onResizeViewport } = this.props;
-
-        window.removeEventListener("resize"
-            , () => onResizeViewport(window.innerWidth, window.innerHeight, window.innerWidth < this.viewBreakPoint));
-        window.removeEventListener("load"
-            , () => onResizeViewport(window.innerWidth, window.innerHeight, window.innerWidth < this.viewBreakPoint));
-        clearTimeout(this.setTimeoutId);
-    }
-
-    public render(): JSX.Element {
-        const { isMounted } = this.state;
-        const { match, isTabletMode, isLoadingExternalLink, height } = this.props;
-        const isLogoCentered = isLoadingExternalLink;
-        const isFirstPage = !("activePagePath" in match.params);
-
+    render(): JSX.Element {
+        const { height } = this.props;
         const styles = {
             home: {
                 position: "relative",
-                width: "100%",
-                height: "100vh"
+                background: "#eeeeee",
+                overflow: "hidden"
             },
-            home__frontPage: {
-                position: "absolute",
-                width: "100%",
-                height: "100%",
-                textAlign: "center"
-            },
-            home__logo: {
-                position: "absolute",
-                top: isLogoCentered ? "50%" : "4.5vh",
-                left: isLogoCentered ? "50%" : "2vw",
-                width: "auto",
-                transform: isLogoCentered && `translate(-50%, -50%)`,
-                zIndex: 8
-            },
-            home__menu: {
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: `translate3d(-50%, -50%, 0)`,
-                transition: "transform 400ms",
-                transitionDelay: `${200}ms`,
-                zIndex: 2
-            },
-            home__socialMedia: {
-                position: "absolute",
-                top: "20%",
-                height: "14%",
-                left: "2vw",
-                transform: "translateY(-50)",
-                zIndex: 8
-            },
-            home__introHeader: {
-                position: "absolute",
-                top: "2vh",
-                right: "4vw",
-            },
-            home__content: {
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: "100%",
-                height: "100%",
-                textAlign: "center",
-                zIndex: 6
-            },
-            home__background: {
+            home__heading: {
                 position: "fixed",
-                left: 0,
                 top: 0,
-                background: "transparent",
-                textAlign: "left"
+                right: 0,
+            },
+            home__bottomNav: {
+                position: "fixed",
+                top: height * 0.9,
+                width: "100%"
             }
         } as any;
-
         return (
-            <div style={styles.home}>
-
-                <div style={styles.home__logo}>
-                    <Logo
-                        params={match.params}
-                        isAnimating={isLoadingExternalLink}
+            <div style={ styles.home }>
+                <div style={ styles.home__heading}>
+                    <Heading/>
+                </div>
+                <div>
+                    <PagesFromStore
+                        history={this.props.history}
                     />
                 </div>
-                {isFirstPage
-                &&  <div style={styles.home__socialMedia}>
-                        <SocialMediaMenu/>
-                    </div>}
-                {isFirstPage
-                    ?  <div style={styles.home__frontPage}>
-                                <div>
-                                    <Contact
-                                        isTabletMode={isTabletMode}
-                                        isMounted={isMounted}
-                                    />
-                                </div>
-                                <div style={styles.home__menu}>
-                                   <MenuFromStore/>
-                                </div>
-                            </div>
-                    :   <div style={styles.home__content}>
-                                {pages[match.params.activePagePath].component}
-                            </div>}
-                <div style={styles.home__background}>
-                    <Background/>
+                <div style={ styles.home__bottomNav }>
+                    <BottomNavigationMenu/>
                 </div>
             </div>
         );
@@ -184,23 +102,24 @@ export class Home extends React.Component<IProps, IState> {
 
 function mapStateToProps(state: IStoreState, ownProps: IProps): IProperties {
     return {
-        width: state.homeStore.width,
         height: state.homeStore.height,
+        width: state.homeStore.width,
         savedLocation: state.homeStore.savedLocation,
-        isTabletMode: state.homeStore.isTabletMode,
-        isLoadingExternalLink: state.homeStore.isLoadingExternalLink,
         savedParams: state.homeStore.savedParams
     };
 }
 
 function mapDispatchToProps(dispatch, ownProps: IProps): ICallbacks {
     return {
-        onResizeViewport: (width, height, isTabletMode) => {
-            dispatch(changeViewportDimensions(width, height));
-            dispatch(setViewMode(isTabletMode));
+        onLoad: (nextLocation, nextParams) => {
+            dispatch(saveLocation(nextLocation));
+            dispatch(saveParams(nextParams));
         },
-        onSaveLocation: (nextLocation) => {
-            dispatch(saveLocation(nextLocation))
+        onAnimationStart: () => {
+            dispatch(toggleScrollAnimation(true));
+        },
+        onResizeViewport: (width, height) => {
+            dispatch(changeViewportDimensions(width, height));
         }
     }
 }
