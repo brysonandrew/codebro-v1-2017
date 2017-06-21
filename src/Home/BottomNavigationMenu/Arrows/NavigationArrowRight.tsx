@@ -1,11 +1,16 @@
 import * as React from 'react';
+import * as Immutable from 'immutable';
 import {colors} from "../../../data/themeOptions";
+import {projectList} from "../../../data/content";
+import {IParams} from "../../../data/models";
+import {Link} from "react-router-dom";
 
 interface IProps {
     thickness: number
     headRadius: number
     bodyLength: number
-    onClick: () => void
+    savedParams: IParams
+    onClick: (nextPath: string) => void
 }
 
 interface IState {}
@@ -16,8 +21,27 @@ export class NavigationArrowRight extends React.Component<IProps, IState> {
         super(props, context);
     }
 
+    handleClick(nextPath) {
+        this.props.onClick(nextPath);
+    }
+
+    findActiveIndex() {
+        const { savedParams } = this.props;
+        const activePagePath = savedParams.activePagePath;
+        const activeIndex = Immutable.List(projectList)
+                                     .findIndex(item => item.path === activePagePath);
+
+        return (activeIndex > -1) ? activeIndex : 0
+    }
+
     render(): JSX.Element {
-        const { thickness, headRadius, bodyLength, onClick } = this.props;
+        const { thickness, headRadius, bodyLength } = this.props;
+
+        const activeIndex = this.findActiveIndex();
+
+        const isMax = (activeIndex === projectList.length - 1);
+
+        const nextPath = isMax ? projectList[activeIndex].path : projectList[activeIndex +  1].path;
 
         const styles = {
             navigationArrowRight: {
@@ -34,7 +58,7 @@ export class NavigationArrowRight extends React.Component<IProps, IState> {
                 top: "50%",
                 height: thickness,
                 borderRadius: 2,
-                background: colors.hi,
+                background: isMax ? colors.gry : colors.hi,
                 width: bodyLength,
                 transform: "translateY(-50%)"
             },
@@ -44,7 +68,7 @@ export class NavigationArrowRight extends React.Component<IProps, IState> {
                 right: 0,
                 height: thickness,
                 borderRadius: 2,
-                background: colors.hi,
+                background: isMax ? colors.gry : colors.hi,
                 width: headRadius,
                 transform: "rotate(-45deg) translateY(200%)"
             },
@@ -54,19 +78,20 @@ export class NavigationArrowRight extends React.Component<IProps, IState> {
                 right: 0,
                 height: thickness,
                 borderRadius: 2,
-                background: colors.hi,
+                background: isMax ? colors.gry : colors.hi,
                 width: headRadius,
                 transform: "rotate(45deg) translateY(-200%)"
             },
         } as any;
         return (
-            <div style= {styles.navigationArrowRight}
-                 onClick={onClick}>
+            <Link style= {styles.navigationArrowRight}
+                  to={`/${nextPath}`}
+                  onClick={isMax ? e => e.preventDefault() : () => this.handleClick(nextPath)}>
                 <div style= {styles.navigationArrowRight__body}>
                     <div style={ styles.navigationArrowRight__headTop }/>
                     <div style={ styles.navigationArrowRight__headBottom }/>
                 </div>
-            </div>
+            </Link>
         );
     }
 }

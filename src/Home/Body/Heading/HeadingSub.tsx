@@ -1,7 +1,11 @@
 import * as React from 'react';
 import {colors} from "../../../data/themeOptions";
 
-interface IProps {}
+interface IProps {
+    isMobile?: boolean
+    isTablet?: boolean
+    isLaptop?: boolean
+}
 
 interface IState {}
 
@@ -12,11 +16,14 @@ export class HeadingSub extends React.Component<IProps, IState> {
     }
 
     render(): JSX.Element {
+        const { isMobile, isTablet, isLaptop} = this.props;
+
         const styles = {
             headingSub: {
                 position: "relative",
                 fontSize: 10,
                 textAlign: "center",
+                top: isTablet ? 100 : 0,
                 width: "100%",
             },
             headingSub__lineLeft: {
@@ -52,17 +59,20 @@ export class HeadingSub extends React.Component<IProps, IState> {
         } as any;
         return (
             <div style={ styles.headingSub }>
-                <div style={styles.headingSub__lineLeft}>
-                    <div style={styles.headingSub__line}/>
-                </div>
                 <span>
                     <pre style={styles.headingSub__text}>
-                       {" F    R    E    E    L    A    N    C    E        W    E    B        D    E    V    E    L    O    P    E    R"}
+                       {`${isTablet ? "" : "F    R    E    E    L    A    N    C    E        "}W    E    B        D    E    V    E    L    O    P    E    R`}
                     </pre>
                 </span>
-                <div style={styles.headingSub__lineRight}>
-                    <div style={styles.headingSub__line}/>
-                </div>
+               {!isTablet
+               &&   <div>
+                        <div style={styles.headingSub__lineLeft}>
+                            <div style={styles.headingSub__line}/>
+                        </div>
+                        <div style={styles.headingSub__lineRight}>
+                            <div style={styles.headingSub__line}/>
+                        </div>
+                    </div>}
             </div>
         );
     }

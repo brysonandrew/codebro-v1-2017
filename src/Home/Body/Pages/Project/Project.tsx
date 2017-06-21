@@ -5,6 +5,7 @@ import { IParams, IProject } from "../../../../data/models";
 import { ProjectHeading } from "./ProjectHeading";
 import {toParams} from "../../../../data/helpers/toParams";
 import {saveParams, toggleScrollAnimation} from "../../../HomeActionCreators";
+import {Link} from "react-router-dom";
 
 interface IProperties {
     isMenuOpen?: boolean
@@ -50,6 +51,10 @@ export class Project extends React.Component<IProps, IState> {
                 isHovered: false
             })
         }
+    }
+
+    handleHeadingClick() {
+
     }
 
     handleMouseEnter() {
@@ -104,8 +109,9 @@ export class Project extends React.Component<IProps, IState> {
         } as any;
 
         return (
-            <div style={ styles.project }
-                 onClick={isActive ? null : () => this.handleClick()}>
+            <Link style={ styles.project }
+                  to={`/${this.props.project.path}`}
+                  onClick={isActive ? e => e.preventDefault() : () => this.handleClick()}>
                 <img style={ styles.project__image }
                      src={`/images/${index}.PNG`}
                      onMouseEnter={isActive ? null : () => this.handleMouseEnter()}
@@ -116,9 +122,11 @@ export class Project extends React.Component<IProps, IState> {
                         isMobile={isMobile}
                         isTablet={isTablet}
                         isLaptop={isLaptop}
+                        isActive={isActive}
+                        onClick={this.handleHeadingClick.bind(this)}
                     />
                 </div>
-            </div>
+            </Link>
         );
     }
 }

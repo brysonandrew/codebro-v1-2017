@@ -1,11 +1,14 @@
 import * as React from 'react';
-import {colors} from "../../../data/themeOptions";
-import {Logo} from "../../../Widgets/Logo/Logo";
-import {HeadingSub} from "./HeadingSub";
-import {headingMenuLeft} from "../../../data/content";
-import {MenuLeft} from "./MenuLeft/MenuLeft";
+import { colors } from "../../../data/themeOptions";
+import { Logo } from "../../../Widgets/Logo/Logo";
+import { HeadingSub } from "./HeadingSub";
+import { MenuLeft } from "./MenuLeft/MenuLeft";
 
-interface IProps {}
+interface IProps {
+    isMobile?: boolean
+    isTablet?: boolean
+    isLaptop?: boolean
+}
 
 interface IState {
     isMounted: boolean
@@ -31,6 +34,7 @@ export class Heading extends React.Component<IProps, IState> {
     }
     render(): JSX.Element {
         const { isMounted } = this.state;
+        const { isMobile, isTablet, isLaptop} = this.props;
 
         const styles = {
             heading: {
@@ -63,7 +67,11 @@ export class Heading extends React.Component<IProps, IState> {
         } as any;
         return (
             <div style={styles.heading}>
-                <MenuLeft/>
+                <MenuLeft
+                    isMobile={isMobile}
+                    isTablet={isTablet}
+                    isLaptop={isLaptop}
+                />
                 <h1 style={styles.heading__main}>
                     <span>code bro</span>
                 </h1>
@@ -71,7 +79,11 @@ export class Heading extends React.Component<IProps, IState> {
                     <Logo/>
                 </div>
                 <div style={styles.heading__sub}>
-                    <HeadingSub/>
+                    <HeadingSub
+                        isMobile={isMobile}
+                        isTablet={isTablet}
+                        isLaptop={isLaptop}
+                    />
                 </div>
             </div>
         );

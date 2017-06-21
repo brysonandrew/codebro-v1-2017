@@ -11,7 +11,8 @@ export const breakPointTests = {
 };
 
 export const fontSize = {
-    // M: (isMobile, isTablet, isLaptop) => isMobile ?  18 : isTablet ? 20 : isLaptop ? 24 : 28,
+    S: (isMobile, isTablet, isLaptop) => isMobile ?  10 : isTablet ? 12 : isLaptop ? 14 : 18,
+    M: (isMobile, isTablet, isLaptop) => isMobile ?  12 : isTablet ? 14 : isLaptop ? 16 : 20,
     L: (isMobile, isTablet, isLaptop) => isMobile ?  14 : isTablet ? 16 : isLaptop ? 18 : 22,
     XL: (isMobile, isTablet, isLaptop) => isMobile ?  16 : isTablet ? 18 : isLaptop ? 22 : 28,
     XXL: (isMobile, isTablet, isLaptop) => isMobile ? 18 : isTablet ? 20 : isLaptop ? 28 : 40,

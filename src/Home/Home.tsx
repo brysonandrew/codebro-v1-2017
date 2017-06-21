@@ -13,6 +13,9 @@ import { BottomNavigationMenu } from "./BottomNavigationMenu/BottomNavigationMen
 interface IProperties {
     savedParams?: IParams
     savedLocation?: Location
+    isMobile?: boolean
+    isTablet?: boolean
+    isLaptop?: boolean
     width?: number
     height?: number
 }
@@ -67,7 +70,7 @@ export class Home extends React.Component<IProps, IState> {
     }
 
     render(): JSX.Element {
-        const { height, savedParams, onArrowNavigate } = this.props;
+        const { height, savedParams, onArrowNavigate, isMobile, isTablet, isLaptop} = this.props;
         const styles = {
             home: {
                 position: "relative",
@@ -91,7 +94,11 @@ export class Home extends React.Component<IProps, IState> {
         return (
             <div style={ styles.home }>
                 <div style={ styles.home__heading}>
-                    <Heading/>
+                    <Heading
+                        isMobile={isMobile}
+                        isTablet={isTablet}
+                        isLaptop={isLaptop}
+                    />
                 </div>
                 <div>
                     <PagesFromStore
@@ -115,6 +122,9 @@ function mapStateToProps(state: IStoreState, ownProps: IProps): IProperties {
     return {
         height: state.homeStore.height,
         width: state.homeStore.width,
+        isMobile: state.homeStore.isMobile,
+        isTablet: state.homeStore.isTablet,
+        isLaptop: state.homeStore.isLaptop,
         savedLocation: state.homeStore.savedLocation,
         savedParams: state.homeStore.savedParams
     };

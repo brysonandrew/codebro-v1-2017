@@ -3,7 +3,11 @@ import { headingMenuLeft } from "../../../../data/content";
 import { colors } from "../../../../data/themeOptions";
 import { MenuLeftItem } from "./MenuLeftItem";
 
-interface IProps {}
+interface IProps {
+    isMobile?: boolean
+    isTablet?: boolean
+    isLaptop?: boolean
+}
 
 interface IState {}
 
@@ -14,6 +18,8 @@ export class MenuLeft extends React.Component<IProps, IState> {
     }
 
     render(): JSX.Element {
+        const { isMobile, isTablet, isLaptop } = this.props;
+
         const styles = {
             menuLeft: {
                 position: "absolute",
@@ -28,6 +34,9 @@ export class MenuLeft extends React.Component<IProps, IState> {
                     <MenuLeftItem
                         key={i}
                         item={item}
+                        isMobile={isMobile}
+                        isTablet={isTablet}
+                        isLaptop={isLaptop}
                     />)}
             </div>
         );

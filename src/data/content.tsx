@@ -3,20 +3,24 @@ import * as React from 'react';
 import { toPath } from "./helpers/toPath";
 import {IDictionary, IProject, ISocialMediaSelector} from "./models";
 
-function Project(name) {
+function Project(name, date) {
     this.name= name;
     this.path= toPath(this.name);
+    this.date= date;
 }
 
 export const projectList: IProject[] = [
     new Project(
-        "Porizi"
+        "Porizi",
+        "2016"
     ),
     new Project(
-        "Coworkz"
+        "Coworkz",
+        "2017"
     ),
     new Project(
-        "Gulumjan Consulting"
+        "Gulumjan Consulting",
+        "2017"
     )
 ];
 

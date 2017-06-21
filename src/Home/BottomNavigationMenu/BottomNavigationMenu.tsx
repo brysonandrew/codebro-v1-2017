@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as Immutable from 'immutable';
 import { colors } from "../../data/themeOptions";
 import { NavigationArrowRight } from "./Arrows/NavigationArrowRight";
 import { IParams } from "../../data/models";
@@ -19,42 +18,16 @@ export class BottomNavigationMenu extends React.Component<IProps, IState> {
         super(props, context);
     }
 
-    handleArrowRightClick() {
+    handleArrowClick(nextPath) {
         const { onArrowNavigation } = this.props;
-
-        const activeIndex = this.findActiveIndex();
-
-        if (activeIndex < projectList.length - 1) {
-            const nextParams = {
-                activePagePath: projectList[activeIndex + 1].path
-            };
-            onArrowNavigation(nextParams);
-        }
-    }
-
-    handleArrowLeftClick() {
-        const { onArrowNavigation } = this.props;
-
-        const activeIndex = this.findActiveIndex();
-
-        if (activeIndex > 0) {
-            const nextParams = {
-                activePagePath: projectList[activeIndex - 1].path
-            };
-            onArrowNavigation(nextParams);
-        }
-    }
-
-    findActiveIndex() {
-        const { savedParams } = this.props;
-        const activePagePath = savedParams.activePagePath;
-        const activeIndex = Immutable.List(projectList)
-                                .findIndex(item => item.path === activePagePath);
-
-        return (activeIndex > -1) ? activeIndex : 0
+        const nextParams = {
+            activePagePath: nextPath
+        };
+        onArrowNavigation(nextParams);
     }
 
     render(): JSX.Element {
+        const { savedParams } = this.props;
         const thickness = 4;
         const headRadius = 20;
         const bodyLength = 60;
@@ -70,13 +43,15 @@ export class BottomNavigationMenu extends React.Component<IProps, IState> {
                     thickness={thickness}
                     headRadius={headRadius}
                     bodyLength={bodyLength}
-                    onClick={this.handleArrowLeftClick.bind(this)}
+                    savedParams={savedParams}
+                    onClick={this.handleArrowClick.bind(this)}
                 />
                 <NavigationArrowRight
                     thickness={thickness}
                     headRadius={headRadius}
                     bodyLength={bodyLength}
-                    onClick={this.handleArrowRightClick.bind(this)}
+                    savedParams={savedParams}
+                    onClick={this.handleArrowClick.bind(this)}
                 />
             </div>
         );

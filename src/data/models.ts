@@ -24,6 +24,7 @@ export interface IParams {
 export interface IProject {
     name: string
     path: string
+    date: string
 }
 
 export interface ISocialMediaSelector {

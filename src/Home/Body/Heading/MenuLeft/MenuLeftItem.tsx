@@ -5,6 +5,9 @@ import {UnderlineToArrow} from "./UnderlineToArrow";
 
 interface IProps {
     item: ISocialMediaSelector
+    isMobile?: boolean
+    isTablet?: boolean
+    isLaptop?: boolean
 }
 
 interface IState {
@@ -33,13 +36,13 @@ export class MenuLeftItem extends React.Component<IProps, IState> {
     }
 
     render(): JSX.Element {
-        const { item } = this.props;
+        const { item, isMobile, isTablet, isLaptop } = this.props;
         const { isHovered } = this.state;
 
         const styles = {
             menuLeftItem: {
                 position: "relative",
-                display: "inline-block",
+                display: `${isTablet ? "" : "inline-"}block`,
                 padding: "0px 10px",
                 margin: "5px 0",
                 width: 100,
@@ -47,7 +50,6 @@ export class MenuLeftItem extends React.Component<IProps, IState> {
                 cursor: "pointer",
                 transition: "margin 200ms, padding 200ms"
             },
-
             menuLeftItem__inner: {
                 display: "table-cell",
                 verticalAlign: "middle",
