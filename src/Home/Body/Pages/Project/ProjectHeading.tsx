@@ -65,12 +65,12 @@ export class ProjectHeading extends React.Component<IProps, IState> {
                         />
                     </div>}
                 <div style={ styles.projectHeading__text }>
-                    <div style={ styles.projectHeading__name }>
+                    <h4 style={ styles.projectHeading__name }>
                         {project.name}
-                    </div>
-                    <code style={ styles.projectHeading__date }>
+                    </h4>
+                    <h4 style={ styles.projectHeading__date }>
                         {project.date}
-                    </code>
+                    </h4>
                 </div>
             </div>
         );

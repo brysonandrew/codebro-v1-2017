@@ -7,6 +7,8 @@ import {toParams} from "../../../../data/helpers/toParams";
 import {saveParams, togglePreview, toggleScrollAnimation} from "../../../HomeActionCreators";
 import {Link} from "react-router-dom";
 import {colors} from "../../../../data/themeOptions";
+import {Loader} from "../../../../Widgets/Loader";
+import {ImageLoader} from "../../../../Widgets/ImageLoader";
 
 interface IProperties {
     isMenuOpen?: boolean
@@ -38,6 +40,8 @@ interface IState extends IProperties, ICallbacks {
     isProjectExtended?: boolean
     posY?: number
     isMounted?: boolean
+    isImagesLoaded?: boolean
+    isImagesLoadedFailed?: boolean
 }
 
 export class Project extends React.Component<IProps, IState> {
@@ -50,6 +54,8 @@ export class Project extends React.Component<IProps, IState> {
             isHovered: false,
             isHeadingHovered: false,
             isProjectExtended: false,
+            isImagesLoaded: false,
+            isImagesLoadedFailed: false,
             posY: 0,
             isMounted: false
         };
@@ -129,14 +135,12 @@ export class Project extends React.Component<IProps, IState> {
         const isMin = posY > 0;
         const isMax = posY < -this.scrollHeight();
 
-        console.log(delta);
-
-        if (delta < -2 && !isMin) {
+        if (delta < -1 && !isMin) {
             this.setState({
                 posY: posY + 40
             })
         }
-        if (delta > 2 && !isMax) {
+        if (delta > 1 && !isMax) {
             this.setState({
                 posY: posY - 40
             })
@@ -151,9 +155,21 @@ export class Project extends React.Component<IProps, IState> {
         return this.state.isMounted ? (this.innerRef.clientHeight / imageNumber) * (imageNumber - 1) : 1;
     }
 
+    handleLoad() {
+        this.setState({
+            isImagesLoaded: true
+        });
+    }
+
+    handleFail() {
+        this.setState({
+            isImagesLoadedFailed: true
+        });
+    }
+
     render(): JSX.Element {
         const { isMobile, isTablet, isLaptop, project, index, savedParams, height, previewWidth } = this.props;
-        const { isHovered, isHeadingHovered, isProjectExtended, posY } = this.state;
+        const { isHovered, isHeadingHovered, isProjectExtended, posY, isImagesLoaded, isImagesLoadedFailed } = this.state;
         const isActive = project.path===savedParams.activePagePath
                             || (!savedParams.activePagePath && index===0);
         const topOffset = isMobile ? 200 : isTablet ? 150 : 100;
@@ -172,8 +188,7 @@ export class Project extends React.Component<IProps, IState> {
                 right: -2,
                 width: 2,
                 height: height / this.scrollHeight() * -posY,
-                background: colors.std,
-                // transition: "height 1000ms"
+                background: colors.std
             },
             project__inner: {
                 display: "inline-block",
@@ -211,11 +226,25 @@ export class Project extends React.Component<IProps, IState> {
                      onMouseEnter={isActive ? null : () => this.handleMouseEnter()}
                      onMouseLeave={isActive ? null : () => this.handleMouseLeave()}>
                     {project.imagePaths.map((path, i) =>
-                        (isProjectExtended || i === 0)
+                        ((isProjectExtended && isImagesLoaded && !isImagesLoadedFailed)
+                        || i === 0)
                             &&
-                            <img key={i}
-                                 style={ styles.project__image }
-                                 src={path}/>)}
+                        <img key={i}
+                             style={ styles.project__image }
+                             src={path}/>
+                    )}
+                    {isProjectExtended
+                    && !isImagesLoaded
+                    && !isImagesLoadedFailed
+                    &&
+                    <div>
+                        <ImageLoader
+                            imagePaths={project.imagePaths}
+                            onLoad={() => this.handleLoad()}
+                            onFail={() => this.handleFail()}
+                        />
+                        <Loader/>
+                    </div>}
                     {!isProjectExtended
                     && <div style={ styles.project__heading}
                             onMouseEnter={isActive ? () => this.handleHeadingMouseEnter() : null}

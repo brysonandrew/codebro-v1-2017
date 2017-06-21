@@ -1,14 +1,14 @@
 import * as React from 'react';
 
 interface IProps {
-    imagePath: string
-    onLoad: () => void
+    imagePath?: string
+    imagePaths?: string[]
+    onLoad?: () => void
+    onAllLoaded?: () => void
     onFail?: () => void
 }
 
-interface IState {
-    isLoading: boolean
-}
+interface IState {}
 
 export class ImageLoader extends React.Component<IProps, IState> {
 
@@ -18,27 +18,31 @@ export class ImageLoader extends React.Component<IProps, IState> {
 
     public constructor(props?: any, context?: any) {
         super(props, context);
-        this.state = {
-            isLoading: false
-        }
     }
 
     componentDidMount() {
+        if (this.props.imagePath) {
+            this.loadSingle();
+        }
+        if (this.props.imagePaths) {
+            this.loadMultiple();
+        }
+    }
+
+
+
+
+    loadSingle() {
         const that = this;
+
         this.handleLoadBackgroundImage(that.props.imagePath).then(
 
             function fulfilled() {
                 that.props.onLoad();
-                that.setState({
-                    isLoading: false
-                });
             },
 
             function rejected() {
                 that.props.onFail() ? that.props.onFail() : null;
-                that.setState({
-                    isLoading: false
-                });
             }
         );
     }
@@ -48,13 +52,28 @@ export class ImageLoader extends React.Component<IProps, IState> {
         this.backgroundImage.removeEventListener('error', this.errorId);
     }
 
+
+    loadMultiple() {
+        const that = this;
+
+        Promise.all(this.props.imagePaths.map(imagePath => this.handleLoadBackgroundImage(imagePath)))
+            .then(
+
+                function fulfilled(x) {
+                    that.props.onLoad();
+                },
+
+                function rejected() {
+                    that.props.onFail() ? that.props.onFail() : null;
+                }
+                //do stuff
+            );
+    }
+
     handleLoadBackgroundImage = (imageURL) => {
+        console.log(imageURL)
         // Define the promise
         return new Promise((resolve, reject) => {
-
-            this.setState({
-                isLoading: true
-            });
 
             this.backgroundImage = new Image();
 
@@ -75,10 +94,6 @@ export class ImageLoader extends React.Component<IProps, IState> {
     };
 
     render(): JSX.Element {
-        return (
-            <div>
-                {this.state.isLoading && "L O A D I N G"}
-            </div>
-        );
+        return null;
     }
 }

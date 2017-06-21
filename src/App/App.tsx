@@ -24,6 +24,10 @@ addComponentCSS({
             outline: none;
             text-decoration: none;
         }
+
+        h4 {
+            font-family: Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New;
+        }
         
         code {
             font-family: Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New;
