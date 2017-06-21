@@ -85,7 +85,7 @@ export class Home extends React.Component<IProps, IState> {
                 left: 0,
                 width: "100%",
                 opacity:  isPreviewExtended ? 0.4 : 1,
-                filter: `grayscale(${isPreviewExtended ? 100 : 0}%)`,
+                filter: `grayscale(${isPreviewExtended ? 100 : 0}%) blur(${isPreviewExtended ? 2 : 0}px)`,
                 zIndex: isPreviewExtended ? 0 : 4
             },
             home__pages: {

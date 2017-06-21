@@ -6,6 +6,7 @@ import { ProjectHeading } from "./ProjectHeading";
 import {toParams} from "../../../../data/helpers/toParams";
 import {saveParams, togglePreview, toggleScrollAnimation} from "../../../HomeActionCreators";
 import {Link} from "react-router-dom";
+import {colors} from "../../../../data/themeOptions";
 
 interface IProperties {
     isMenuOpen?: boolean
@@ -36,6 +37,7 @@ interface IState extends IProperties, ICallbacks {
     isHeadingHovered?: boolean
     isProjectExtended?: boolean
     posY?: number
+    isMounted?: boolean
 }
 
 export class Project extends React.Component<IProps, IState> {
@@ -48,12 +50,15 @@ export class Project extends React.Component<IProps, IState> {
             isHovered: false,
             isHeadingHovered: false,
             isProjectExtended: false,
-            posY: 0
+            posY: 0,
+            isMounted: false
         };
     }
 
-    handleClick() {
-        this.props.onAnimationStart(toParams(`/${this.props.project.path}`));
+    componentDidMount() {
+        this.setState({
+            isMounted: true
+        });
     }
 
     componentWillReceiveProps(nextProps) {
@@ -67,6 +72,10 @@ export class Project extends React.Component<IProps, IState> {
             });
             this.props.onCondensePreview();
         }
+    }
+
+    handleClick() {
+        this.props.onAnimationStart(toParams(`/${this.props.project.path}`));
     }
 
     handleHeadingClick() {
@@ -114,21 +123,20 @@ export class Project extends React.Component<IProps, IState> {
 
     handleWheel(e) {
         const { posY } = this.state;
-        const { project } = this.props;
 
         const delta = e.deltaY;
-        const imageNumber = project.imagePaths.length;
-        const scrollHeight = this.imageHeight() * (imageNumber - 1);
 
         const isMin = posY > 0;
-        const isMax = posY < -scrollHeight;
+        const isMax = posY < -this.scrollHeight();
 
-        if (delta < 10 && !isMin) {
+        console.log(delta);
+
+        if (delta < -2 && !isMin) {
             this.setState({
                 posY: posY + 40
             })
         }
-        if (delta > 10 && !isMax) {
+        if (delta > 2 && !isMax) {
             this.setState({
                 posY: posY - 40
             })
@@ -138,9 +146,9 @@ export class Project extends React.Component<IProps, IState> {
         e.preventDefault();
     }
 
-    imageHeight() {
+    scrollHeight() {
         const imageNumber = this.props.project.imagePaths.length;
-        return this.innerRef.clientHeight / imageNumber;
+        return this.state.isMounted ? (this.innerRef.clientHeight / imageNumber) * (imageNumber - 1) : 1;
     }
 
     render(): JSX.Element {
@@ -157,6 +165,15 @@ export class Project extends React.Component<IProps, IState> {
                 height: height,
                 verticalAlign: "top",
                 width: "100%"
+            },
+            project__bar: {
+                position: "absolute",
+                top: 0,
+                right: -2,
+                width: 2,
+                height: height / this.scrollHeight() * -posY,
+                background: colors.std,
+                // transition: "height 1000ms"
             },
             project__inner: {
                 display: "inline-block",
@@ -215,6 +232,7 @@ export class Project extends React.Component<IProps, IState> {
                         />
                     </div>}
                 </div>
+                <div style={ styles.project__bar} />
             </Link>
         );
     }
