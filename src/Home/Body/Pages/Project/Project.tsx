@@ -24,20 +24,27 @@ interface ICallbacks {
 interface IProps extends IProperties, ICallbacks {
     index: number
     project: IProject
+    previewWidth?: number
     docScroll?: number
     offsetTop?: number
 }
 
 interface IState extends IProperties, ICallbacks {
     isHovered?: boolean
+    isProjectExtended?: boolean
+    posY?: number
 }
 
 export class Project extends React.Component<IProps, IState> {
 
+    innerRef;
+
     public constructor(props?: any, context?: any) {
         super(props, context);
         this.state = {
-            isHovered: false
+            isHovered: false,
+            isProjectExtended: false,
+            posY: 0
         };
     }
 
@@ -47,14 +54,19 @@ export class Project extends React.Component<IProps, IState> {
 
     componentWillReceiveProps(nextProps) {
         if (this.props.savedParams.activePagePath !== nextProps.savedParams.activePagePath) {
-            this.setState({
-                isHovered: false
+            this.setState({ //reset
+                isHovered: false,
+                isProjectExtended: false,
+                posY: 0
             })
         }
     }
 
     handleHeadingClick() {
-
+        this.props.onAnimationStart(toParams(`/${this.props.project.path}`));
+        this.setState({
+            isProjectExtended: true
+        })
     }
 
     handleMouseEnter() {
@@ -69,62 +81,95 @@ export class Project extends React.Component<IProps, IState> {
         })
     }
 
-    render(): JSX.Element {
-        const { isMobile, isTablet, isLaptop, project, index, savedParams, height } = this.props;
-        const { isHovered } = this.state;
-        const isActive = project.path===savedParams.activePagePath || (!savedParams.activePagePath && index===0);
+    handleWheel(e) {
+        const { posY } = this.state;
+        const { project } = this.props;
 
+        const delta = e.deltaY;
+        const imageNumber = project.imagePaths.length;
+        const imageHeight = this.innerRef.clientHeight / imageNumber;
+        const scrollHeight = imageHeight * (imageNumber - 1);
+
+        const isMin = posY > 0;
+        const isMax = posY < -scrollHeight;
+
+        if (delta > 10 && !isMin) {
+            this.setState({
+                posY: posY + 10
+            })
+        } else if (delta < 10 && !isMax) {
+            this.setState({
+                posY: posY - 10
+            })
+        }
+
+        e.stopPropagation();
+        e.preventDefault();
+    }
+
+    render(): JSX.Element {
+        const { isMobile, isTablet, isLaptop, project, index, savedParams, height, previewWidth } = this.props;
+        const { isHovered, isProjectExtended, posY } = this.state;
+        const isActive = project.path===savedParams.activePagePath || (!savedParams.activePagePath && index===0);
         const styles = {
             project: {
-                display: "table",
-                height: "100%",
+                position: "relative",
+                display: "table-cell",
+                height: height,
+                verticalAlign: "middle",
                 width: "100%",
+                zIndex: isProjectExtended ? 6666 : 0
+            },
+            project__inner: {
+                display: "inline-block",
+                transform: `translate3d(0px, ${posY}px, 0px)`
             },
             project__image: {
-                position: "absolute",
-                left: 0,
-                top: "50%",
+                position: "relative",
                 width: "calc(100% - 20px)",
                 padding: "0px 10px",
                 height: "auto",
-                transform: "translateY(-50%)",
                 WebkitFilter: `grayscale(${isActive ? 0 : isHovered ? 20 : 100}%)`,
                 MozFilter: `grayscale(${isActive ? 0 : isHovered ? 20 : 100}%)`,
                 filter: `grayscale(${isActive ? 0 : isHovered ? 20 : 100}%)`,
                 opacity: isActive ? 1 : isHovered ? 0.6 : 0.2,
                 transition: "opacity 800ms, filter 800ms",
-                cursor: isHovered ? "pointer" : "default"
+                cursor: isProjectExtended ? "default" : "pointer"
             },
-            project__inner: {
-                position: "absolute",
-                left: "50%",
-                top: height * 0.9,
-                WebkitFilter: `grayscale(${isActive ? 0 : isHovered ? 20 : 100}%)`,
-                MozFilter: `grayscale(${isActive ? 0 : isHovered ? 20 : 100}%)`,
-                filter: `grayscale(${isActive ? 0 : isHovered ? 20 : 100}%)`,
+            project__heading: {
+                width: "100%",
                 opacity: isActive ? 1 : isHovered ? 0.6 : 0.2,
-                transition: "opacity 800ms, filter 800ms",
-                transform: "translate(-50%, -100%)"
+                transition: "opacity 800ms",
             }
         } as any;
 
         return (
             <Link style={ styles.project }
                   to={`/${this.props.project.path}`}
+                  onWheel={isProjectExtended ? (e) => this.handleWheel(e) : null}
                   onClick={isActive ? e => e.preventDefault() : () => this.handleClick()}>
-                <img style={ styles.project__image }
-                     src={`/images/${index}.PNG`}
+                <div style={ styles.project__inner }
+                     ref={el => this.innerRef = el}
                      onMouseEnter={isActive ? null : () => this.handleMouseEnter()}
-                     onMouseLeave={isActive ? null : () => this.handleMouseLeave()}/>
-                <div style={ styles.project__inner }>
-                    <ProjectHeading
-                        project={project}
-                        isMobile={isMobile}
-                        isTablet={isTablet}
-                        isLaptop={isLaptop}
-                        isActive={isActive}
-                        onClick={this.handleHeadingClick.bind(this)}
-                    />
+                     onMouseLeave={isActive ? null : () => this.handleMouseLeave()}>
+                    {project.imagePaths.map((path, i) =>
+                        (isProjectExtended || i === 0)
+                            &&
+                            <img key={i}
+                                 style={ styles.project__image }
+                                 src={path}/>)}
+                    {!isProjectExtended
+                    && <div style={ styles.project__heading}>
+                        <ProjectHeading
+                            project={project}
+                            previewWidth={previewWidth}
+                            isMobile={isMobile}
+                            isTablet={isTablet}
+                            isLaptop={isLaptop}
+                            isActive={isActive}
+                            onClick={this.handleHeadingClick.bind(this)}
+                        />
+                    </div>}
                 </div>
             </Link>
         );

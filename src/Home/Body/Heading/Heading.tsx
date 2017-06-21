@@ -61,8 +61,7 @@ export class Heading extends React.Component<IProps, IState> {
                 color: colors.std,
                 fontSize: 24,
                 opacity: isMounted ? 1 : 0,
-                transition: "opacity 200ms",
-                zIndex: 2
+                transition: "opacity 200ms"
             }
         } as any;
         return (

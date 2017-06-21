@@ -24,8 +24,8 @@ export class MenuLeft extends React.Component<IProps, IState> {
             menuLeft: {
                 position: "absolute",
                 textAlign: "left",
-                top: 2,
-                left: 10,
+                top: 0,
+                left: 0,
             }
         } as any;
         return (

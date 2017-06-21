@@ -6,6 +6,7 @@ import {ProjectHeadingUnderline} from "./ProjectHeadingUnderline";
 
 interface IProps {
     project?: IProject
+    previewWidth?: number
     isMobile: boolean
     isTablet: boolean
     isLaptop: boolean
@@ -40,16 +41,18 @@ export class ProjectHeading extends React.Component<IProps, IState> {
 
 
     render(): JSX.Element {
-        const { isMobile, isTablet, isLaptop, project, isActive } = this.props;
+        const { isMobile, isTablet, isLaptop, project, isActive, previewWidth } = this.props;
         const { isHovered } = this.state;
 
         const styles = {
             projectHeading: {
+                width: "100%",
                 cursor: "pointer",
                 textAlign: "center"
             },
             projectHeading__text: {
-                transform: `translate3d(0px, ${isHovered ? 0 : 0}px, 0px)`,
+                display: "inline-block",
+                transform: `translate3d(0px, ${isHovered ? 100 : 50}%, 0px)`,
                 transition: "transform 200ms"
             },
             projectHeading__name: {
@@ -61,6 +64,10 @@ export class ProjectHeading extends React.Component<IProps, IState> {
                 display: "inline-block",
                 fontSize: fontSize.S(isMobile, isTablet, isLaptop),
                 padding: `0px ${padding.M(isMobile, isTablet, isLaptop)}px`
+            },
+            projectHeading__underline: {
+                width: "100%",
+                textAlign: "center"
             }
         } as any;
         return (
@@ -76,9 +83,12 @@ export class ProjectHeading extends React.Component<IProps, IState> {
                         {project.date}
                     </div>
                 </div>
-                <ProjectHeadingUnderline
-                    isHovered={isHovered}
-                />
+                <div style={ styles.projectHeading__underline }>
+                    <ProjectHeadingUnderline
+                        previewWidth={previewWidth}
+                        isHovered={isHovered}
+                    />
+                </div>
             </div>
         );
     }

@@ -41,6 +41,9 @@ export class NavigationArrowRight extends React.Component<IProps, IState> {
 
         const isMax = (activeIndex === projectList.length - 1);
 
+        const background = isMax ? colors.gry : colors.hi;
+        const cursor = isMax ? "default" : "pointer";
+
         const nextPath = isMax ? projectList[activeIndex].path : projectList[activeIndex +  1].path;
 
         const styles = {
@@ -50,7 +53,7 @@ export class NavigationArrowRight extends React.Component<IProps, IState> {
                 right: "2vw",
                 top: 0,
                 width: bodyLength,
-                cursor: "pointer"
+                cursor: cursor
             },
             navigationArrowRight__body: {
                 position: "absolute",
@@ -58,7 +61,7 @@ export class NavigationArrowRight extends React.Component<IProps, IState> {
                 top: "50%",
                 height: thickness,
                 borderRadius: 2,
-                background: isMax ? colors.gry : colors.hi,
+                background: background,
                 width: bodyLength,
                 transform: "translateY(-50%)"
             },
@@ -68,7 +71,7 @@ export class NavigationArrowRight extends React.Component<IProps, IState> {
                 right: 0,
                 height: thickness,
                 borderRadius: 2,
-                background: isMax ? colors.gry : colors.hi,
+                background: background,
                 width: headRadius,
                 transform: "rotate(-45deg) translateY(200%)"
             },
@@ -78,7 +81,7 @@ export class NavigationArrowRight extends React.Component<IProps, IState> {
                 right: 0,
                 height: thickness,
                 borderRadius: 2,
-                background: isMax ? colors.gry : colors.hi,
+                background: background,
                 width: headRadius,
                 transform: "rotate(45deg) translateY(-200%)"
             },

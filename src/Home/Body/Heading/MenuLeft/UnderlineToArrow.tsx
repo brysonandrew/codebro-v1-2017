@@ -25,22 +25,22 @@ export class UnderlineToArrow extends React.Component<IProps, IState> {
             isHovered
                 ?   {
                         position: "absolute",
-                        top: -1,
-                        left: -10,
+                        top: 0,
+                        left: 0,
                         width: 120,
                         height: thickness,
                         background: colors.std,
-                        transform: "rotate(0deg) translate3d(0px, 32px, 0px)",
+                        transform: "rotate(0deg) translate3d(0px, 42px, 0px)",
                         transition: "transform 500ms, width 500ms"
                     }
                 :   {
                         position: "absolute",
-                        top: -1,
-                        left: -10,
+                        top: 0,
+                        left: 0,
                         width: sectionLength,
                         height: thickness,
                         background: colors.std,
-                        transform: `rotate(0deg) translate3d(0px, 46px, 0px) scaleX(1)`,
+                        transform: `rotate(0deg) translate3d(0px, 53px, 0px) scaleX(1)`,
                         transition: "transform 500ms, width 500ms"
                 },
             underlineToArrow__headTop:

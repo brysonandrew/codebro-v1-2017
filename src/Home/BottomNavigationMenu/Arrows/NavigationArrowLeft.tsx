@@ -41,6 +41,9 @@ export class NavigationArrowLeft extends React.Component<IProps, IState> {
 
         const isMin = (activeIndex === 0);
 
+        const background = isMin ? colors.gry : colors.hi;
+        const cursor = isMin ? "default" : "pointer";
+
         const nextPath = isMin ? projectList[activeIndex].path : projectList[activeIndex - 1].path;
 
         const styles = {
@@ -50,7 +53,7 @@ export class NavigationArrowLeft extends React.Component<IProps, IState> {
                 width: bodyLength,
                 left: "2vw",
                 top: 0,
-                cursor: "pointer"
+                cursor: cursor
             },
             navigationArrowLeft__body: {
                 position: "absolute",
@@ -58,7 +61,7 @@ export class NavigationArrowLeft extends React.Component<IProps, IState> {
                 top: "50%",
                 height: thickness,
                 borderRadius: 2,
-                background: isMin ? colors.gry : colors.hi,
+                background: background,
                 width: bodyLength,
                 transform: "translateY(-50%)"
             },
@@ -68,7 +71,7 @@ export class NavigationArrowLeft extends React.Component<IProps, IState> {
                 top: 0,
                 height: thickness,
                 borderRadius: 2,
-                background: isMin ? colors.gry : colors.hi,
+                background: background,
                 width: headRadius,
                 transform: "rotate(45deg) translateY(200%)"
             },
@@ -78,7 +81,7 @@ export class NavigationArrowLeft extends React.Component<IProps, IState> {
                 top: 0,
                 height: thickness,
                 borderRadius: 2,
-                background: isMin ? colors.gry : colors.hi,
+                background: background,
                 width: headRadius,
                 transform: "rotate(-45deg) translateY(-200%)"
             }

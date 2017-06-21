@@ -167,6 +167,7 @@ export class Pages extends React.Component<IProps, IState> {
                             <ProjectFromStore
                                 index={i}
                                 project={project}
+                                previewWidth={adjustedWidth}
                             />
                         </div>)}
                 </div>

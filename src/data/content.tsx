@@ -3,24 +3,28 @@ import * as React from 'react';
 import { toPath } from "./helpers/toPath";
 import {IDictionary, IProject, ISocialMediaSelector} from "./models";
 
-function Project(name, date) {
+function Project(name, date, photoNumber) {
     this.name= name;
     this.path= toPath(this.name);
+    this.imagePaths = new Array(photoNumber).fill("").map((_, i) => `/images/${this.path}/${i}.PNG`);
     this.date= date;
 }
 
 export const projectList: IProject[] = [
     new Project(
         "Porizi",
-        "2016"
+        "2016",
+        11
     ),
     new Project(
         "Coworkz",
-        "2017"
+        "2017",
+        10
     ),
     new Project(
         "Gulumjan Consulting",
-        "2017"
+        "2017",
+        6
     )
 ];
 
@@ -44,3 +48,9 @@ export const headingMenuLeft: ISocialMediaSelector[] = [
         label: "vlog"
     }
 ];
+
+function Preview(name, date) {
+    this.name= name;
+    this.path=
+    this.date= date;
+}
