@@ -110,7 +110,7 @@ export class Pages extends React.Component<IProps, IState> {
     }
 
     calcWidthMarginFactor(isMobile, isTablet, isLaptop) {
-        return (isMobile ? 0 : isTablet ? 0.1 : isLaptop ? 0.2 : 0.3);
+        return (isMobile ? 0 : isTablet ? 0.0675 : isLaptop ? 0.125 : 0.25);
     }
 
     render(): JSX.Element {
@@ -141,7 +141,7 @@ export class Pages extends React.Component<IProps, IState> {
                 position: "fixed",
                 left: widthMargin,
                 top: 0,
-                width: projectList.length * adjustedWidth,
+                width: projectList.length * adjustedWidth
             },
             pages__project: {
                 display: "inline-block",

@@ -23,20 +23,28 @@ export class HeadingSub extends React.Component<IProps, IState> {
                 position: "relative",
                 fontSize: 10,
                 textAlign: "center",
-                top: isTablet ? 100 : 0,
+                top: isMobile ? 100 : isTablet ? 50 : 0,
+                transform: "translateY(-50%)",
                 width: "100%",
+            },
+            headingSub__text: {
+                position: "absolute",
+                left: "50%",
+                color: colors.std,
+                transform: "translate(-50%, -50%)",
+                width: 480
             },
             headingSub__lineLeft: {
                 position: "absolute",
                 left: 240,
-                top: "50%",
+                top: -2,
                 transform: "translateY(-50%)",
                 width: "calc(50% - 480px)"
             },
             headingSub__lineRight: {
                 position: "absolute",
                 right: 0,
-                top: "50%",
+                top: -2,
                 transform: "translateY(-50%)",
                 width: "calc(50% - 240px)"
             },
@@ -46,16 +54,7 @@ export class HeadingSub extends React.Component<IProps, IState> {
                 background: colors.std,
                 width: "100%",
                 transition: "transform 200ms"
-            },
-            headingSub__text: {
-                position: "absolute",
-                left: "50%",
-                color: colors.std,
-                transform: "translate(-50%, -50%)",
-                width: 480,
-                zIndex: 2,
-            },
-
+            }
         } as any;
         return (
             <div style={ styles.headingSub }>

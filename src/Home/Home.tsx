@@ -9,10 +9,12 @@ import { MenuFromStore } from "./ProjectsMenu/Menu";
 import { PagesFromStore } from "./Body/Pages/Pages";
 import { Heading } from "./Body/Heading/Heading";
 import { BottomNavigationMenu } from "./BottomNavigationMenu/BottomNavigationMenu";
+import {colors} from "../data/themeOptions";
 
 interface IProperties {
     savedParams?: IParams
     savedLocation?: Location
+    isPreviewExtended?: boolean
     isMobile?: boolean
     isTablet?: boolean
     isLaptop?: boolean
@@ -70,7 +72,7 @@ export class Home extends React.Component<IProps, IState> {
     }
 
     render(): JSX.Element {
-        const { height, savedParams, onArrowNavigate, isMobile, isTablet, isLaptop} = this.props;
+        const { height, savedParams, onArrowNavigate, isMobile, isTablet, isLaptop, isPreviewExtended} = this.props;
         const styles = {
             home: {
                 position: "relative",
@@ -82,13 +84,19 @@ export class Home extends React.Component<IProps, IState> {
                 top: 0,
                 left: 0,
                 width: "100%",
-                zIndex: 4
-
+                opacity:  isPreviewExtended ? 0.4 : 1,
+                filter: `grayscale(${isPreviewExtended ? 100 : 0}%)`,
+                zIndex: isPreviewExtended ? 0 : 4
+            },
+            home__pages: {
+                position: "relative",
+                zIndex: 2
             },
             home__bottomNav: {
                 position: "fixed",
-                top: height * 0.9,
-                width: "100%"
+                bottom: isTablet ? 0 : 80,
+                width: "100%",
+                zIndex: 2
             }
         } as any;
         return (
@@ -100,7 +108,7 @@ export class Home extends React.Component<IProps, IState> {
                         isLaptop={isLaptop}
                     />
                 </div>
-                <div>
+                <div style={ styles.home__pages}>
                     <PagesFromStore
                         history={this.props.history}
                     />
@@ -109,6 +117,9 @@ export class Home extends React.Component<IProps, IState> {
                     <BottomNavigationMenu
                         onArrowNavigation={onArrowNavigate}
                         savedParams={savedParams}
+                        isMobile={isMobile}
+                        isTablet={isTablet}
+                        isLaptop={isLaptop}
                     />
                 </div>
             </div>
@@ -125,6 +136,7 @@ function mapStateToProps(state: IStoreState, ownProps: IProps): IProperties {
         isMobile: state.homeStore.isMobile,
         isTablet: state.homeStore.isTablet,
         isLaptop: state.homeStore.isLaptop,
+        isPreviewExtended: state.homeStore.isPreviewExtended,
         savedLocation: state.homeStore.savedLocation,
         savedParams: state.homeStore.savedParams
     };

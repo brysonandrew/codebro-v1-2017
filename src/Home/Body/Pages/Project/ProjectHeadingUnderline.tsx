@@ -22,6 +22,7 @@ export class ProjectHeadingUnderline extends React.Component<IProps, IState> {
         const styles = {
             projectHeadingUnderline: {
                 position: "relative",
+                top: 0,
                 left: width * 0.75,
                 transform: `translate3d(0px, ${isHovered ? 80 : 0}px, 0px)`,
                 transition: "transform 200ms"
@@ -34,8 +35,8 @@ export class ProjectHeadingUnderline extends React.Component<IProps, IState> {
                 width: width * 0.5,
                 height: 2,
                 transform: `rotate(${isHovered ? -22 : 0}deg) 
-                            translate3d(${isHovered ? width * 0.125 : width * 0.75}px, 0px, 0px) 
-                            scaleX(${isHovered ? 0.5 : 1})`,
+                            translate3d(${isHovered ? width * 0.025 : width * 0.75}px, 0px, 0px) 
+                            scaleX(${isHovered ? 0.1 : 1})`,
                 transition: "transform 200ms"
             },
             projectHeadingUnderline__right: {
@@ -46,8 +47,8 @@ export class ProjectHeadingUnderline extends React.Component<IProps, IState> {
                 width: width * 0.5,
                 height: 2,
                 transform: `rotate(${isHovered ? 22 : 0}deg) 
-                            translate3d(${isHovered ? -width * 0.125 : -width * 0.75}px, 0px, 0px) 
-                            scaleX(${isHovered ? 0.5 : 1})`,
+                            translate3d(${isHovered ? -width * 0.025 : -width * 0.75}px, 0px, 0px) 
+                            scaleX(${isHovered ? 0.1 : 1})`,
                 transition: "transform 200ms"
             },
         } as any;

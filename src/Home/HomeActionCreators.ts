@@ -7,6 +7,7 @@ import {
     UPDATE__WHEEL_EVENT,
     // v i e w s
     OPEN__MENU,
+    EXTEND__PREVIEW,
     UPDATE__VIEWPORT_DIMENSIONS
 } from "./HomeActions";
 import { createAction } from "../redux/utils/actions";
@@ -46,6 +47,13 @@ export function toggleMenu(isMenuOpen) {
     return dispatch => {
         dispatch(createAction<OPEN__MENU>(OPEN__MENU.type, {
             isMenuOpen: isMenuOpen,
+        }));
+    }
+}
+export function togglePreview(isPreviewExtended) {
+    return dispatch => {
+        dispatch(createAction<EXTEND__PREVIEW>(EXTEND__PREVIEW.type, {
+            isPreviewExtended: isPreviewExtended,
         }));
     }
 }

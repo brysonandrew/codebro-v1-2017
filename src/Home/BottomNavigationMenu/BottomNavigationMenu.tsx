@@ -8,6 +8,9 @@ import {NavigationArrowLeft} from "./Arrows/NavigationArrowLeft";
 interface IProps {
     onArrowNavigation: (nextParams: IParams) => void
     savedParams: IParams
+    isMobile?: boolean
+    isTablet?: boolean
+    isLaptop?: boolean
 }
 
 interface IState {}
@@ -27,14 +30,16 @@ export class BottomNavigationMenu extends React.Component<IProps, IState> {
     }
 
     render(): JSX.Element {
-        const { savedParams } = this.props;
+        const { savedParams, isTablet } = this.props;
         const thickness = 4;
         const headRadius = 20;
         const bodyLength = 60;
 
         const styles = {
             bottomNavigationMenu: {
-                width: "100%"
+                width: "100%",
+                height: isTablet ? 40 : 0,
+                background: isTablet ? colors.wht : "transparent",
             }
         } as any;
         return (

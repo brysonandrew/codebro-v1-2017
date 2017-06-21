@@ -4,7 +4,7 @@ import { IStoreState } from '../../../../redux/main_reducer';
 import { IParams, IProject } from "../../../../data/models";
 import { ProjectHeading } from "./ProjectHeading";
 import {toParams} from "../../../../data/helpers/toParams";
-import {saveParams, toggleScrollAnimation} from "../../../HomeActionCreators";
+import {saveParams, togglePreview, toggleScrollAnimation} from "../../../HomeActionCreators";
 import {Link} from "react-router-dom";
 
 interface IProperties {
@@ -19,6 +19,8 @@ interface IProperties {
 
 interface ICallbacks {
     onAnimationStart?: (nextParams: IParams) => void
+    onExtendPreview?: () => void
+    onCondensePreview?: () => void
 }
 
 interface IProps extends IProperties, ICallbacks {
@@ -31,6 +33,7 @@ interface IProps extends IProperties, ICallbacks {
 
 interface IState extends IProperties, ICallbacks {
     isHovered?: boolean
+    isHeadingHovered?: boolean
     isProjectExtended?: boolean
     posY?: number
 }
@@ -43,6 +46,7 @@ export class Project extends React.Component<IProps, IState> {
         super(props, context);
         this.state = {
             isHovered: false,
+            isHeadingHovered: false,
             isProjectExtended: false,
             posY: 0
         };
@@ -53,20 +57,35 @@ export class Project extends React.Component<IProps, IState> {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (this.props.savedParams.activePagePath !== nextProps.savedParams.activePagePath) {
+        const { savedParams } = this.props;
+        if (savedParams.activePagePath !== nextProps.savedParams.activePagePath) {
             this.setState({ //reset
                 isHovered: false,
+                isHeadingHovered: false,
                 isProjectExtended: false,
                 posY: 0
-            })
+            });
+            this.props.onCondensePreview();
         }
     }
 
     handleHeadingClick() {
-        this.props.onAnimationStart(toParams(`/${this.props.project.path}`));
-        this.setState({
-            isProjectExtended: true
-        })
+        const { project, onAnimationStart, onExtendPreview, onCondensePreview } = this.props;
+        const { isProjectExtended } = this.state;
+
+        if (isProjectExtended) {
+            this.setState({
+                isProjectExtended: false,
+                posY: 0
+            });
+            onCondensePreview();
+        } else {
+            this.setState({
+                isProjectExtended: true
+            });
+            onAnimationStart(toParams(`/${project.path}`));
+            onExtendPreview();
+        }
     }
 
     handleMouseEnter() {
@@ -81,25 +100,37 @@ export class Project extends React.Component<IProps, IState> {
         })
     }
 
+    handleHeadingMouseEnter() {
+        this.setState({
+            isHeadingHovered: true
+        })
+    }
+
+    handleHeadingMouseLeave() {
+        this.setState({
+            isHeadingHovered: false
+        })
+    }
+
     handleWheel(e) {
         const { posY } = this.state;
         const { project } = this.props;
 
         const delta = e.deltaY;
         const imageNumber = project.imagePaths.length;
-        const imageHeight = this.innerRef.clientHeight / imageNumber;
-        const scrollHeight = imageHeight * (imageNumber - 1);
+        const scrollHeight = this.imageHeight() * (imageNumber - 1);
 
         const isMin = posY > 0;
         const isMax = posY < -scrollHeight;
 
-        if (delta > 10 && !isMin) {
+        if (delta < 10 && !isMin) {
             this.setState({
-                posY: posY + 10
+                posY: posY + 40
             })
-        } else if (delta < 10 && !isMax) {
+        }
+        if (delta > 10 && !isMax) {
             this.setState({
-                posY: posY - 10
+                posY: posY - 40
             })
         }
 
@@ -107,22 +138,31 @@ export class Project extends React.Component<IProps, IState> {
         e.preventDefault();
     }
 
+    imageHeight() {
+        const imageNumber = this.props.project.imagePaths.length;
+        return this.innerRef.clientHeight / imageNumber;
+    }
+
     render(): JSX.Element {
         const { isMobile, isTablet, isLaptop, project, index, savedParams, height, previewWidth } = this.props;
-        const { isHovered, isProjectExtended, posY } = this.state;
-        const isActive = project.path===savedParams.activePagePath || (!savedParams.activePagePath && index===0);
+        const { isHovered, isHeadingHovered, isProjectExtended, posY } = this.state;
+        const isActive = project.path===savedParams.activePagePath
+                            || (!savedParams.activePagePath && index===0);
+        const topOffset = isMobile ? 200 : isTablet ? 150 : 100;
+
         const styles = {
             project: {
                 position: "relative",
                 display: "table-cell",
                 height: height,
-                verticalAlign: "middle",
-                width: "100%",
-                zIndex: isProjectExtended ? 6666 : 0
+                verticalAlign: "top",
+                width: "100%"
             },
             project__inner: {
                 display: "inline-block",
-                transform: `translate3d(0px, ${posY}px, 0px)`
+                paddingTop: isProjectExtended ? 0 : topOffset,
+                transform: `translate3d(0px, ${posY}px, 0px)`,
+                transition: "padding 800ms"
             },
             project__image: {
                 position: "relative",
@@ -134,9 +174,10 @@ export class Project extends React.Component<IProps, IState> {
                 filter: `grayscale(${isActive ? 0 : isHovered ? 20 : 100}%)`,
                 opacity: isActive ? 1 : isHovered ? 0.6 : 0.2,
                 transition: "opacity 800ms, filter 800ms",
-                cursor: isProjectExtended ? "default" : "pointer"
+                cursor: isProjectExtended ? "default" : "pointer",
             },
             project__heading: {
+                padding: "40px 0px 80px",
                 width: "100%",
                 opacity: isActive ? 1 : isHovered ? 0.6 : 0.2,
                 transition: "opacity 800ms",
@@ -147,7 +188,7 @@ export class Project extends React.Component<IProps, IState> {
             <Link style={ styles.project }
                   to={`/${this.props.project.path}`}
                   onWheel={isProjectExtended ? (e) => this.handleWheel(e) : null}
-                  onClick={isActive ? e => e.preventDefault() : () => this.handleClick()}>
+                  onClick={isActive ? e => {e.preventDefault();this.handleHeadingClick()} : () => this.handleClick()}>
                 <div style={ styles.project__inner }
                      ref={el => this.innerRef = el}
                      onMouseEnter={isActive ? null : () => this.handleMouseEnter()}
@@ -159,7 +200,9 @@ export class Project extends React.Component<IProps, IState> {
                                  style={ styles.project__image }
                                  src={path}/>)}
                     {!isProjectExtended
-                    && <div style={ styles.project__heading}>
+                    && <div style={ styles.project__heading}
+                            onMouseEnter={isActive ? () => this.handleHeadingMouseEnter() : null}
+                            onMouseLeave={isActive ? () => this.handleHeadingMouseLeave() : null}>
                         <ProjectHeading
                             project={project}
                             previewWidth={previewWidth}
@@ -167,6 +210,7 @@ export class Project extends React.Component<IProps, IState> {
                             isTablet={isTablet}
                             isLaptop={isLaptop}
                             isActive={isActive}
+                            isHovered={isHeadingHovered}
                             onClick={this.handleHeadingClick.bind(this)}
                         />
                     </div>}
@@ -194,6 +238,12 @@ function mapDispatchToProps(dispatch, ownProps: IProps): ICallbacks {
         onAnimationStart: (nextParams) => {
             dispatch(toggleScrollAnimation(true));
             dispatch(saveParams(nextParams));
+        },
+        onExtendPreview: () => {
+            dispatch(togglePreview(true));
+        },
+        onCondensePreview: () => {
+            dispatch(togglePreview(false));
         }
     }
 }

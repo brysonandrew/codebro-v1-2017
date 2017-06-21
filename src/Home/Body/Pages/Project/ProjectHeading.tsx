@@ -11,38 +11,22 @@ interface IProps {
     isTablet: boolean
     isLaptop: boolean
     isActive?: boolean
+    isHovered?: boolean
     onClick: () => void
 }
 
 interface IState {
-    isHovered?: boolean
 }
 
 export class ProjectHeading extends React.Component<IProps, IState> {
 
     public constructor(props?: any, context?: any) {
         super(props, context);
-        this.state = {
-            isHovered: false
-        };
-    }
 
-    handleMouseEnter() {
-        this.setState({
-            isHovered: true
-        })
     }
-
-    handleMouseLeave() {
-        this.setState({
-            isHovered: false
-        })
-    }
-
 
     render(): JSX.Element {
-        const { isMobile, isTablet, isLaptop, project, isActive, previewWidth } = this.props;
-        const { isHovered } = this.state;
+        const { isMobile, isTablet, isLaptop, project, isActive, previewWidth, isHovered } = this.props;
 
         const styles = {
             projectHeading: {
@@ -52,7 +36,7 @@ export class ProjectHeading extends React.Component<IProps, IState> {
             },
             projectHeading__text: {
                 display: "inline-block",
-                transform: `translate3d(0px, ${isHovered ? 100 : 50}%, 0px)`,
+                transform: `translate3d(0px, ${isHovered ? 0 : -20}px, 0px)`,
                 transition: "transform 200ms"
             },
             projectHeading__name: {
@@ -72,22 +56,21 @@ export class ProjectHeading extends React.Component<IProps, IState> {
         } as any;
         return (
             <div style={ styles.projectHeading }
-                 onClick={this.props.onClick}
-                 onMouseEnter={isActive ? () => this.handleMouseEnter() : null}
-                 onMouseLeave={isActive ? () => this.handleMouseLeave() : null}>
+                 onClick={this.props.onClick}>
+               {!isMobile
+               &&   <div style={ styles.projectHeading__underline }>
+                        <ProjectHeadingUnderline
+                            previewWidth={previewWidth}
+                            isHovered={isHovered}
+                        />
+                    </div>}
                 <div style={ styles.projectHeading__text }>
                     <div style={ styles.projectHeading__name }>
                         {project.name}
                     </div>
-                    <div style={ styles.projectHeading__date }>
+                    <code style={ styles.projectHeading__date }>
                         {project.date}
-                    </div>
-                </div>
-                <div style={ styles.projectHeading__underline }>
-                    <ProjectHeadingUnderline
-                        previewWidth={previewWidth}
-                        isHovered={isHovered}
-                    />
+                    </code>
                 </div>
             </div>
         );
