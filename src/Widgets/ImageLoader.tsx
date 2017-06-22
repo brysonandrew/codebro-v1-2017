@@ -29,9 +29,6 @@ export class ImageLoader extends React.Component<IProps, IState> {
         }
     }
 
-
-
-
     loadSingle() {
         const that = this;
 
@@ -71,7 +68,6 @@ export class ImageLoader extends React.Component<IProps, IState> {
     }
 
     handleLoadBackgroundImage = (imageURL) => {
-        console.log(imageURL)
         // Define the promise
         return new Promise((resolve, reject) => {
 

@@ -12,7 +12,7 @@ interface IProps {
     isLaptop: boolean
     isActive?: boolean
     isHovered?: boolean
-    onClick: () => void
+    onClick: (event: Event) => void
 }
 
 interface IState {
@@ -23,6 +23,10 @@ export class ProjectHeading extends React.Component<IProps, IState> {
     public constructor(props?: any, context?: any) {
         super(props, context);
 
+    }
+
+    handleClick(e) {
+        this.props.onClick(e);
     }
 
     render(): JSX.Element {
@@ -56,7 +60,7 @@ export class ProjectHeading extends React.Component<IProps, IState> {
         } as any;
         return (
             <div style={ styles.projectHeading }
-                 onClick={this.props.onClick}>
+                 onClick={(e) => this.handleClick(e)}>
                {!isMobile
                &&   <div style={ styles.projectHeading__underline }>
                         <ProjectHeadingUnderline
