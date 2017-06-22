@@ -3,9 +3,10 @@ import * as React from 'react';
 import { toPath } from "./helpers/toPath";
 import {IDictionary, IProject, ISocialMediaSelector} from "./models";
 
-function Project(name, date, photoNumber) {
+function Project(name, date, photoNumber, link) {
     this.name= name;
     this.path= toPath(this.name);
+    this.link= link;
     this.imagePaths = new Array(photoNumber).fill("").map((_, i) => `/images/${this.path}/${i}.PNG`);
     this.date= date;
 }
@@ -14,17 +15,20 @@ export const projectList: IProject[] = [
     new Project(
         "Porizi",
         "2016",
-        11
+        11,
+        "https://porizi.herokuapp.com/"
     ),
     new Project(
         "Coworkz",
         "2017",
-        10
+        10,
+        "cb-coworking.herokuapp.com"
     ),
     new Project(
         "Gulumjan Consulting",
         "2017",
-        6
+        6,
+        "https://gulumjan-consulting.herokuapp.com/"
     )
 ];
 

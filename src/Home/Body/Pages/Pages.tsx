@@ -115,7 +115,7 @@ export class Pages extends React.Component<IProps, IState> {
 
     render(): JSX.Element {
         const { docScroll, isMounted } = this.state;
-        const { onAnimationEnd, savedParams, isAnimating, width, height, isMobile, isTablet, isLaptop } = this.props;
+        const { onAnimationEnd, savedParams, isAnimating, width, height, isMobile, isTablet, isLaptop, history } = this.props;
         const isSelected = "activePagePath" in savedParams;
         const isOffsetsReady = (this.pageOffsets != null);
         const isScrollReady = (isSelected && isOffsetsReady);
@@ -167,6 +167,7 @@ export class Pages extends React.Component<IProps, IState> {
                             <ProjectFromStore
                                 index={i}
                                 project={project}
+                                history={history}
                                 previewWidth={adjustedWidth}
                             />
                         </div>)}

@@ -13,17 +13,35 @@ interface IProps {
     onClick: (nextPath: string) => void
 }
 
-interface IState {}
+interface IState {
+    isHovered: boolean
+}
 
 export class NavigationArrowRight extends React.Component<IProps, IState> {
 
     public constructor(props?: any, context?: any) {
         super(props, context);
+        this.state = {
+            isHovered: false
+        };
     }
 
     handleClick(nextPath) {
         this.props.onClick(nextPath);
     }
+
+    handleMouseEnter() {
+        this.setState({
+            isHovered: true
+        })
+    }
+
+    handleMouseLeave() {
+        this.setState({
+            isHovered: false
+        })
+    }
+
 
     findActiveIndex() {
         const { savedParams } = this.props;
@@ -36,6 +54,7 @@ export class NavigationArrowRight extends React.Component<IProps, IState> {
 
     render(): JSX.Element {
         const { thickness, headRadius, bodyLength } = this.props;
+        const { isHovered } = this.state;
 
         const activeIndex = this.findActiveIndex();
 
@@ -50,10 +69,12 @@ export class NavigationArrowRight extends React.Component<IProps, IState> {
             navigationArrowRight: {
                 position: "absolute",
                 height: headRadius * 2,
-                right: "2vw",
+                right: 0,
                 top: 0,
                 width: bodyLength,
-                cursor: cursor
+                cursor: cursor,
+                transform: `translate3d(${isHovered ? -1 : -2}vw, 0px, 0px)`,
+                transition: "transform 200ms"
             },
             navigationArrowRight__body: {
                 position: "absolute",
@@ -89,8 +110,10 @@ export class NavigationArrowRight extends React.Component<IProps, IState> {
         return (
             <Link style= {styles.navigationArrowRight}
                   to={`/${nextPath}`}
-                  onClick={isMax ? e => e.preventDefault() : () => this.handleClick(nextPath)}>
-                <div style= {styles.navigationArrowRight__body}>
+                  onClick={isMax ? e => e.preventDefault() : () => this.handleClick(nextPath)}
+                  onMouseEnter={isMax ? null : () => this.handleMouseEnter()}
+                  onMouseLeave={isMax ? null : () => this.handleMouseLeave()}>
+            <div style= {styles.navigationArrowRight__body}>
                     <div style={ styles.navigationArrowRight__headTop }/>
                     <div style={ styles.navigationArrowRight__headBottom }/>
                 </div>

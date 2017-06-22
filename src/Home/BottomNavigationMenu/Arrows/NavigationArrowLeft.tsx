@@ -13,16 +13,33 @@ interface IProps {
     onClick: (nextPath: string) => void
 }
 
-interface IState {}
+interface IState {
+    isHovered: boolean
+}
 
 export class NavigationArrowLeft extends React.Component<IProps, IState> {
 
     public constructor(props?: any, context?: any) {
         super(props, context);
+        this.state = {
+            isHovered: false
+        };
     }
 
     handleClick(nextPath) {
         this.props.onClick(nextPath);
+    }
+
+    handleMouseEnter() {
+        this.setState({
+            isHovered: true
+        })
+    }
+
+    handleMouseLeave() {
+        this.setState({
+            isHovered: false
+        })
     }
 
     findActiveIndex() {
@@ -36,6 +53,7 @@ export class NavigationArrowLeft extends React.Component<IProps, IState> {
 
     render(): JSX.Element {
         const { thickness, headRadius, bodyLength, onClick } = this.props;
+        const { isHovered } = this.state;
 
         const activeIndex = this.findActiveIndex();
 
@@ -51,9 +69,11 @@ export class NavigationArrowLeft extends React.Component<IProps, IState> {
                 position: "absolute",
                 height: headRadius * 2,
                 width: bodyLength,
-                left: "2vw",
+                left: 0,
                 top: 0,
-                cursor: cursor
+                cursor: cursor,
+                transform: `translate3d(${isHovered ? 1 : 2}vw, 0px, 0px)`,
+                transition: "transform 200ms"
             },
             navigationArrowLeft__body: {
                 position: "absolute",
@@ -89,7 +109,9 @@ export class NavigationArrowLeft extends React.Component<IProps, IState> {
         return (
             <Link style= {styles.navigationArrowLeft}
                   to={`/${nextPath}`}
-                  onClick={isMin ? e => e.preventDefault() : () => this.handleClick(nextPath)}>
+                  onClick={isMin ? e => e.preventDefault() : () => this.handleClick(nextPath)}
+                  onMouseEnter={isMin ? null : () => this.handleMouseEnter()}
+                  onMouseLeave={isMin ? null : () => this.handleMouseLeave()}>
                 <div style= {styles.navigationArrowLeft__body}>
                     <div style={ styles.navigationArrowLeft__headTop }/>
                     <div style={ styles.navigationArrowLeft__headBottom }/>

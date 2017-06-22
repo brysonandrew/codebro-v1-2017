@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {colors} from "../../../../data/themeOptions";
+import {colors} from "../../../../../data/themeOptions";
 
 interface IProps {
     isHovered: boolean

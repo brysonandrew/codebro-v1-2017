@@ -1,7 +1,7 @@
 import * as React from 'react';
-import {fontSize, padding} from "../../../../data/helpers/breakPoints";
-import {IProject} from "../../../../data/models";
-import {colors} from "../../../../data/themeOptions";
+import {fontSize, padding} from "../../../../../data/helpers/breakPoints";
+import {IProject} from "../../../../../data/models";
+import {colors} from "../../../../../data/themeOptions";
 import {ProjectHeadingUnderline} from "./ProjectHeadingUnderline";
 
 interface IProps {
@@ -12,7 +12,7 @@ interface IProps {
     isLaptop: boolean
     isActive?: boolean
     isHovered?: boolean
-    onClick: (event: Event) => void
+    onClick: () => void
 }
 
 interface IState {
@@ -25,12 +25,8 @@ export class ProjectHeading extends React.Component<IProps, IState> {
 
     }
 
-    handleClick(e) {
-        this.props.onClick(e);
-    }
-
     render(): JSX.Element {
-        const { isMobile, isTablet, isLaptop, project, isActive, previewWidth, isHovered } = this.props;
+        const { isMobile, isTablet, isLaptop, project, onClick, previewWidth, isHovered } = this.props;
 
         const styles = {
             projectHeading: {
@@ -60,7 +56,7 @@ export class ProjectHeading extends React.Component<IProps, IState> {
         } as any;
         return (
             <div style={ styles.projectHeading }
-                 onClick={(e) => this.handleClick(e)}>
+                 onClick={onClick}>
                {!isMobile
                &&   <div style={ styles.projectHeading__underline }>
                         <ProjectHeadingUnderline

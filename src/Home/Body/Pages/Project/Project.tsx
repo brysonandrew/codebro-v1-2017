@@ -1,14 +1,16 @@
 import * as React from 'react';
+import * as history from 'history';
 import { connect } from 'react-redux';
 import { IStoreState } from '../../../../redux/main_reducer';
 import { IParams, IProject } from "../../../../data/models";
-import { ProjectHeading } from "./ProjectHeading";
+import { ProjectHeading } from "./Heading/ProjectHeading";
 import { toParams } from "../../../../data/helpers/toParams";
 import { saveParams, togglePreview, toggleScrollAnimation } from "../../../HomeActionCreators";
 import { Link } from "react-router-dom";
 import { colors } from "../../../../data/themeOptions";
 import { Loader } from "../../../../Widgets/Loader";
 import { ImageLoader } from "../../../../Widgets/ImageLoader";
+import {ProjectLink} from "./Link/ProjectLink";
 
 interface IProperties {
     isMenuOpen?: boolean
@@ -29,6 +31,7 @@ interface ICallbacks {
 interface IProps extends IProperties, ICallbacks {
     index: number
     project: IProject
+    history: history.History
     previewWidth?: number
     docScroll?: number
     offsetTop?: number
@@ -74,16 +77,20 @@ export class Project extends React.Component<IProps, IState> {
                 posY: 0
             });
             this.props.onCondensePreview();
-            console.log(this.props.project.path + "  cancelling")
         }
+    }
+
+    componentWillUnmount() {
+        clearTimeout(this.timeoutId);
+        cancelAnimationFrame(this.animationFrameId);
     }
 
     handleClick() {
         this.props.onAnimationStart(toParams(`/${this.props.project.path}`));
     }
 
-    handleHeadingClick(e) {
-        const { project, onAnimationStart, onExtendPreview, onCondensePreview } = this.props;
+    handleHeadingClick() {
+        const { project, onAnimationStart, onExtendPreview, onCondensePreview, history } = this.props;
         const { isProjectExtended } = this.state;
         if (isProjectExtended) {
             this.setState({
@@ -99,7 +106,7 @@ export class Project extends React.Component<IProps, IState> {
             onAnimationStart(toParams(`/${project.path}`));
             onExtendPreview();
         }
-        e.preventDefault();
+        history.push(`/${this.props.project.path}`);
     }
 
     handleMouseEnter() {
@@ -207,7 +214,6 @@ export class Project extends React.Component<IProps, IState> {
             posY: nextPosY
         });
 
-
         //detect wheel stop
         clearTimeout(this.timeoutId);
         this.timeoutId = setTimeout(() => this.handleRelease(), 140);
@@ -237,6 +243,7 @@ export class Project extends React.Component<IProps, IState> {
         const heightByScroll = ((height + this.elasticBuffer) / this.scrollHeight * (-posY - this.elasticBuffer));
 
         const topOffset = isMobile ? 200 : isTablet ? 150 : 100;
+
         const styles = {
             project: {
                 position: "relative",
@@ -283,10 +290,9 @@ export class Project extends React.Component<IProps, IState> {
         } as any;
 
         return (
-            <Link style={ styles.project }
-                  to={`/${this.props.project.path}`}
+            <div style={ styles.project }
                   onWheel={(isProjectExtended && isImagesLoaded) ? (e) => this.handleWheel(e) : null}
-                  onClick={isActive ? (e) => this.handleHeadingClick(e) : () => this.handleClick()}>
+                  onClick={isActive ? () => this.handleHeadingClick() : () => this.handleClick()}>
                 <div style={ styles.project__inner }
                      ref={el => this.innerRef = el}
                      onMouseEnter={isActive ? null : () => this.handleMouseEnter()}
@@ -311,24 +317,32 @@ export class Project extends React.Component<IProps, IState> {
                         />
                         <Loader/>
                     </div>}
-                    {!isProjectExtended
-                    && <div style={ styles.project__heading}
-                            onMouseEnter={isActive ? () => this.handleHeadingMouseEnter() : null}
-                            onMouseLeave={isActive ? () => this.handleHeadingMouseLeave() : null}>
-                        <ProjectHeading
-                            project={project}
-                            previewWidth={previewWidth}
-                            isMobile={isMobile}
-                            isTablet={isTablet}
-                            isLaptop={isLaptop}
-                            isActive={isActive}
-                            isHovered={isHeadingHovered}
-                            onClick={this.handleHeadingClick.bind(this)}
-                        />
-                    </div>}
+                    {isProjectExtended
+                        ?   <div>
+                                <ProjectLink
+                                    project={project}
+                                    isMobile={isMobile}
+                                    isTablet={isTablet}
+                                    isLaptop={isLaptop}
+                                />
+                            </div>
+                        :   <div style={ styles.project__heading}
+                                onMouseEnter={isActive ? () => this.handleHeadingMouseEnter() : null}
+                                onMouseLeave={isActive ? () => this.handleHeadingMouseLeave() : null}>
+                                <ProjectHeading
+                                    project={project}
+                                    previewWidth={previewWidth}
+                                    isMobile={isMobile}
+                                    isTablet={isTablet}
+                                    isLaptop={isLaptop}
+                                    isActive={isActive}
+                                    isHovered={isHeadingHovered}
+                                    onClick={this.handleHeadingClick.bind(this)}
+                                />
+                            </div>}
                 </div>
                 <div style={ styles.project__bar} />
-            </Link>
+            </div>
         );
     }
 }

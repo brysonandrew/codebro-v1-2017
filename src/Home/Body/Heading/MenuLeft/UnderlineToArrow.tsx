@@ -40,7 +40,7 @@ export class UnderlineToArrow extends React.Component<IProps, IState> {
                         width: sectionLength,
                         height: thickness,
                         background: colors.std,
-                        transform: `rotate(0deg) translate3d(0px, 50px, 0px) scaleX(1)`,
+                        transform: `rotate(0deg) translate3d(0px, 50px, 0px)`,
                         transition: "transform 500ms, width 500ms"
                 },
             underlineToArrow__headTop:
