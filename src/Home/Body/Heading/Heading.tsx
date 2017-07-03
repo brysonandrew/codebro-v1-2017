@@ -34,7 +34,7 @@ export class Heading extends React.Component<IProps, IState> {
     }
     render(): JSX.Element {
         const { isMounted } = this.state;
-        const { isMobile, isTablet, isLaptop} = this.props;
+        const { isMobile, isTablet, isLaptop } = this.props;
 
         const styles = {
             heading: {

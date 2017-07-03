@@ -22,7 +22,7 @@ export const projectList: IProject[] = [
         "Coworkz",
         "2017",
         10,
-        "cb-coworking.herokuapp.com"
+        "https://cb-coworking.herokuapp.com"
     ),
     new Project(
         "Gulumjan Consulting",

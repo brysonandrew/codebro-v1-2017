@@ -72,7 +72,7 @@ export class Home extends React.Component<IProps, IState> {
     }
 
     render(): JSX.Element {
-        const { height, savedParams, onArrowNavigate, isMobile, isTablet, isLaptop, isPreviewExtended} = this.props;
+        const { height, savedParams, onArrowNavigate, isMobile, isTablet, isLaptop, isPreviewExtended } = this.props;
         const styles = {
             home: {
                 position: "relative",
@@ -86,7 +86,8 @@ export class Home extends React.Component<IProps, IState> {
                 width: "100%",
                 opacity:  isPreviewExtended ? 0.4 : 1,
                 filter: `grayscale(${isPreviewExtended ? 100 : 0}%) blur(${isPreviewExtended ? 2 : 0}px)`,
-                zIndex: isPreviewExtended ? 0 : 4
+                zIndex: isPreviewExtended ? 0 : 4,
+                transition: "filter 200ms"
             },
             home__pages: {
                 position: "relative",

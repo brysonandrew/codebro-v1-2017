@@ -68,12 +68,12 @@ export class NavigationArrowLeft extends React.Component<IProps, IState> {
             navigationArrowLeft: {
                 position: "absolute",
                 height: headRadius * 2,
-                width: bodyLength,
+                width: `calc(${bodyLength}px + ${isHovered ? 1 : 0}vw)`,
                 left: 0,
                 top: 0,
                 cursor: cursor,
                 transform: `translate3d(${isHovered ? 1 : 2}vw, 0px, 0px)`,
-                transition: "transform 200ms"
+                transition: "width 200ms, transform 200ms"
             },
             navigationArrowLeft__body: {
                 position: "absolute",

@@ -76,7 +76,6 @@ export class Project extends React.Component<IProps, IState> {
                 isProjectExtended: false,
                 posY: 0
             });
-            this.props.onCondensePreview();
         }
     }
 
@@ -89,15 +88,18 @@ export class Project extends React.Component<IProps, IState> {
         this.props.onAnimationStart(toParams(`/${this.props.project.path}`));
     }
 
+    // handleTransitionEnd() {
+    //     ();
+    // }
+
     handleHeadingClick() {
-        const { project, onAnimationStart, onExtendPreview, onCondensePreview, history } = this.props;
+        const { project, onAnimationStart, onExtendPreview, history } = this.props;
         const { isProjectExtended } = this.state;
         if (isProjectExtended) {
             this.setState({
                 isProjectExtended: false,
                 posY: 0
             });
-            onCondensePreview();
         } else {
             this.setState({
                 isProjectExtended: true
@@ -296,7 +298,8 @@ export class Project extends React.Component<IProps, IState> {
                 <div style={ styles.project__inner }
                      ref={el => this.innerRef = el}
                      onMouseEnter={isActive ? null : () => this.handleMouseEnter()}
-                     onMouseLeave={isActive ? null : () => this.handleMouseLeave()}>
+                     onMouseLeave={isActive ? null : () => this.handleMouseLeave()}
+                     onTransitionEnd={isProjectExtended ? null : this.props.onCondensePreview}>
                     {project.imagePaths.map((path, i) =>
                         ((isProjectExtended && isImagesLoaded && !isImagesLoadedFailed)
                         || i === 0)
