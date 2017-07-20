@@ -42,8 +42,7 @@ interface IState extends IProperties, ICallbacks {
     isHeadingHovered?: boolean
     isProjectExtended?: boolean
     posY?: number
-    isImagesLoaded?: boolean
-    isImagesLoadedFailed?: boolean
+    isImagesLoading?: boolean
 }
 
 export class Project extends React.Component<IProps, IState> {
@@ -60,16 +59,15 @@ export class Project extends React.Component<IProps, IState> {
             isHovered: false,
             isHeadingHovered: false,
             isProjectExtended: false,
-            isImagesLoaded: false,
-            isImagesLoadedFailed: false,
+            isImagesLoading: false,
             posY: 0,
         };
     }
 
     componentWillReceiveProps(nextProps) {
         const { savedParams } = this.props;
-        const isParamsChanged = (savedParams.activePagePath !== nextProps.savedParams.activePagePath);
-        if (isParamsChanged && savedParams.activePagePath)  {
+        const isParamsChanged = (savedParams.activeProjectPath !== nextProps.savedParams.activeProjectPath);
+        if (isParamsChanged && savedParams.activeProjectPath)  {
             this.setState({ //reset
                 isHovered: false,
                 isHeadingHovered: false,
@@ -226,21 +224,21 @@ export class Project extends React.Component<IProps, IState> {
 
     handleLoad() {
         this.setState({
-            isImagesLoaded: true
+            isImagesLoading: false
         });
     }
 
     handleFail() {
         this.setState({
-            isImagesLoadedFailed: true
+            isImagesLoading: false
         });
     }
 
     render(): JSX.Element {
         const { isMobile, isTablet, isLaptop, project, index, savedParams, height, previewWidth } = this.props;
-        const { isHovered, isHeadingHovered, isProjectExtended, posY, isImagesLoaded, isImagesLoadedFailed } = this.state;
-        const isActive = project.path===savedParams.activePagePath
-                            || (!savedParams.activePagePath && index===0);
+        const { isHovered, isHeadingHovered, isProjectExtended, posY, isImagesLoading } = this.state;
+        const isActive = project.path===savedParams.activeProjectPath
+                            || (!savedParams.activeProjectPath && index===0);
 
         const heightByScroll = ((height + this.elasticBuffer) / this.scrollHeight * (-posY - this.elasticBuffer));
 
@@ -263,9 +261,11 @@ export class Project extends React.Component<IProps, IState> {
                 background: colors.std
             },
             project__inner: {
+                position: "relative",
+                top: `${isProjectExtended ? 0 : 50}%`,
                 display: "inline-block",
                 paddingTop: isProjectExtended ? 0 : topOffset,
-                transform: `translate3d(0px, ${posY}px, 0px)`,
+                transform: `translate3d(0px, ${posY}px, 0px) translateY(${isProjectExtended ? 0 : -50}%)`,
                 transition: "padding 800ms"
             },
             project__image: {
@@ -293,7 +293,11 @@ export class Project extends React.Component<IProps, IState> {
 
         return (
             <div style={ styles.project }
-                  onWheel={(isProjectExtended && isImagesLoaded) ? (e) => this.handleWheel(e) : null}
+                  onWheel={isProjectExtended
+                            ?   isImagesLoading
+                            ?   e => e.preventDefault()
+                                :   (e) => this.handleWheel(e)
+                                :   null}
                   onClick={isActive ? () => this.handleHeadingClick() : () => this.handleClick()}>
                 <div style={ styles.project__inner }
                      ref={el => this.innerRef = el}
@@ -301,7 +305,7 @@ export class Project extends React.Component<IProps, IState> {
                      onMouseLeave={isActive ? null : () => this.handleMouseLeave()}
                      onTransitionEnd={isProjectExtended ? null : this.props.onCondensePreview}>
                     {project.imagePaths.map((path, i) =>
-                        ((isProjectExtended && isImagesLoaded && !isImagesLoadedFailed)
+                        ((isProjectExtended && !isImagesLoading)
                         || i === 0)
                             &&
                         <img key={i}
@@ -309,8 +313,7 @@ export class Project extends React.Component<IProps, IState> {
                              src={path}/>
                     )}
                     {isProjectExtended
-                    && !isImagesLoaded
-                    && !isImagesLoadedFailed
+                    && isImagesLoading
                     &&
                     <div>
                         <ImageLoader

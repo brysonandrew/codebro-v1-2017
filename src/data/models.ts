@@ -11,7 +11,7 @@ export interface IPageRoute {
 }
 
 export interface IParams {
-    activePagePath?: string
+    activeProjectPath?: string
     activeViewPath?: string
 }
 //

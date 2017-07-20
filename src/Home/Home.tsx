@@ -6,10 +6,10 @@ import { IStoreState } from '../redux/main_reducer';
 import { changeViewportDimensions, saveLocation, saveParams, toggleScrollAnimation } from './HomeActionCreators';
 import { toParams } from "../data/helpers/toParams";
 import { MenuFromStore } from "./ProjectsMenu/Menu";
-import { PagesFromStore } from "./Body/Pages/Pages";
+import { ProjectsFromStore } from "./Body/Projects/Projects";
 import { Heading } from "./Body/Heading/Heading";
 import { BottomNavigationMenu } from "./BottomNavigationMenu/BottomNavigationMenu";
-import {colors} from "../data/themeOptions";
+import { colors } from "../data/themeOptions";
 
 interface IProperties {
     savedParams?: IParams
@@ -42,7 +42,7 @@ export class Home extends React.Component<IProps, IState> {
 
     timerId;
 
-    public constructor(props?: any, context?: any) {
+    constructor(props?: any, context?: any) {
         super(props, context);
         this.state = {
             isMounted: false
@@ -54,7 +54,7 @@ export class Home extends React.Component<IProps, IState> {
 
         const params = toParams(history.location.pathname);
 
-        if (params.activePagePath.length > 0) {
+        if (params.activeProjectPath.length > 0) {
             onAnimationStart();
         }
 
@@ -89,7 +89,7 @@ export class Home extends React.Component<IProps, IState> {
                 zIndex: isPreviewExtended ? 0 : 4,
                 transition: "filter 200ms"
             },
-            home__pages: {
+            home__projects: {
                 position: "relative",
                 zIndex: 2
             },
@@ -109,8 +109,8 @@ export class Home extends React.Component<IProps, IState> {
                         isLaptop={isLaptop}
                     />
                 </div>
-                <div style={ styles.home__pages}>
-                    <PagesFromStore
+                <div style={ styles.home__projects}>
+                    <ProjectsFromStore
                         history={this.props.history}
                     />
                 </div>

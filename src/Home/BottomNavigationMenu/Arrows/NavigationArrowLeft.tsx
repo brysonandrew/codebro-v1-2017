@@ -44,9 +44,9 @@ export class NavigationArrowLeft extends React.Component<IProps, IState> {
 
     findActiveIndex() {
         const { savedParams } = this.props;
-        const activePagePath = savedParams.activePagePath;
+        const activeProjectPath = savedParams.activeProjectPath;
         const activeIndex = Immutable.List(projectList)
-                                     .findIndex(item => item.path === activePagePath);
+                                     .findIndex(item => item.path === activeProjectPath);
 
         return (activeIndex > -1) ? activeIndex : 0
     }

@@ -24,7 +24,7 @@ export class BottomNavigationMenu extends React.Component<IProps, IState> {
     handleArrowClick(nextPath) {
         const { onArrowNavigation } = this.props;
         const nextParams = {
-            activePagePath: nextPath
+            activeProjectPath: nextPath
         };
         onArrowNavigation(nextParams);
     }

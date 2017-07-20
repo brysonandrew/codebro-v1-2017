@@ -36,14 +36,14 @@ interface IState extends IProperties, ICallbacks {
     isMounted?: boolean
 }
 
-export class Pages extends React.Component<IProps, IState> {
+export class Projects extends React.Component<IProps, IState> {
 
-    pageOffsetList: number[] = [];
-    pageOffsets: IDictionary<number>;
+    projectOffsetList: number[] = [];
+    projectOffsets: IDictionary<number>;
     timeoutId;
     timeoutStopDelay=50;
     isWheelRecorded=false;
-    pageRef;
+    projectRef;
 
     public constructor(props?: any, context?: any) {
         super(props, context);
@@ -70,7 +70,7 @@ export class Pages extends React.Component<IProps, IState> {
 
     handleScroll() {
         if (!this.props.isAnimating) {
-            this.changePagePathOnScroll();
+            this.changeProjectPathOnScroll();
         }
         this.setState({docScroll: document.scrollingElement.scrollTop});
     }
@@ -92,17 +92,17 @@ export class Pages extends React.Component<IProps, IState> {
         }
     }
 
-    changePagePathOnScroll() {
+    changeProjectPathOnScroll() {
         const { savedParams } = this.props;
 
-        const approachingPageBuffer = 200;
-        const pagesScrolledPastOffsets = this.pageOffsetList.filter(offset => (offset - approachingPageBuffer) < window.scrollY);
+        const approachingProjectBuffer = 200;
+        const projectsScrolledPastOffsets = this.projectOffsetList.filter(offset => (offset - approachingProjectBuffer) < window.scrollY);
 
-        const currentIndex = pagesScrolledPastOffsets.length > 0
-                                ?   pagesScrolledPastOffsets.length - 1
+        const currentIndex = projectsScrolledPastOffsets.length > 0
+                                ?   projectsScrolledPastOffsets.length - 1
                                 :   -1;
 
-        if (currentIndex > -1 && projectList[currentIndex].path !== savedParams.activePagePath) {
+        if (currentIndex > -1 && projectList[currentIndex].path !== savedParams.activeProjectPath) {
             const nextPath = `/${projectList[currentIndex].path}`;
             this.props.history.push(nextPath);
             this.props.onURLChange(toParams(nextPath));
@@ -116,12 +116,12 @@ export class Pages extends React.Component<IProps, IState> {
     render(): JSX.Element {
         const { docScroll, isMounted } = this.state;
         const { onAnimationEnd, savedParams, isAnimating, width, height, isMobile, isTablet, isLaptop, history } = this.props;
-        const isSelected = "activePagePath" in savedParams;
-        const isOffsetsReady = (this.pageOffsets != null);
+        const isSelected = "activeProjectPath" in savedParams;
+        const isOffsetsReady = (this.projectOffsets != null);
         const isScrollReady = (isSelected && isOffsetsReady);
 
-        this.pageOffsetList = projectList.map((project, i) => i * width);
-        this.pageOffsets = this.pageOffsetList.reduce((acc, curr, i) => {
+        this.projectOffsetList = projectList.map((project, i) => i * width);
+        this.projectOffsets = this.projectOffsetList.reduce((acc, curr, i) => {
             acc[projectList[i].path] = curr;
             return acc;
         }, {});
@@ -133,17 +133,17 @@ export class Pages extends React.Component<IProps, IState> {
         const adjustedScroll = docScroll - (widthMarginFactor * docScroll * 2);
 
         const styles = {
-            pages: {
+            projects: {
                 position: "relative",
                 height: height + scrollHeight
             },
-            pages__projects: {
+            projects__inner: {
                 position: "fixed",
                 left: widthMargin,
                 top: 0,
                 width: projectList.length * adjustedWidth
             },
-            pages__project: {
+            projects__project: {
                 display: "inline-block",
                 position: "relative",
                 width: adjustedWidth,
@@ -153,17 +153,17 @@ export class Pages extends React.Component<IProps, IState> {
         } as any;
 
         return (
-            <div style={ styles.pages }>
-                <div style={ styles.pages__projects }>
+            <div style={ styles.projects }>
+                <div style={ styles.projects__inner }>
                     {isScrollReady &&   <MotionScroll
                                             docScroll={docScroll}
                                             isAnimating={isAnimating}
-                                            scrollTarget={this.pageOffsets[savedParams.activePagePath]}
+                                            scrollTarget={this.projectOffsets[savedParams.activeProjectPath]}
                                             onRest={onAnimationEnd}
                                         />}
                     {projectList.map((project, i) =>
                         <div key={i}
-                             style={ styles.pages__project }>
+                             style={ styles.projects__project }>
                             <ProjectFromStore
                                 index={i}
                                 project={project}
@@ -210,6 +210,6 @@ function mapDispatchToProps(dispatch, ownProps: IProps): ICallbacks {
     }
 }
 
-export let PagesFromStore = connect(
+export let ProjectsFromStore = connect(
     mapStateToProps, mapDispatchToProps
-)(Pages);
+)(Projects);

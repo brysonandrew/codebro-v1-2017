@@ -16,7 +16,7 @@ export const projectList: IProject[] = [
         "Porizi",
         "2016",
         11,
-        "https://porizi.herokuapp.com/"
+        "http://www.porizi.com/"
     ),
     new Project(
         "Coworkz",
@@ -28,7 +28,7 @@ export const projectList: IProject[] = [
         "Gulumjan Consulting",
         "2017",
         6,
-        "https://gulumjan-consulting.herokuapp.com/"
+        "http://www.gulumjan-consulting.de/"
     )
 ];
 

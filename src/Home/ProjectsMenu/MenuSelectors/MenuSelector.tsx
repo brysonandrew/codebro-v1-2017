@@ -47,7 +47,7 @@ export class MenuSelector extends React.Component<IProps, IState> {
     render(): JSX.Element {
         const { isHovered } = this.state;
         const { isWheel, content, savedParams } = this.props;
-        const isActive = savedParams.activePagePath === content.path;
+        const isActive = savedParams.activeProjectPath === content.path;
         const nextPath = `/${content.path}`;
 
         const styles = {

@@ -1,7 +1,6 @@
-// import {emptyParams} from "../pages";
 const params = [
     "/",
-    "activePagePath",
+    "activeProjectPath",
     "activeViewPath"
 ];
 

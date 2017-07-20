@@ -8,7 +8,7 @@ function Route(path, component) {
 }
 
 const routes: IPageRoute[] = [
-    new Route("/:activePagePath?/:activeViewPath?", HomeFromStore)
+    new Route("/:activeProjectPath?/:activeViewPath?", HomeFromStore)
 ];
 
 export default routes;

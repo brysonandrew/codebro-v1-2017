@@ -2,7 +2,7 @@ import { IParams } from "../models";
 
 export const isPage = (params: IParams) => {
     return {
-        home: params.activePagePath==="home" || params.activePagePath==null
+        home: params.activeProjectPath==="home" || params.activeProjectPath==null
     };
 };
 
