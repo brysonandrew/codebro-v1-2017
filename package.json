@@ -1,6 +1,9 @@
 {
   "name": "codebro",
   "version": "0.0.0",
+  "engines": {
+    "node": "7.4.0"
+  },
   "description": "Website for helping people who want to know more about the web.",
   "scripts": {
     "release": "webpack --config ./webpack/release.js",
