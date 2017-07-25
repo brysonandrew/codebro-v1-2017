@@ -7,7 +7,7 @@ function Project(name, date, photoNumber, link) {
     this.name= name;
     this.path= toPath(this.name);
     this.link= link;
-    this.imagePaths = new Array(photoNumber).fill("").map((_, i) => `/images/${this.path}/${i}.PNG`);
+    this.imagePaths = new Array(photoNumber).fill("").map((_, i) => `/images/Projects/${this.path}/${i}.PNG`);
     this.date= date;
 }
 
@@ -42,19 +42,13 @@ export const headingMenuLeft: ISocialMediaSelector[] = [
     {
         name: "medium link",
         link: "https://medium.com/@codebroio",
-        icon: "/images/social media/medium.png",
+        icon: "/images/Home/social media/medium.png",
         label: "blog"
     },
     {
         name: "youtube link",
         link: "https://www.youtube.com/channel/UCF1SvsAZTJL4Bw9qj0hdNLA",
-        icon: "/images/social media/youtube.png",
+        icon: "/images/Home/social media/youtube.png",
         label: "vlog"
     }
 ];
-
-function Preview(name, date) {
-    this.name= name;
-    this.path=
-    this.date= date;
-}

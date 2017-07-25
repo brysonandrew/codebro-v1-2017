@@ -62,6 +62,9 @@ export class Project extends React.Component<IProps, IState> {
             isImagesLoading: false,
             posY: 0,
         };
+        this.handleHeadingClick = this.handleHeadingClick.bind(this);
+        this.handleRelease = this.handleRelease.bind(this);
+        this.handleClick = this.handleClick.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -83,16 +86,15 @@ export class Project extends React.Component<IProps, IState> {
     }
 
     handleClick() {
-        this.props.onAnimationStart(toParams(`/${this.props.project.path}`));
+        const path = `/${this.props.project.path}`;
+        this.props.history.push(path);
+        this.props.onAnimationStart(toParams(path));
     }
-
-    // handleTransitionEnd() {
-    //     ();
-    // }
 
     handleHeadingClick() {
         const { project, onAnimationStart, onExtendPreview, history } = this.props;
         const { isProjectExtended } = this.state;
+
         if (isProjectExtended) {
             this.setState({
                 isProjectExtended: false,
@@ -100,7 +102,8 @@ export class Project extends React.Component<IProps, IState> {
             });
         } else {
             this.setState({
-                isProjectExtended: true
+                isProjectExtended: true,
+                isImagesLoading: true
             });
 
             onAnimationStart(toParams(`/${project.path}`));
@@ -140,7 +143,7 @@ export class Project extends React.Component<IProps, IState> {
         const isMin = posY > 0;
         const isMax = posY < -this.scrollHeight;
 
-        this.animationFrameId = requestAnimationFrame(this.handleRelease.bind(this))
+        this.animationFrameId = requestAnimationFrame(this.handleRelease);
 
         if (isMin) {
             if (posY < 50) {
@@ -235,7 +238,7 @@ export class Project extends React.Component<IProps, IState> {
     }
 
     render(): JSX.Element {
-        const { isMobile, isTablet, isLaptop, project, index, savedParams, height, previewWidth } = this.props;
+        const { isMobile, isTablet, isLaptop, project, index, savedParams, height, previewWidth, onCondensePreview } = this.props;
         const { isHovered, isHeadingHovered, isProjectExtended, posY, isImagesLoading } = this.state;
         const isActive = project.path===savedParams.activeProjectPath
                             || (!savedParams.activeProjectPath && index===0);
@@ -273,9 +276,6 @@ export class Project extends React.Component<IProps, IState> {
                 width: "calc(100% - 20px)",
                 padding: "0px 10px",
                 height: "auto",
-                // boxShadow: isProjectExtended
-                //     ? "0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)"
-                //     : "0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)",
                 WebkitFilter: `grayscale(${isActive ? 0 : isHovered ? 20 : 100}%)`,
                 MozFilter: `grayscale(${isActive ? 0 : isHovered ? 20 : 100}%)`,
                 filter: `grayscale(${isActive ? 0 : isHovered ? 20 : 100}%)`,
@@ -298,12 +298,14 @@ export class Project extends React.Component<IProps, IState> {
                             ?   e => e.preventDefault()
                                 :   (e) => this.handleWheel(e)
                                 :   null}
-                  onClick={isActive ? () => this.handleHeadingClick() : () => this.handleClick()}>
+                  onClick={isActive ? this.handleHeadingClick : this.handleClick}>
                 <div style={ styles.project__inner }
                      ref={el => this.innerRef = el}
                      onMouseEnter={isActive ? null : () => this.handleMouseEnter()}
                      onMouseLeave={isActive ? null : () => this.handleMouseLeave()}
-                     onTransitionEnd={isProjectExtended ? null : this.props.onCondensePreview}>
+                     onTransitionEnd={isProjectExtended || !isActive
+                                        ?   null
+                                        :   onCondensePreview}>
                     {project.imagePaths.map((path, i) =>
                         ((isProjectExtended && !isImagesLoading)
                         || i === 0)
@@ -343,7 +345,7 @@ export class Project extends React.Component<IProps, IState> {
                                     isLaptop={isLaptop}
                                     isActive={isActive}
                                     isHovered={isHeadingHovered}
-                                    onClick={this.handleHeadingClick.bind(this)}
+                                    onClick={this.handleHeadingClick}
                                 />
                             </div>}
                 </div>

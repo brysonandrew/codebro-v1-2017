@@ -42,7 +42,7 @@ const initialState : IHomeState = {
     height: 720,
     isMobile: false,
     isTablet: false,
-    isLaptop: false,
+    isLaptop: false
 };
 
 export const homeReducer = createReducer<IHomeState>(initialState, [

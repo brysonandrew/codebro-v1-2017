@@ -73,11 +73,16 @@ export class Home extends React.Component<IProps, IState> {
 
     render(): JSX.Element {
         const { height, savedParams, onArrowNavigate, isMobile, isTablet, isLaptop, isPreviewExtended } = this.props;
+        const { isMounted } = this.state;
+
         const styles = {
             home: {
                 position: "relative",
                 background: "#eeeeee",
-                overflow: "hidden"
+                overflow: "hidden",
+                opacity: isMounted ? 1 : 0,
+                filter: isMounted ? "none" : "blur(10px)",
+                transition: "opacity 800ms, filter 800ms"
             },
             home__heading: {
                 position: "fixed",
