@@ -51,7 +51,7 @@ export class MenuLeftItem extends React.Component<IProps, IState> {
             menuLeftItem__inner: {
                 display: "table-cell",
                 verticalAlign: "middle",
-                height: 55,
+                height: 50,
             },
             menuLeftItem__icon: {
                 display: "inline-block",
@@ -64,6 +64,11 @@ export class MenuLeftItem extends React.Component<IProps, IState> {
                 padding: "0px 10px",
                 width: "auto",
                 color: colors.gry
+            },
+            menuLeftItem__underline: {
+                position: "absolute",
+                top: 0,
+                left: 0
             }
         } as any;
         return (
@@ -79,9 +84,11 @@ export class MenuLeftItem extends React.Component<IProps, IState> {
                         {item.label}
                     </span>
                 </div>
-                <UnderlineToArrow
-                    isHovered={isHovered}
-                />
+                <div style={styles.menuLeftItem__underline}>
+                    <UnderlineToArrow
+                        isHovered={isHovered}
+                    />
+                </div>
             </a>
         );
     }

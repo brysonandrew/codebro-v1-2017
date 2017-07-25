@@ -35,7 +35,7 @@ export class UnderlineToArrow extends React.Component<IProps, IState> {
                     }
                 :   {
                         position: "absolute",
-                        top: 1,
+                        top: 0,
                         left: 0,
                         width: sectionLength,
                         height: thickness,

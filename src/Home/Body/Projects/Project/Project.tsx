@@ -250,9 +250,7 @@ export class Project extends React.Component<IProps, IState> {
         const styles = {
             project: {
                 position: "relative",
-                display: "table-cell",
                 height: height,
-                verticalAlign: "top",
                 width: "100%"
             },
             project__bar: {
@@ -266,9 +264,8 @@ export class Project extends React.Component<IProps, IState> {
             project__inner: {
                 position: "relative",
                 top: `${isProjectExtended ? 0 : 50}%`,
-                display: "inline-block",
                 paddingTop: isProjectExtended ? 0 : topOffset,
-                transform: `translate3d(0px, ${posY}px, 0px) translateY(${isProjectExtended ? 0 : -50}%)`,
+                transform: `translate3d(0px, ${posY}px, 0px) translate(0px, ${posY}px) translate(0px, ${isProjectExtended ? 0 : -50}%)`,
                 transition: "padding 800ms"
             },
             project__image: {

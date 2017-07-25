@@ -20,11 +20,10 @@ export class HeadingSub extends React.Component<IProps, IState> {
 
         const styles = {
             headingSub: {
-                position: "relative",
+                position: "absolute",
                 fontSize: 10,
                 textAlign: "center",
                 top: isMobile ? 100 : isTablet ? 50 : 0,
-                transform: "translateY(-50%)",
                 width: "100%",
             },
             headingSub__text: {
@@ -37,22 +36,19 @@ export class HeadingSub extends React.Component<IProps, IState> {
             headingSub__lineLeft: {
                 position: "absolute",
                 left: 240,
-                top: -2,
-                transform: "translateY(-50%)",
+                top: 0,
                 width: "calc(50% - 480px)"
             },
             headingSub__lineRight: {
                 position: "absolute",
                 right: 0,
-                top: -2,
-                transform: "translateY(-50%)",
+                top: 0,
                 width: "calc(50% - 240px)"
             },
             headingSub__line: {
                 display: "inline-block",
                 height: 2,
                 background: colors.std,
-                width: "100%",
                 transition: "transform 200ms"
             }
         } as any;
@@ -65,12 +61,8 @@ export class HeadingSub extends React.Component<IProps, IState> {
                 </span>
                {!isTablet
                &&   <div>
-                        <div style={styles.headingSub__lineLeft}>
-                            <div style={styles.headingSub__line}/>
-                        </div>
-                        <div style={styles.headingSub__lineRight}>
-                            <div style={styles.headingSub__line}/>
-                        </div>
+                       <div style={Object.assign({}, styles.headingSub__lineLeft, styles.headingSub__line)}/>
+                       <div style={Object.assign({}, styles.headingSub__lineRight, styles.headingSub__line)}/>
                     </div>}
             </div>
         );

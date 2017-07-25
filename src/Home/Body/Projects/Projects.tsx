@@ -146,6 +146,7 @@ export class Projects extends React.Component<IProps, IState> {
             projects__project: {
                 display: "inline-block",
                 position: "relative",
+                verticalAlign: "top",
                 width: adjustedWidth,
                 height: height,
                 transform: `translate3d(${-adjustedScroll}px, 0px, 0px)`
