@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as history from 'history';
 import { connect } from 'react-redux';
 import { IStoreState } from '../../../../redux/main_reducer';
-import { IParams, IProject } from "../../../../data/models";
+import {IGrabParams, IParams, IProject} from "../../../../data/models";
 import { ProjectHeading } from "./Heading/ProjectHeading";
 import { toParams } from "../../../../data/helpers/toParams";
 import { saveParams, togglePreview, toggleScrollAnimation } from "../../../HomeActionCreators";
@@ -43,6 +43,7 @@ interface IState extends IProperties, ICallbacks {
     isProjectExtended?: boolean
     posY?: number
     isImagesLoading?: boolean
+    grabParams?: IGrabParams
 }
 
 export class Project extends React.Component<IProps, IState> {
@@ -60,11 +61,20 @@ export class Project extends React.Component<IProps, IState> {
             isHeadingHovered: false,
             isProjectExtended: false,
             isImagesLoading: false,
+            grabParams: {
+                isActive: false,
+                origY: 0
+            },
             posY: 0,
         };
         this.handleHeadingClick = this.handleHeadingClick.bind(this);
         this.handleRelease = this.handleRelease.bind(this);
         this.handleClick = this.handleClick.bind(this);
+        this.handleMouseEnter = this.handleMouseEnter.bind(this);
+        this.handleMouseLeave = this.handleMouseLeave.bind(this);
+        this.handleMouseDown = this.handleMouseDown.bind(this);
+        this.handleMouseUp = this.handleMouseUp.bind(this);
+        this.handleMouseMove = this.handleMouseMove.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -112,6 +122,7 @@ export class Project extends React.Component<IProps, IState> {
         history.push(`/${this.props.project.path}`);
     }
 
+
     handleMouseEnter() {
         this.setState({
             isHovered: true
@@ -120,8 +131,107 @@ export class Project extends React.Component<IProps, IState> {
 
     handleMouseLeave() {
         this.setState({
-            isHovered: false
+            isHovered: false,
+            grabParams: {
+                isActive: false,
+                origY: 0
+            }
         })
+    }
+
+    handleMouseDown(e) {
+        this.setState({
+            grabParams: {
+                isActive: true,
+                origY: e.clientY
+            }
+        });
+        e.preventDefault();
+    }
+
+    handleMouseUp() {
+        this.setState({
+            grabParams: {
+                isActive: false,
+                origY: 0
+            }
+        })
+    }
+
+    handleMouseMove(e) {
+        const { posY, grabParams } = this.state;
+
+        const diffY = e.clientY - grabParams.origY;
+
+        const easing = 0.15;
+
+        this.scrollHeight = this.innerRef.clientHeight;
+
+        const isMin = posY > 0;
+        const isMax = posY < -this.scrollHeight;
+        const isUp = (diffY < 0.5);
+        const isDown = (diffY > -0.5);
+
+        const nextPosY = isDown
+                            ?   isMin
+                                    ?   posY + (this.elasticBuffer - posY) * easing
+                                    :   posY + diffY
+                            :   isUp
+                                    ?   isMax
+                                        ?   posY - ((this.scrollHeight + this.elasticBuffer) + posY) * easing
+                                        :   posY + diffY
+                                    :   this.handleRelease();
+
+        this.setState({
+            posY: nextPosY,
+            grabParams: {
+                isActive: true,
+                origY: e.clientY
+            }
+        });
+
+        //detect wheel stop
+        clearTimeout(this.timeoutId);
+        this.timeoutId = setTimeout(() => this.handleRelease(), 140);
+
+        e.stopPropagation();
+        e.preventDefault();
+    }
+
+    handleWheel(e) {
+        const { posY } = this.state;
+
+        const delta = e.deltaY;
+        const easing = 0.15;
+
+        // const imageNumber = this.props.project.imagePaths.length;
+        this.scrollHeight = this.innerRef.clientHeight;
+
+        const isMin = posY > 0;
+        const isMax = posY < -this.scrollHeight;
+        const isUp = (delta > 0.5);
+        const isDown = (delta < -0.5);
+
+        const nextPosY = isDown
+                        ?   isMin
+                            ?   posY + (this.elasticBuffer - posY) * easing
+                            :   posY + 28
+                        :   isUp
+                            ?   isMax
+                                ?   posY - ((this.scrollHeight + this.elasticBuffer) + posY) * easing
+                                :   posY - 28
+                            :   this.handleRelease();
+
+        this.setState({
+            posY: nextPosY
+        });
+
+        //detect wheel stop
+        clearTimeout(this.timeoutId);
+        this.timeoutId = setTimeout(() => this.handleRelease(), 140);
+
+        e.stopPropagation();
+        e.preventDefault();
     }
 
     handleHeadingMouseEnter() {
@@ -189,42 +299,6 @@ export class Project extends React.Component<IProps, IState> {
         }
     }
 
-    handleWheel(e) {
-        const { posY } = this.state;
-
-        const delta = e.deltaY;
-        const easing = 0.15;
-
-        const imageNumber = this.props.project.imagePaths.length;
-        this.scrollHeight = (this.innerRef.clientHeight / imageNumber) * (imageNumber - 1);
-
-        const isMin = posY > 0;
-        const isMax = posY < -this.scrollHeight;
-        const isUp = (delta > 1);
-        const isDown = (delta < -1);
-
-        const nextPosY = isDown
-                            ?   isMin
-                                    ?   posY + (this.elasticBuffer - posY) * easing
-                                    :   posY + 28
-                            :   isUp
-                                    ?   isMax
-                                            ?   posY - ((this.scrollHeight + this.elasticBuffer) + posY) * easing
-                                            :   posY - 28
-                                    :   this.handleRelease();
-
-        this.setState({
-            posY: nextPosY
-        });
-
-        //detect wheel stop
-        clearTimeout(this.timeoutId);
-        this.timeoutId = setTimeout(() => this.handleRelease(), 140);
-
-        e.stopPropagation();
-        e.preventDefault();
-    }
-
     handleLoad() {
         this.setState({
             isImagesLoading: false
@@ -239,7 +313,7 @@ export class Project extends React.Component<IProps, IState> {
 
     render(): JSX.Element {
         const { isMobile, isTablet, isLaptop, project, index, savedParams, height, previewWidth, onCondensePreview } = this.props;
-        const { isHovered, isHeadingHovered, isProjectExtended, posY, isImagesLoading } = this.state;
+        const { isHovered, isHeadingHovered, isProjectExtended, posY, isImagesLoading, grabParams } = this.state;
         const isActive = project.path===savedParams.activeProjectPath
                             || (!savedParams.activeProjectPath && index===0);
 
@@ -247,25 +321,40 @@ export class Project extends React.Component<IProps, IState> {
 
         const topOffset = isMobile ? 200 : isTablet ? 150 : 100;
 
+        const cursor = isProjectExtended
+                            ?   "crosshair"
+                            :   "pointer";
+
         const styles = {
             project: {
                 position: "relative",
                 height: height,
                 width: "100%"
             },
+            project__barFill: {
+                position: "absolute",
+                top: 0,
+                left: -2,
+                width: 4,
+                height: height,
+                background: colors.std,
+                transform: `scale(${(isActive && isProjectExtended) ? 1 : 0})`,
+                transition: "transform 200ms"
+            },
             project__bar: {
                 position: "absolute",
                 top: 0,
-                right: -2,
+                left: 1,
                 width: 2,
-                height: (isActive && heightByScroll > 0) ? heightByScroll : 0,
-                background: colors.std
+                height: (heightByScroll > 0) ? heightByScroll : 0,
+                background: colors.wht
             },
             project__inner: {
                 position: "relative",
+                display: "inline-block",
                 top: `${isProjectExtended ? 0 : 50}%`,
                 paddingTop: isProjectExtended ? 0 : topOffset,
-                transform: `translate3d(0px, ${posY}px, 0px) translate(0px, ${posY}px) translate(0px, ${isProjectExtended ? 0 : -50}%)`,
+                transform: `translate3d(0px, ${posY}px, 0px) translate(0px, ${isProjectExtended ? 0 : -50}%)`,
                 transition: "padding 800ms"
             },
             project__image: {
@@ -278,7 +367,7 @@ export class Project extends React.Component<IProps, IState> {
                 filter: `grayscale(${isActive ? 0 : isHovered ? 20 : 100}%)`,
                 opacity: isActive ? 1 : isHovered ? 0.6 : 0.2,
                 transition: "opacity 800ms, filter 800ms",
-                cursor: isProjectExtended ? "default" : "pointer",
+                cursor: cursor,
             },
             project__heading: {
                 padding: "40px 0px 80px",
@@ -291,15 +380,28 @@ export class Project extends React.Component<IProps, IState> {
         return (
             <div style={ styles.project }
                   onWheel={isProjectExtended
-                            ?   isImagesLoading
-                            ?   e => e.preventDefault()
-                                :   (e) => this.handleWheel(e)
+                                ?   isImagesLoading
+                                    ?   e => e.preventDefault()
+                                    :   e => this.handleWheel(e)
                                 :   null}
-                  onClick={isActive ? this.handleHeadingClick : this.handleClick}>
+                  onClick={isActive
+                                ?   isProjectExtended
+                                        ?   null
+                                        :   this.handleHeadingClick
+                                :   this.handleClick}
+                 onMouseDown={isActive
+                            && isProjectExtended
+                            && !isImagesLoading
+                                 ?   this.handleMouseDown
+                                 :   null}
+                 onMouseUp={isActive && isProjectExtended
+                                 ?   this.handleMouseUp
+                                 :   null}
+                 onMouseMove={(isActive && grabParams.isActive) ? this.handleMouseMove : null}>
                 <div style={ styles.project__inner }
                      ref={el => this.innerRef = el}
-                     onMouseEnter={isActive ? null : () => this.handleMouseEnter()}
-                     onMouseLeave={isActive ? null : () => this.handleMouseLeave()}
+                     onMouseEnter={isActive ? null : this.handleMouseEnter}
+                     onMouseLeave={this.handleMouseLeave}
                      onTransitionEnd={isProjectExtended || !isActive
                                         ?   null
                                         :   onCondensePreview}>
@@ -346,7 +448,9 @@ export class Project extends React.Component<IProps, IState> {
                                 />
                             </div>}
                 </div>
-                <div style={ styles.project__bar} />
+               <div style={ styles.project__barFill}>
+                    <div style={ styles.project__bar} />
+               </div>
             </div>
         );
     }

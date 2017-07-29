@@ -35,3 +35,8 @@ export interface ISocialMediaSelector {
     icon: string
     label: string
 }
+
+export interface IGrabParams {
+    isActive: boolean
+    origY: number
+}
