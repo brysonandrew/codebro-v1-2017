@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { IStoreState } from '../../../redux/main_reducer';
+import { IStoreState } from '../../../../redux/main_reducer';
 import { MenuSelector } from "./MenuSelector";
-import { saveParams, toggleMenu, toggleScrollAnimation } from "../../HomeActionCreators";
-import { toParams } from "../../../data/helpers/toParams";
-import { portfolioProjectList } from '../../../data/content';
-import { IParams } from "../../../data/models";
-import { colors } from "../../../data/themeOptions";
+import { saveParams, toggleMenu, toggleScrollAnimation } from "../../../HomeActionCreators";
+import { toParams } from "../../../../data/helpers/toParams";
+import { portfolioProjectList } from '../../../../data/content';
+import { IParams } from "../../../../data/models";
+import { colors } from "../../../../data/themeOptions";
 
 interface IProperties {
     isMenuOpen?: boolean

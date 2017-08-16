@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { colors } from "../../../../data/themeOptions";
-import { IStoreState } from '../../../../redux/main_reducer';
-import { toggleMenu } from '../../../HomeActionCreators';
+import { colors } from "../../../../../data/themeOptions";
+import { IStoreState } from '../../../../../redux/main_reducer';
+import { toggleMenu } from '../../../../HomeActionCreators';
 
 interface IProperties {
     isMenuOpen?: boolean

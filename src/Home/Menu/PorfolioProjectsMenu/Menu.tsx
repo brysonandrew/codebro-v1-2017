@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { IStoreState } from '../../redux/main_reducer';
+import { IStoreState } from '../../../redux/main_reducer';
 import { MenuFull } from "./MenuFull/MenuFull";
 import { MenuTablet } from "./MenuTablet/MenuTablet";
 
@@ -35,8 +35,7 @@ export class Menu extends React.Component<IProps, IState> {
             menu: {
                 position: "fixed",
                 right: 20,
-                top: 28,
-                zIndex: 0
+                top: 28
             }
         } as any;
         return (

@@ -5,7 +5,7 @@ import { isGL } from "../../../../../data/helpers/WebGL";
 import { connect } from 'react-redux';
 import { IStoreState } from '../../../../../redux/main_reducer';
 import { IParams } from "../../../../../data/models";
-import { animateKey, playerPositionX, playerPositionZ, playerRotationY, isFiring, isMove
+import { animateKey, playerPositionX, playerPositionZ, playerRotationY
 } from "../../../../../data/helpers/controls/keyboard";
 import { loadGround } from "./fixtures/ground";
 
@@ -145,7 +145,6 @@ export class Spotlight extends React.Component<IProps, IState> {
     }
 
     render(): JSX.Element {
-        // const { isMobile, isTablet, isLaptop } = this.props;
         const styles = {
             world: {
                 position: "absolute",

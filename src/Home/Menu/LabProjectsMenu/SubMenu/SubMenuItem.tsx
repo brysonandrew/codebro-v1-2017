@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { IParams, ILabProject } from "../../../data/models";
+import { IParams, ILabProject } from "../../../../data/models";
 import { Link } from "react-router-dom";
-import { colors } from '../../../data/themeOptions';
+import { colors } from '../../../../data/themeOptions';
 
 interface IProps {
     index: number
@@ -38,7 +38,7 @@ export class SubMenuItem extends React.Component<IProps, IState> {
 
         const isSelected = savedParams.activeViewPath===content.path;
 
-        const itemPath = `/${savedParams.activePagePath}/${content.path}`;
+        const itemPath = `/lab/${savedParams.activeProjectPath}/${content.path}`;
 
         const styles = {
             subMenuItem: {
@@ -75,7 +75,10 @@ export class SubMenuItem extends React.Component<IProps, IState> {
            onMouseLeave={() => this.handleMouseLeave()}>
             <Link to={itemPath}
                   onClick={(e) => e.stopPropagation()}>
-                {!isSubMenuOpen && <div style={styles.subMenuItem__number}>{index + 1}.</div>}
+                {!isSubMenuOpen
+                &&  <div style={styles.subMenuItem__number}>
+                        {index + 1}.
+                    </div>}
                <div style={styles.subMenuItem__text}>
                    {content.name}
                </div>

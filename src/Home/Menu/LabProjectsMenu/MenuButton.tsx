@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Motion, spring } from 'react-motion';
-import { colors } from "../../data/themeOptions";
+import { colors } from "../../../data/themeOptions";
 
 interface IProps {
     isACross: boolean

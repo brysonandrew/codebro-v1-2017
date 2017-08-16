@@ -8,6 +8,7 @@ interface IProps {
     isMobile: boolean
     isTablet: boolean
     isLaptop: boolean
+    onProjectClick?: (index: number) => void
 }
 
 interface IState {}
@@ -18,8 +19,12 @@ export class IntroContents extends React.Component<IProps, IState> {
         super(props, context);
     }
 
+    handleClick(i) {
+        this.props.onProjectClick(i);
+    }
+
     render(): JSX.Element {
-        const {isMobile, isTablet, isLaptop} = this.props;
+        const { isMobile, isTablet, isLaptop } = this.props;
         const styles = {
             introContents: {
                 display: "inline-block",
@@ -38,6 +43,7 @@ export class IntroContents extends React.Component<IProps, IState> {
                 {labProjectList.map((item, i) =>
                     <Link key={i}
                           to={`/lab/${item.path}`}
+                          onClick={() => this.handleClick(i)}
                           style={styles.introContents__item}>
                         {item.name}
                     </Link>)}

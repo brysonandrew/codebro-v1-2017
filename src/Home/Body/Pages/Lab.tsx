@@ -6,7 +6,8 @@ import { IParams } from '../../../data/models';
 import { IStoreState } from '../../../redux/main_reducer';
 import { labProjectList, labProjects } from '../../../data/content';
 import { toParams } from '../../../data/helpers/toParams';
-import { saveParams } from '../../HomeActionCreators';
+import { saveParams, togglePreview } from '../../HomeActionCreators';
+import { MenuFromStore } from '../../Menu/LabProjectsMenu/Menu';
 
 interface IProperties {
     savedParams?: IParams
@@ -18,7 +19,9 @@ interface IProperties {
 }
 
 interface ICallbacks {
-    onLocationListen?: (nextParams: IParams) => void
+    onExtendPreview?: () => void
+    onCondensePreview?: () => void
+    onProjectSelect?: (nextParams: IParams) => void
 }
 
 interface IProps extends IProperties, ICallbacks {
@@ -47,21 +50,39 @@ export class Lab extends React.Component<IProps, IState> {
         this.handleKeyPress = this.handleKeyPress.bind(this);
         this.handleKeyUp = this.handleKeyUp.bind(this);
         this.handleMouseMove = this.handleMouseMove.bind(this);
+        this.handlePagesMenuClick = this.handlePagesMenuClick.bind(this);
     }
 
     componentDidMount() {
-        const{ onLocationListen } = this.props;
-
-
-        this.props.history.listen( location =>  {
-            onLocationListen(toParams(location.pathname));
-        });
+        const { onExtendPreview, onCondensePreview, savedParams } = this.props;
 
         this.timeoutId = setTimeout(() => this.setState({ isMounted: true }), 0);
+
+        const isIntro = !savedParams || savedParams.activeProjectPath === 'intro';
+
+        if (isIntro) {
+            onCondensePreview();
+        } else {
+            onExtendPreview();
+        }
 
         window.addEventListener('keypress', this.handleKeyPress);
         window.addEventListener('keyup', this.handleKeyUp);
         window.addEventListener('mousemove', this.handleMouseMove);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        const { onExtendPreview, onCondensePreview, savedParams } = this.props;
+
+        if (!nextProps.savedParams) {
+            onCondensePreview();
+        } else if (!!savedParams
+            && savedParams.activeProjectPath !== nextProps.savedParams
+            && nextProps.savedParams.activeProjectPath === "intro") {
+            onCondensePreview();
+        } else {
+            onExtendPreview();
+        }
     }
 
     componentWillUnmount() {
@@ -94,18 +115,25 @@ export class Lab extends React.Component<IProps, IState> {
         this.setState({
             mx: e.pageX,
             my: e.pageY
-        })
-
+        });
     }
 
     handlePagesMenuClick(i) {
-        const pagePath = labProjectList[i].path;
-        this.props.history.push(`/${pagePath}`);
+        const projectPath = labProjectList[i].path;
+        const path = `/lab/${projectPath}`;
+        this.handleParamsChange(path);
+    }
+
+    handleParamsChange(path) {
+        const { history, onProjectSelect } = this.props;
+        history.push(path);
+        onProjectSelect(toParams(path));
     }
 
     render(): JSX.Element {
         const { savedParams, history } = this.props;
         const { keysPressed, my, mx, isMounted } = this.state;
+
         const styles = {
             pages: {
                 position: 'relative'
@@ -114,11 +142,9 @@ export class Lab extends React.Component<IProps, IState> {
                 position: 'absolute',
                 top: 0,
                 left: 0,
-                opacity: isMounted ? 1 : 0
+                zIndex: 10000
             },
-            pages__page: {
-
-            }
+            pages__page: {}
         } as any;
 
         const activeProjectPath = savedParams.activeProjectPath;
@@ -126,11 +152,11 @@ export class Lab extends React.Component<IProps, IState> {
 
         return (
             <div style={ styles.pages }>
-                {/*<div style={ styles.pages__menu }>*/}
-                    {/*<MenuFromStore*/}
-                        {/*onClick={this.handlePagesMenuClick.bind(this)}*/}
-                    {/*/>*/}
-                {/*</div>*/}
+                <div style={ styles.pages__menu }>
+                    <MenuFromStore
+                        onClick={this.handlePagesMenuClick}
+                    />
+                </div>
                 <div style={ styles.pages__page }>
                     {React.cloneElement(
                         component,
@@ -162,8 +188,14 @@ function mapStateToProps(state: IStoreState, ownProps: IProps): IProperties {
 
 function mapDispatchToProps(dispatch, ownProps: IProps): ICallbacks {
     return {
-        onLocationListen: (nextParams) => {
+        onProjectSelect: (nextParams: IParams) => {
             dispatch(saveParams(nextParams));
+        },
+        onExtendPreview: () => {
+            dispatch(togglePreview(true));
+        },
+        onCondensePreview: () => {
+            dispatch(togglePreview(false));
         }
     }
 }

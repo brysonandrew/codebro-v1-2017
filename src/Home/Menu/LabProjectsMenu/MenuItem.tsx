@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { IParams, ILabProject } from "../../data/models";
+import { IParams, ILabProject } from "../../../data/models";
 import { SubMenu } from "./SubMenu/SubMenu";
-import { colors } from '../../data/themeOptions';
+import { colors } from '../../../data/themeOptions';
 
 interface IProps {
     index: number
@@ -41,7 +41,7 @@ export class MenuItem extends React.Component<IProps, IState> {
         const { index, content, isMenuOpen, textOpacity, savedParams } = this.props;
         const { isHovered } = this.state;
 
-        const isSelected = savedParams.activePagePath===content.path;
+        const isSelected = savedParams.activeProjectPath===content.path;
 
         const styles = {
             menuItem: {
@@ -88,7 +88,10 @@ export class MenuItem extends React.Component<IProps, IState> {
                 onClick={this.handleClick.bind(this)}
                 onMouseEnter={() => this.handleMouseEnter()}
                 onMouseLeave={() => this.handleMouseLeave()}>
-                {!isMenuOpen && <div style={styles.menuItem__number}>{index + 1}.</div>}
+                {!isMenuOpen
+                &&  <div style={styles.menuItem__number}>
+                        {index + 1}.
+                    </div>}
                <div style={styles.menuItem__text}>
                    {content.name}
                </div>

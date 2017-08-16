@@ -7,6 +7,7 @@ import { IntroHeading } from "./IntroHeading";
 import { saveParams } from "../../../HomeActionCreators";
 import { labProjectList } from '../../../../data/content';
 import { IntroContents } from './IntroContents';
+import { toParams } from '../../../../data/helpers/toParams';
 
 interface IProperties {
     isMobile?: boolean
@@ -17,6 +18,7 @@ interface IProperties {
 
 interface ICallbacks {
     onURLChange?: (nextParams: IParams) => void
+    onProjectSelect?: (nextParams: IParams) => void
 }
 
 interface IProps extends IProperties, ICallbacks {
@@ -33,6 +35,7 @@ export class Intro extends React.Component<IProps, IState> {
     public constructor(props?: any, context?: any) {
         super(props, context);
         this.state = {};
+        this.handlePagesMenuClick = this.handlePagesMenuClick.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -40,9 +43,21 @@ export class Intro extends React.Component<IProps, IState> {
 
             const firstPath = labProjectList[1].path;
 
-            this.props.history.push(`/${firstPath}`);
-            this.props.onURLChange({activePagePath: firstPath});
+            this.props.history.push(`/lab/${firstPath}`);
+            this.props.onURLChange({activePagePath: "lab", activeProjectPath: firstPath});
         }
+    }
+
+    handlePagesMenuClick(i) {
+        const projectPath = labProjectList[i].path;
+        const path = `/lab/${projectPath}`;
+        this.handleParamsChange(path);
+    }
+
+    handleParamsChange(path) {
+        const { history, onProjectSelect } = this.props;
+        history.push(path);
+        onProjectSelect(toParams(path));
     }
 
     render(): JSX.Element {
@@ -73,7 +88,8 @@ export class Intro extends React.Component<IProps, IState> {
                     <IntroContents
                         isMobile={isMobile}
                         isTablet={isTablet}
-                        isLaptop={isLaptop}/>
+                        isLaptop={isLaptop}
+                        onProjectClick={this.handlePagesMenuClick}/>
                 </div>
             </div>
         );
@@ -93,7 +109,10 @@ function mapStateToProps(state: IStoreState, ownProps: IProps): IProperties {
 
 function mapDispatchToProps(dispatch, ownProps: IProps): ICallbacks {
     return {
-        onURLChange: (nextParams) => {
+        onProjectSelect: (nextParams: IParams) => {
+            dispatch(saveParams(nextParams));
+        },
+        onURLChange: (nextParams: IParams) => {
             dispatch(saveParams(nextParams));
         }
     }

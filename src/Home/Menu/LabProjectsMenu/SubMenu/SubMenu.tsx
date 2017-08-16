@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { SubMenuItem } from "./SubMenuItem";
-import { IParams } from "../../../data/models";
+import { IParams } from "../../../../data/models";
 import { MenuButton } from "../MenuButton";
-import { colors } from '../../../data/themeOptions';
+import { colors } from '../../../../data/themeOptions';
 
 interface IProps {
     savedParams?: IParams

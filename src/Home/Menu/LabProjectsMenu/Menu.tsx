@@ -1,13 +1,12 @@
 import * as React from 'react';
-import { StaggeredMotion, spring } from 'react-motion';
-import { labProjectList } from "../../data/content";
+import { labProjectList } from "../../../data/content";
 import { MenuItem } from "./MenuItem";
 import { connect } from 'react-redux';
-import { IStoreState } from '../../redux/main_reducer';
-import { toggleMenu } from '../HomeActionCreators';
+import { IStoreState } from '../../../redux/main_reducer';
+import { toggleMenu } from '../../HomeActionCreators';
 import { MenuButton } from "./MenuButton";
-import { IParams } from "../../data/models";
-import { colors } from '../../data/themeOptions';
+import { IParams } from "../../../data/models";
+import { colors } from '../../../data/themeOptions';
 
 interface IProperties {
     isMenuOpen?: boolean
@@ -47,7 +46,7 @@ export class Menu extends React.Component<IProps, IState> {
 
         const widthStyle = isMenuOpen ? 220 : 40;
 
-        const opacityStyle = isMenuOpen ? 1 : 0;
+        const opacityStyle = 1;
 
         return (
             <div style={styles.pagesMenu}>

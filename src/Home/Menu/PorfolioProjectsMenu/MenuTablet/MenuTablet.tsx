@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { MenuButtonFromStore } from "./MenuButton/MenuButton";
 import { MenuSelectorsFromStore } from "../MenuSelectors/MenuSelectors";
-import { colors } from "../../../data/themeOptions";
-import { portfolioProjectList } from "../../../data/content";
+import { colors } from "../../../../data/themeOptions";
+import { portfolioProjectList } from "../../../../data/content";
 
 interface IProps {
     isMobile?: boolean
