@@ -1,9 +1,9 @@
 import * as React from 'react';
 import * as Immutable from 'immutable';
-import {colors} from "../../../data/themeOptions";
-import {projectList} from "../../../data/content";
-import {IParams} from "../../../data/models";
-import {Link} from "react-router-dom";
+import { colors } from "../../../data/themeOptions";
+import { portfolioProjectList } from "../../../data/content";
+import { IParams } from "../../../data/models";
+import { Link } from "react-router-dom";
 
 interface IProps {
     thickness: number
@@ -45,7 +45,7 @@ export class NavigationArrowLeft extends React.Component<IProps, IState> {
     findActiveIndex() {
         const { savedParams } = this.props;
         const activeProjectPath = savedParams.activeProjectPath;
-        const activeIndex = Immutable.List(projectList)
+        const activeIndex = Immutable.List(portfolioProjectList)
                                      .findIndex(item => item.path === activeProjectPath);
 
         return (activeIndex > -1) ? activeIndex : 0
@@ -62,7 +62,7 @@ export class NavigationArrowLeft extends React.Component<IProps, IState> {
         const background = isMin ? colors.gry : colors.hi;
         const cursor = isMin ? "default" : "pointer";
 
-        const nextPath = isMin ? projectList[activeIndex].path : projectList[activeIndex - 1].path;
+        const nextPath = isMin ? portfolioProjectList[activeIndex].path : portfolioProjectList[activeIndex - 1].path;
 
         const styles = {
             navigationArrowLeft: {

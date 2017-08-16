@@ -11,22 +11,30 @@ export interface IPageRoute {
 }
 
 export interface IParams {
+    activePagePath?: string
     activeProjectPath?: string
     activeViewPath?: string
 }
-//
-// export interface IPage {
-//     name: string
-//     path: string
-//     component: JSX.Element
-// }
 
-export interface IProject {
+export interface IPage {
+    name: string
+    path: string
+    component: JSX.Element
+}
+
+export interface IPortfolioProject {
     name: string
     path: string
     link: string
     imagePaths: string[]
     date: string
+}
+
+export interface ILabProject {
+    name: string
+    path: string
+    component: any
+    subComponents?: any[]
 }
 
 export interface ISocialMediaSelector {

@@ -5,11 +5,9 @@ import { IParams } from "../data/models";
 import { IStoreState } from '../redux/main_reducer';
 import { changeViewportDimensions, saveLocation, saveParams, toggleScrollAnimation } from './HomeActionCreators';
 import { toParams } from "../data/helpers/toParams";
-import { MenuFromStore } from "./ProjectsMenu/Menu";
-import { ProjectsFromStore } from "./Body/Projects/Projects";
-import { Heading } from "./Body/Heading/Heading";
-import { BottomNavigationMenu } from "./BottomNavigationMenu/BottomNavigationMenu";
-import { colors } from "../data/themeOptions";
+import { HeadingFromStore } from "./Body/Heading/Heading";
+import { match } from 'react-router';
+import { Pages } from './Body/Pages/Pages';
 
 interface IProperties {
     savedParams?: IParams
@@ -30,6 +28,7 @@ interface ICallbacks {
 }
 
 interface IProps extends IProperties, ICallbacks {
+    match: match<IParams>
     location: history.Location
     history: history.History
 }
@@ -54,7 +53,7 @@ export class Home extends React.Component<IProps, IState> {
 
         const params = toParams(history.location.pathname);
 
-        if (params.activeProjectPath.length > 0) {
+        if (params.activeProjectPath && params.activeProjectPath.length > 0) {
             onAnimationStart();
         }
 
@@ -71,8 +70,18 @@ export class Home extends React.Component<IProps, IState> {
             , () => onResizeViewport(window.innerWidth, window.innerHeight));
     }
 
+    componentWillUnmount() {
+        clearTimeout(this.timerId);
+    }
+
     render(): JSX.Element {
-        const { height, savedParams, onArrowNavigate, isMobile, isTablet, isLaptop, isPreviewExtended } = this.props;
+        const {
+            isTablet,
+            isPreviewExtended,
+            match,
+            history,
+            savedParams
+        } = this.props;
         const { isMounted } = this.state;
 
         const styles = {
@@ -93,39 +102,20 @@ export class Home extends React.Component<IProps, IState> {
                 filter: `grayscale(${isPreviewExtended ? 100 : 0}%) blur(${isPreviewExtended ? 2 : 0}px)`,
                 zIndex: isPreviewExtended ? 0 : 4,
                 transition: "filter 200ms"
-            },
-            home__projects: {
-                position: "relative",
-                zIndex: 2
-            },
-            home__bottomNav: {
-                position: "fixed",
-                bottom: isTablet ? 0 : 80,
-                width: "100%",
-                zIndex: 2
             }
         } as any;
+
         return (
             <div style={ styles.home }>
                 <div style={ styles.home__heading}>
-                    <Heading
-                        isMobile={isMobile}
-                        isTablet={isTablet}
-                        isLaptop={isLaptop}
+                    <HeadingFromStore
+                        history={history}
                     />
                 </div>
-                <div style={ styles.home__projects}>
-                    <ProjectsFromStore
-                        history={this.props.history}
-                    />
-                </div>
-                <div style={ styles.home__bottomNav }>
-                    <BottomNavigationMenu
-                        onArrowNavigation={onArrowNavigate}
+                <div>
+                    <Pages
                         savedParams={savedParams}
-                        isMobile={isMobile}
-                        isTablet={isTablet}
-                        isLaptop={isLaptop}
+                        history={history}
                     />
                 </div>
             </div>

@@ -2,8 +2,7 @@ import * as React from 'react';
 import { colors } from "../../data/themeOptions";
 import { NavigationArrowRight } from "./Arrows/NavigationArrowRight";
 import { IParams } from "../../data/models";
-import {projectList} from "../../data/content";
-import {NavigationArrowLeft} from "./Arrows/NavigationArrowLeft";
+import { NavigationArrowLeft } from "./Arrows/NavigationArrowLeft";
 
 interface IProps {
     onArrowNavigation: (nextParams: IParams) => void

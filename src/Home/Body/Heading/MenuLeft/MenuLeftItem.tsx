@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { colors } from "../../../../data/themeOptions";
 import { ISocialMediaSelector } from "../../../../data/models";
-import {UnderlineToArrow} from "./UnderlineToArrow";
+import { UnderlineToArrow } from "./UnderlineToArrow";
 
 interface IProps {
     item: ISocialMediaSelector

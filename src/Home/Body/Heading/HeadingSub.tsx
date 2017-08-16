@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {colors} from "../../../data/themeOptions";
+import { colors } from "../../../data/themeOptions";
 
 interface IProps {
     isMobile?: boolean
@@ -61,8 +61,8 @@ export class HeadingSub extends React.Component<IProps, IState> {
                 </span>
                {!isTablet
                &&   <div>
-                       <div style={Object.assign({}, styles.headingSub__lineLeft, styles.headingSub__line)}/>
-                       <div style={Object.assign({}, styles.headingSub__lineRight, styles.headingSub__line)}/>
+                       <div style={{...styles.headingSub__lineLeft, ...styles.headingSub__line}}/>
+                       <div style={{...styles.headingSub__lineRight, ...styles.headingSub__line}}/>
                     </div>}
             </div>
         );

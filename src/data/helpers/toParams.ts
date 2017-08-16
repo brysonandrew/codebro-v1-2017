@@ -1,5 +1,6 @@
 const params = [
     "/",
+    "activePagePath",
     "activeProjectPath",
     "activeViewPath"
 ];
