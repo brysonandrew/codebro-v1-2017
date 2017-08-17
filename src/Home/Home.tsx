@@ -5,7 +5,7 @@ import { IParams } from "../data/models";
 import { IStoreState } from '../redux/main_reducer';
 import { changeViewportDimensions, saveLocation, saveParams, toggleScrollAnimation } from './HomeActionCreators';
 import { toParams } from "../data/helpers/toParams";
-import { HeadingFromStore } from "./Body/Heading/Heading";
+import { HeadingFromStore } from "./Body/Pages/Lab/LabProjects/Heading/Heading";
 import { match } from 'react-router';
 import { Pages } from './Body/Pages/Pages';
 
@@ -78,9 +78,6 @@ export class Home extends React.Component<IProps, IState> {
 
     render(): JSX.Element {
         const {
-            isTablet,
-            isPreviewExtended,
-            match,
             history,
             savedParams
         } = this.props;
@@ -94,32 +91,15 @@ export class Home extends React.Component<IProps, IState> {
                 opacity: isMounted ? 1 : 0,
                 filter: isMounted ? "none" : "blur(10px)",
                 transition: "opacity 800ms, filter 800ms"
-            },
-            home__heading: {
-                position: "fixed",
-                top: 0,
-                left: 0,
-                width: "100%",
-                opacity:  isPreviewExtended ? 0.4 : 1,
-                filter: `grayscale(${isPreviewExtended ? 100 : 0}%) blur(${isPreviewExtended ? 2 : 0}px)`,
-                zIndex: isPreviewExtended ? 0 : 4,
-                transition: "filter 400ms, opacity 400ms"
             }
         } as any;
 
         return (
             <div style={ styles.home }>
-                <div style={ styles.home__heading}>
-                    <HeadingFromStore
-                        history={history}
-                    />
-                </div>
-                <div>
-                    <Pages
-                        savedParams={savedParams}
-                        history={history}
-                    />
-                </div>
+                <Pages
+                    savedParams={savedParams}
+                    history={history}
+                />
             </div>
         );
     }

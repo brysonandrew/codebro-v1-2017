@@ -12,26 +12,12 @@ interface IState {}
 
 export class Pages extends React.Component<IProps, IState> {
 
-    timerId;
-
     public constructor(props?: any, context?: any) {
         super(props, context);
-        this.state = {
-            isMounted: false
-        };
-    }
-
-    componentDidMount() {
-        this.timerId = setTimeout(() => this.setState({ isMounted: true }), 0);
-    }
-
-    componentWillUnmount() {
-        clearTimeout(this.timerId);
     }
 
     render(): JSX.Element {
         const { history, savedParams } = this.props;
-        const styles = {} as any;
         const currentPagePath = !!savedParams.activePagePath
                                     ?   savedParams.activePagePath
                                     :   "portfolio";
