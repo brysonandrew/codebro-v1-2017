@@ -58,7 +58,8 @@ export class Heading extends React.Component<IProps, IState> {
 
     render(): JSX.Element {
         const { isMounted } = this.state;
-        const { isMobile, isTablet, isLaptop, history, onPageSelect } = this.props;
+        const { isMobile, isTablet, isLaptop, history, onPageSelect, savedParams } = this.props;
+        const isPortfolio = savedParams.activePagePath === "portfolio";
 
         const styles = {
             heading: {
@@ -90,12 +91,13 @@ export class Heading extends React.Component<IProps, IState> {
         } as any;
         return (
             <div style={styles.heading}>
-                <MenuLeft
-                    isMobile={isMobile}
-                    isTablet={isTablet}
-                    isLaptop={isLaptop}
-                />
-                <h1 style={styles.heading__main}>
+                {isPortfolio
+                &&  <MenuLeft
+                        isMobile={isMobile}
+                        isTablet={isTablet}
+                        isLaptop={isLaptop}
+                    />}
+                <div style={styles.heading__main}>
                     <PageHeading
                         isMobile={isMobile}
                         isTablet={isTablet}
@@ -103,17 +105,19 @@ export class Heading extends React.Component<IProps, IState> {
                         history={history}
                         onPageSelect={onPageSelect}
                     />
-                </h1>
+                </div>
                 <div style={styles.heading__logo}>
                     <Logo/>
                 </div>
-                <div style={styles.heading__sub}>
-                    <HeadingSub
-                        isMobile={isMobile}
-                        isTablet={isTablet}
-                        isLaptop={isLaptop}
-                    />
-                </div>
+                {isPortfolio
+                &&  <div style={styles.heading__sub}>
+                        <HeadingSub
+                            isMobile={isMobile}
+                            isTablet={isTablet}
+                            isLaptop={isLaptop}
+                        />
+                    </div>}
+
             </div>
         );
     }

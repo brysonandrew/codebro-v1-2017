@@ -22,12 +22,31 @@ interface IProps extends IProperties, ICallbacks {
     onClick: (index: number) => void
 }
 
-interface IState extends IProperties, ICallbacks {}
+interface IState extends IProperties, ICallbacks {
+    isMenuExpanded: boolean
+}
 
 export class Menu extends React.Component<IProps, IState> {
 
     public constructor(props?: any, context?: any) {
         super(props, context);
+        this.state = {
+            isMenuExpanded: false
+        };
+        this.handleMenuExpand = this.handleMenuExpand.bind(this);
+        this.handleMenuCondense = this.handleMenuCondense.bind(this);
+    }
+
+    handleMenuExpand() {
+        this.setState({
+            isMenuExpanded: true
+        })
+    }
+
+    handleMenuCondense() {
+        this.setState({
+            isMenuExpanded: false
+        })
     }
 
     render(): JSX.Element {
@@ -35,8 +54,7 @@ export class Menu extends React.Component<IProps, IState> {
 
         const styles = {
             pagesMenu: {
-                textAlign: "left",
-                background: colors.hi
+                textAlign: "left"
             },
             pagesMenu__items: {
                 display: "block",
@@ -44,30 +62,23 @@ export class Menu extends React.Component<IProps, IState> {
             }
         };
 
-        const widthStyle = isMenuOpen ? 220 : 40;
-
-        const opacityStyle = 1;
-
         return (
             <div style={styles.pagesMenu}>
                 <MenuButton
                     isACross={isMenuOpen}
                     onClick={isMenuOpen ? onMenuClose : onMenuOpen}
                 />
-                <div style={styles.pagesMenu__items}>
-                    {labProjectList.map((content, i) =>
-                        <div key={i}
-                             style={{width: widthStyle}}>
-                            <MenuItem
-                                index={i}
-                                textOpacity={opacityStyle}
-                                savedParams={savedParams}
-                                isMenuOpen={isMenuOpen}
-                                content={content}
-                                onClick={this.props.onClick}
-                            />
-                        </div>)}
-                </div>
+                {isMenuOpen &&  <div style={styles.pagesMenu__items}>
+                                    {labProjectList.map((content, i) =>
+                                        <MenuItem
+                                            key={i}
+                                            index={i}
+                                            savedParams={savedParams}
+                                            isMenuOpen={isMenuOpen}
+                                            content={content}
+                                            onClick={this.props.onClick}
+                                        />)}
+                                </div>}
             </div>
         );
     }

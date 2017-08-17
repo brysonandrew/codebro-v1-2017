@@ -62,7 +62,9 @@ export class NavigationArrowLeft extends React.Component<IProps, IState> {
         const background = isMin ? colors.gry : colors.hi;
         const cursor = isMin ? "default" : "pointer";
 
-        const nextPath = isMin ? portfolioProjectList[activeIndex].path : portfolioProjectList[activeIndex - 1].path;
+        const nextPath = isMin
+                            ?   `/portfolio/${portfolioProjectList[activeIndex].path}`
+                            :   `/portfolio/${portfolioProjectList[activeIndex - 1].path}` ;
 
         const styles = {
             navigationArrowLeft: {
@@ -108,7 +110,7 @@ export class NavigationArrowLeft extends React.Component<IProps, IState> {
         } as any;
         return (
             <Link style= {styles.navigationArrowLeft}
-                  to={`/${nextPath}`}
+                  to={nextPath}
                   onClick={isMin ? e => e.preventDefault() : () => this.handleClick(nextPath)}
                   onMouseEnter={isMin ? null : () => this.handleMouseEnter()}
                   onMouseLeave={isMin ? null : () => this.handleMouseLeave()}>

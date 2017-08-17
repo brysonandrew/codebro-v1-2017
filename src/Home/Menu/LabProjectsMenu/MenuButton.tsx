@@ -44,27 +44,31 @@ export class MenuButton extends React.Component<IProps, IState> {
                 width: "100%",
                 height: 6,
                 borderRadius: 2,
-                background: colors.wht
+                background: colors.std
             },
             menuButton__lines: [
                 {
                     top: isACross ? 20 : 6,
-                    left: isHovered ? isACross ? 12 : 25 : -5,
-                    width: isHovered ? 75 : 110,
+                    left: isACross
+                                ?   12
+                                :   25,
+                    width: 75,
                     scale: 1,
                     rotate: isACross ? 45 : 0
                 },
                 {
                     top: 17,
                     left: -5,
-                    width: isHovered ? 75 : 110,
+                    width: 75,
                     scale: isACross ? 0 : 1,
                     rotate: 0
                 },
                 {
                     top: isACross ? 20 : 27,
-                    left: isHovered ? isACross ? 12 : 25 : -5,
-                    width: isHovered ? 75 : 110,
+                    left: isACross
+                        ?   12
+                        :   25,
+                    width: 75,
                     scale: 1,
                     rotate: isACross ? -45 : 0,
                 }

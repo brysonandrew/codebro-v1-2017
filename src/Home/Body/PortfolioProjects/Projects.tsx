@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { IStoreState } from '../../../redux/main_reducer';
 import { portfolioProjectList } from "../../../data/content";
 import { IParams, IDictionary } from "../../../data/models";
-import { toggleScrollAnimation, toggleWheel, saveParams } from "../../HomeActionCreators";
+import { toggleScrollAnimation, toggleWheel, saveParams, togglePreview } from '../../HomeActionCreators';
 import { toParams} from "../../../data/helpers/toParams";
 import { MotionScroll } from "../../../Widgets/MotionScroll/MotionScroll";
 import { ProjectFromStore } from "./Project/Project";

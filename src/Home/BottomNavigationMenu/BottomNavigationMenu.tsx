@@ -3,6 +3,7 @@ import { colors } from "../../data/themeOptions";
 import { NavigationArrowRight } from "./Arrows/NavigationArrowRight";
 import { IParams } from "../../data/models";
 import { NavigationArrowLeft } from "./Arrows/NavigationArrowLeft";
+import { toParams } from '../../data/helpers/toParams';
 
 interface IProps {
     onArrowNavigation: (nextParams: IParams) => void
@@ -18,14 +19,12 @@ export class BottomNavigationMenu extends React.Component<IProps, IState> {
 
     public constructor(props?: any, context?: any) {
         super(props, context);
+        this.handleArrowClick = this.handleArrowClick.bind(this);
     }
 
     handleArrowClick(nextPath) {
         const { onArrowNavigation } = this.props;
-        const nextParams = {
-            activeProjectPath: nextPath
-        };
-        onArrowNavigation(nextParams);
+        onArrowNavigation(toParams(nextPath));
     }
 
     render(): JSX.Element {
@@ -48,14 +47,14 @@ export class BottomNavigationMenu extends React.Component<IProps, IState> {
                     headRadius={headRadius}
                     bodyLength={bodyLength}
                     savedParams={savedParams}
-                    onClick={this.handleArrowClick.bind(this)}
+                    onClick={this.handleArrowClick}
                 />
                 <NavigationArrowRight
                     thickness={thickness}
                     headRadius={headRadius}
                     bodyLength={bodyLength}
                     savedParams={savedParams}
-                    onClick={this.handleArrowClick.bind(this)}
+                    onClick={this.handleArrowClick}
                 />
             </div>
         );

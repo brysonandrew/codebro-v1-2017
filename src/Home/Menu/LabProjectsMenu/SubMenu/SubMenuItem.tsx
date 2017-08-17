@@ -6,8 +6,6 @@ import { colors } from '../../../../data/themeOptions';
 interface IProps {
     index: number
     savedParams: IParams
-    textOpacity: number
-    isSubMenuOpen: boolean
     content: ILabProject
 }
 
@@ -33,10 +31,10 @@ export class SubMenuItem extends React.Component<IProps, IState> {
     }
 
     render(): JSX.Element {
-        const { index, content, isSubMenuOpen, textOpacity, savedParams } = this.props;
+        const { content, savedParams } = this.props;
         const { isHovered } = this.state;
 
-        const isSelected = savedParams.activeViewPath===content.path;
+        const isSelected = savedParams.activeViewPath === content.path;
 
         const itemPath = `/lab/${savedParams.activeProjectPath}/${content.path}`;
 
@@ -44,10 +42,9 @@ export class SubMenuItem extends React.Component<IProps, IState> {
             subMenuItem: {
                 display: "block",
                 position: "relative",
-                width: "100%",
+                width: 220,
                 height: 40,
-                background: isSelected ? colors.wht : colors.hi,
-                opacity: isHovered ? 0.8 : 1,
+                opacity: (isHovered || isSelected) ? 0.8 : 1,
                 borderRight: "1px solid #fff",
                 cursor: "pointer"
             },
@@ -55,30 +52,17 @@ export class SubMenuItem extends React.Component<IProps, IState> {
                 position: "absolute",
                 left: "50%",
                 top: "50%",
-                color: isSelected ? colors.hi : colors.wht,
-                opacity: textOpacity,
-                transform: "translate(-50%, -50%)"
-            },
-            subMenuItem__number: {
-                position: "absolute",
-                left: "50%",
-                top: "50%",
-                color: isSelected ? colors.hi : colors.wht,
-                opacity: -1 * (textOpacity - 1),
+                color: colors.std,
                 transform: "translate(-50%, -50%)"
             }
         } as any;
 
         return (
         <div style={styles.subMenuItem}
-           onMouseEnter={() => this.handleMouseEnter()}
-           onMouseLeave={() => this.handleMouseLeave()}>
+             onMouseEnter={() => this.handleMouseEnter()}
+             onMouseLeave={() => this.handleMouseLeave()}>
             <Link to={itemPath}
                   onClick={(e) => e.stopPropagation()}>
-                {!isSubMenuOpen
-                &&  <div style={styles.subMenuItem__number}>
-                        {index + 1}.
-                    </div>}
                <div style={styles.subMenuItem__text}>
                    {content.name}
                </div>

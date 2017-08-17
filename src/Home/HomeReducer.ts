@@ -33,7 +33,11 @@ export interface IHomeState {
 const initialState : IHomeState = {
     content: AsyncGet.init(null),
     savedLocation: <Location>{},
-    savedParams: {},
+    savedParams: {
+        activePagePath: "",
+        activeProjectPath: "",
+        activeViewPath: ""
+    },
     isAnimating: false,
     isWheel: false,
     isMenuOpen: false,

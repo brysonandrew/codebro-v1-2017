@@ -21,7 +21,8 @@ interface IProperties {
 }
 
 interface ICallbacks {
-    onLoad?: (nextLocation: history.Location, nextParams: IParams) => void
+    onLocationListen?: (nextParams: IParams) => void
+    onLoad?: (nextParams: IParams) => void
     onAnimationStart?: () => void
     onResizeViewport?: (width: number, height: number) => void
     onArrowNavigate?: (nextParams: IParams) => void
@@ -49,18 +50,27 @@ export class Home extends React.Component<IProps, IState> {
     }
 
     componentDidMount() {
-        const { onResizeViewport, onAnimationStart, history } = this.props;
+        const { onResizeViewport, onAnimationStart, history, onLocationListen, onLoad } = this.props;
+
+
+        history.listen( location =>  {
+
+            const params = toParams(location.pathname);
+
+            onLocationListen(
+                params
+            );
+        });
 
         const params = toParams(history.location.pathname);
 
-        if (params.activeProjectPath && params.activeProjectPath.length > 0) {
-            onAnimationStart();
-        }
-
-        this.props.onLoad(
-            history.location,
+        onLoad(
             params
         );
+
+        if (params.activeProjectPath) {
+            onAnimationStart();
+        }
 
         this.timerId = setTimeout(() => this.setState({ isMounted: true }), 0);
 
@@ -68,6 +78,13 @@ export class Home extends React.Component<IProps, IState> {
             , () => onResizeViewport(window.innerWidth, window.innerHeight));
         window.addEventListener("load"
             , () => onResizeViewport(window.innerWidth, window.innerHeight));
+    }
+
+    componentWillReceiveProps(nextProps) {
+        const isProjectPathChanged = nextProps.savedParams.activeProjectPath !== this.props.savedParams.activeProjectPath;
+        if (isProjectPathChanged || (!nextProps.savedParams.activeProjectPath && isProjectPathChanged)) {
+            nextProps.onAnimationStart();
+        }
     }
 
     componentWillUnmount() {
@@ -101,7 +118,7 @@ export class Home extends React.Component<IProps, IState> {
                 opacity:  isPreviewExtended ? 0.4 : 1,
                 filter: `grayscale(${isPreviewExtended ? 100 : 0}%) blur(${isPreviewExtended ? 2 : 0}px)`,
                 zIndex: isPreviewExtended ? 0 : 4,
-                transition: "filter 200ms"
+                transition: "filter 400ms, opacity 400ms"
             }
         } as any;
 
@@ -140,8 +157,10 @@ function mapStateToProps(state: IStoreState, ownProps: IProps): IProperties {
 
 function mapDispatchToProps(dispatch, ownProps: IProps): ICallbacks {
     return {
-        onLoad: (nextLocation, nextParams) => {
-            dispatch(saveLocation(nextLocation));
+        onLoad: (nextParams) => {
+            dispatch(saveParams(nextParams));
+        },
+        onLocationListen: (nextParams) => {
             dispatch(saveParams(nextParams));
         },
         onAnimationStart: () => {

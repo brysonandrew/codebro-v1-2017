@@ -39,26 +39,28 @@ export class PageHeading extends React.Component<IProps, IState> {
         const params: IParams = toParams(history.location.pathname);
         const pagePath = params.activePagePath ? params.activePagePath : "portfolio";
         const isPortfolio = pagePath === "portfolio";
+        const mobileDisplay = `${!isMobile ? 'inline-' : ''}block`;
 
         const styles = {
+            pageHeading: {},
             pageHeading__main: {
+                display: mobileDisplay,
+                float: isMobile ? 'none' : 'right',
                 fontSize: 22,
             },
             pageHeading__options: {
-                display: "table-cell"
+                display: mobileDisplay,
+                fontSize: 14,
+                paddingRight: isMobile ? 0 : 16,
             },
             pageHeading__itemPortfolio: {
-                display: `${!isMobile ? 'inline-' : ''}block`,
+                display: "block",
                 opacity: isPortfolio ? 1 : 0.22,
-                fontSize: 14,
-                paddingLeft: 8,
                 cursor: isPortfolio ? "default" : "pointer"
             },
             pageHeading__itemLab: {
-                display: `${!isMobile ? 'inline-' : ''}block`,
+                display: "block",
                 opacity: !isPortfolio ? 1 : 0.22,
-                fontSize: 14,
-                paddingLeft: 8,
                 cursor: !isPortfolio ? "default" : "pointer"
             }
         } as any;

@@ -60,11 +60,11 @@ export class Lab extends React.Component<IProps, IState> {
 
         const isIntro = !savedParams || savedParams.activeProjectPath === 'intro';
 
-        if (isIntro) {
-            onCondensePreview();
-        } else {
-            onExtendPreview();
-        }
+        // if (isIntro) {
+        //     onCondensePreview();
+        // } else {
+        //     onExtendPreview();
+        // }
 
         window.addEventListener('keypress', this.handleKeyPress);
         window.addEventListener('keyup', this.handleKeyUp);
@@ -74,15 +74,12 @@ export class Lab extends React.Component<IProps, IState> {
     componentWillReceiveProps(nextProps) {
         const { onExtendPreview, onCondensePreview, savedParams } = this.props;
 
-        if (!nextProps.savedParams) {
-            onCondensePreview();
-        } else if (!!savedParams
-            && savedParams.activeProjectPath !== nextProps.savedParams
-            && nextProps.savedParams.activeProjectPath === "intro") {
-            onCondensePreview();
-        } else {
-            onExtendPreview();
-        }
+        // if (savedParams.activeProjectPath !== nextProps.savedParams.activeProjectPath
+        //     && (nextProps.savedParams.activeProjectPath === "intro" || !nextProps.savedParams.activeProjectPath)) {
+        //     onCondensePreview();
+        // } else {
+        //     onExtendPreview();
+        // }
     }
 
     componentWillUnmount() {
@@ -134,17 +131,29 @@ export class Lab extends React.Component<IProps, IState> {
         const { savedParams, history } = this.props;
         const { keysPressed, my, mx, isMounted } = this.state;
 
+        const isIntro = savedParams.activeProjectPath === "intro" || !savedParams.activeProjectPath;
+
         const styles = {
             pages: {
-                position: 'relative'
+                position: 'relative',
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: `${isIntro ? 100 : 0}vh`
             },
             pages__menu: {
                 position: 'absolute',
+                top: 2,
+                left: 2,
+                zIndex: 4
+            },
+            pages__page: {
+                position: 'absolute',
                 top: 0,
                 left: 0,
-                zIndex: 10000
-            },
-            pages__page: {}
+                width: "100%",
+                height: "100%"
+            }
         } as any;
 
         const activeProjectPath = savedParams.activeProjectPath;

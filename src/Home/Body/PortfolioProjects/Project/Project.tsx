@@ -80,12 +80,7 @@ export class Project extends React.Component<IProps, IState> {
         const { savedParams } = this.props;
         const isParamsChanged = (savedParams.activeProjectPath !== nextProps.savedParams.activeProjectPath);
         if (isParamsChanged && savedParams.activeProjectPath)  {
-            this.setState({ //reset
-                isHovered: false,
-                isHeadingHovered: false,
-                isProjectExtended: false,
-                posY: 0
-            });
+            this.handleReset();
         }
     }
 
@@ -101,14 +96,24 @@ export class Project extends React.Component<IProps, IState> {
         onAnimationStart(toParams(path));
     }
 
+    handleReset() {
+
+        this.setState({ //reset
+            isHovered: false,
+            isHeadingHovered: false,
+            isProjectExtended: false,
+            posY: 0
+        });
+
+        this.timeoutId = setTimeout(() => this.props.onCondensePreview(), 500);
+
+    }
+
     handleHeadingClick() {
-        const { project, onAnimationStart, onExtendPreview, history } = this.props;
+        const { project, onAnimationStart, onExtendPreview, history, onCondensePreview } = this.props;
         const { isProjectExtended } = this.state;
         if (isProjectExtended) {
-            this.setState({
-                isProjectExtended: false,
-                posY: 0
-            });
+            this.handleReset();
         } else {
             this.setState({
                 isProjectExtended: true,
@@ -313,7 +318,7 @@ export class Project extends React.Component<IProps, IState> {
     render(): JSX.Element {
         const { isMobile, isTablet, isLaptop, project, index, savedParams, height, previewWidth, onCondensePreview } = this.props;
         const { isHovered, isHeadingHovered, isProjectExtended, posY, isImagesLoading, grabParams } = this.state;
-        const isActive = project.path===savedParams.activeProjectPath
+        const isActive = project.path === savedParams.activeProjectPath
                             || (!savedParams.activeProjectPath && index===0);
 
         const heightByScroll = ((height + this.elasticBuffer) / this.scrollHeight * (-posY - this.elasticBuffer));
@@ -400,10 +405,7 @@ export class Project extends React.Component<IProps, IState> {
                 <div style={ styles.project__inner }
                      ref={el => this.innerRef = el}
                      onMouseEnter={isActive ? null : this.handleMouseEnter}
-                     onMouseLeave={this.handleMouseLeave}
-                     onTransitionEnd={isProjectExtended || !isActive
-                                        ?   null
-                                        :   onCondensePreview}>
+                     onMouseLeave={this.handleMouseLeave}>
                     {project.imagePaths.map((path, i) =>
                         ((isProjectExtended && !isImagesLoading)
                         || i === 0)

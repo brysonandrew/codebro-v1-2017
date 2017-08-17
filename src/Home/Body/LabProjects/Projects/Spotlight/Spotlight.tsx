@@ -165,7 +165,7 @@ export class Spotlight extends React.Component<IProps, IState> {
 
         return (
             this.state.isFallback
-            &&  <div style={ styles.main }>
+            &&  <div style={ styles.world }>
                     <div style={ styles.world__noGLMessage }>
                         {"Unable to view due to browser or browser settings. Try another browser or reconfigure your current browser."}
                     </div>

@@ -63,7 +63,9 @@ export class NavigationArrowRight extends React.Component<IProps, IState> {
         const background = isMax ? colors.gry : colors.hi;
         const cursor = isMax ? "default" : "pointer";
 
-        const nextPath = isMax ? portfolioProjectList[activeIndex].path : portfolioProjectList[activeIndex +  1].path;
+        const nextPath = isMax
+                            ?   `/portfolio/${portfolioProjectList[activeIndex].path}`
+                            :   `/portfolio/${portfolioProjectList[activeIndex + 1].path}` ;
 
         const styles = {
             navigationArrowRight: {
@@ -109,7 +111,7 @@ export class NavigationArrowRight extends React.Component<IProps, IState> {
         } as any;
         return (
             <Link style= {styles.navigationArrowRight}
-                  to={`/${nextPath}`}
+                  to={nextPath}
                   onClick={isMax ? e => e.preventDefault() : () => this.handleClick(nextPath)}
                   onMouseEnter={isMax ? null : () => this.handleMouseEnter()}
                   onMouseLeave={isMax ? null : () => this.handleMouseLeave()}>

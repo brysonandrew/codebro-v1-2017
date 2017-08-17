@@ -3,7 +3,6 @@ import * as history from 'history';
 import { connect } from 'react-redux';
 import { IStoreState } from '../../../../redux/main_reducer';
 import { IParams } from "../../../../data/models";
-import { IntroHeading } from "./IntroHeading";
 import { saveParams } from "../../../HomeActionCreators";
 import { labProjectList } from '../../../../data/content';
 import { IntroContents } from './IntroContents';
@@ -72,7 +71,7 @@ export class Intro extends React.Component<IProps, IState> {
                 display: "table-cell",
                 textAlign: "center",
                 verticalAlign: "middle",
-                height: "100vh",
+                height: "100%",
                 width: "100%"
             }
         } as any;
@@ -80,11 +79,6 @@ export class Intro extends React.Component<IProps, IState> {
         return (
             <div style={ styles.intro }>
                 <div style={ styles.intro__inner }>
-                    <IntroHeading
-                        isMobile={isMobile}
-                        isTablet={isTablet}
-                        isLaptop={isLaptop}
-                    />
                     <IntroContents
                         isMobile={isMobile}
                         isTablet={isTablet}
