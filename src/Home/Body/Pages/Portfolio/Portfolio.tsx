@@ -1,12 +1,12 @@
 import * as React from 'react';
 import * as history from 'history';
 import { connect } from 'react-redux';
-import { ProjectsFromStore } from './Projects';
-import { BottomNavigationMenu } from '../PorfolioProjectsMenu/BottomNavigationMenu/BottomNavigationMenu';
-import { IParams } from '../../../../../data/models';
-import { saveParams, toggleScrollAnimation } from '../../../../HomeActionCreators';
-import { IStoreState } from '../../../../../redux/main_reducer';
-import { HeadingFromStore } from './Heading/Heading';
+import { ProjectsFromStore } from './PortfolioProjects/Projects';
+import { BottomNavigationMenu } from './PorfolioProjectsMenu/BottomNavigationMenu/BottomNavigationMenu';
+import { IParams } from '../../../../data/models';
+import { saveParams, toggleScrollAnimation } from '../../../HomeActionCreators';
+import { IStoreState } from '../../../../redux/main_reducer';
+import { HeadingFromStore } from './PortfolioProjects/Heading/Heading';
 
 interface IProperties {
     savedParams?: IParams

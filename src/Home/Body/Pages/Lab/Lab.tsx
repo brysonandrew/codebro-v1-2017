@@ -2,14 +2,14 @@ import * as React from 'react';
 import * as Immutable from 'immutable';
 import * as history from 'history';
 import { connect } from 'react-redux';
-import { IParams } from '../../../../../data/models';
-import { IStoreState } from '../../../../../redux/main_reducer';
-import { labProjectList, labProjects } from '../../../../../data/content';
-import { toParams } from '../../../../../data/helpers/toParams';
-import { saveParams } from '../../../../HomeActionCreators';
-import { MenuFromStore } from '../LabProjectsMenu/Menu';
-import { HeadingFromStore } from './Heading/Heading';
-import { MenuButton } from '../LabProjectsMenu/MenuButton';
+import { IParams } from '../../../../data/models';
+import { IStoreState } from '../../../../redux/main_reducer';
+import { labProjectList, labProjects } from '../../../../data/content';
+import { toParams } from '../../../../data/helpers/toParams';
+import { saveParams } from '../../../HomeActionCreators';
+import { MenuFromStore } from './LabProjectsMenu/Menu';
+import { HeadingFromStore } from './LabProjects/Heading/Heading';
+import { MenuButton } from './LabProjectsMenu/MenuButton';
 
 interface IProperties {
     savedParams?: IParams
@@ -23,7 +23,7 @@ interface IProperties {
 interface ICallbacks {
     onExtendPreview?: () => void
     onCondensePreview?: () => void
-    onProjectSelect?: (nextParams: IParams) => void
+    // onProjectSelect?: (nextParams: IParams) => void
 }
 
 interface IProps extends IProperties, ICallbacks {
@@ -100,6 +100,7 @@ export class Lab extends React.Component<IProps, IState> {
     }
 
     handleProjectMenuClick(i) {
+        console.log("triggered: " + i)
         const projectPath = labProjectList[i].path;
         const path = `/lab/${projectPath}`;
         this.handleParamsChange(path);
@@ -118,9 +119,9 @@ export class Lab extends React.Component<IProps, IState> {
     }
 
     handleParamsChange(path) {
-        const { history, onProjectSelect } = this.props;
+        const { history } = this.props;
         history.push(path);
-        onProjectSelect(toParams(path));
+        // onProjectSelect(toParams(path));
     }
 
     render(): JSX.Element {
@@ -226,9 +227,9 @@ function mapStateToProps(state: IStoreState, ownProps: IProps): IProperties {
 
 function mapDispatchToProps(dispatch, ownProps: IProps): ICallbacks {
     return {
-        onProjectSelect: (nextParams: IParams) => {
-            dispatch(saveParams(nextParams));
-        }
+        // onProjectSelect: (nextParams: IParams) => {
+        //     dispatch(saveParams(nextParams));
+        // }
     }
 }
 

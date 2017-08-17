@@ -32,8 +32,9 @@ export class SubMenuItem extends React.Component<IProps, IState> {
         this.setState({isHovered: false});
     }
 
-    handleClick() {
-        this.props.onClick(this.props.index)
+    handleClick(e) {
+        this.props.onClick(this.props.index);
+        e.stopPropagation();
     }
 
     render(): JSX.Element {

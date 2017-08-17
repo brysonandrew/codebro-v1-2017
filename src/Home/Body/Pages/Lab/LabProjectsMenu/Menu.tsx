@@ -6,7 +6,6 @@ import { IStoreState } from '../../../../../redux/main_reducer';
 import { toggleMenu } from '../../../../HomeActionCreators';
 import { MenuButton } from "./MenuButton";
 import { IParams } from "../../../../../data/models";
-import { colors } from '../../../../../data/themeOptions';
 
 interface IProperties {
     isMenuOpen?: boolean
@@ -51,7 +50,14 @@ export class Menu extends React.Component<IProps, IState> {
     }
 
     render(): JSX.Element {
-        const { isMenuOpen, onMenuOpen, onMenuClose, savedParams, onProjectMenuClick, onSubProjectMenuClick } = this.props;
+        const {
+            isMenuOpen,
+            onMenuOpen,
+            onMenuClose,
+            savedParams,
+            onProjectMenuClick,
+            onSubProjectMenuClick
+        } = this.props;
 
         const styles = {
             pagesMenu: {

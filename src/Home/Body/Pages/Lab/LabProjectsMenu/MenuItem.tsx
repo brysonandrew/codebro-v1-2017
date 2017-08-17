@@ -76,7 +76,8 @@ export class MenuItem extends React.Component<IProps, IState> {
                <div style={styles.menuItem__text}>
                    {content.name}
                </div>
-                {(content.subComponents && isSelected)
+                {!!content.subComponents
+                    && isSelected
                     &&  <div style={styles.menuItem__subMenu}>
                             <SubMenu
                                 savedParams={savedParams}

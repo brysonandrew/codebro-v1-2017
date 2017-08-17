@@ -18,13 +18,13 @@ export class Pages extends React.Component<IProps, IState> {
 
     render(): JSX.Element {
         const { history, savedParams } = this.props;
-        const currentPagePath = !!savedParams.activePagePath
-                                    ?   savedParams.activePagePath
-                                    :   "portfolio";
+        const activePagePath = savedParams.activePagePath;
+        const component = pages[activePagePath ? activePagePath : "portfolio"].component;
+
         return (
             <div>
                 {React.cloneElement(
-                    pages[currentPagePath].component,
+                    component,
                     {
                         history: history
                     }

@@ -68,6 +68,8 @@ export class Armoury extends React.Component<IProps, IState> {
     }
 
     componentWillUnmount() {
+        console.log('unmount');
+
         cancelAnimationFrame(this.animateLoop);
         if (isGL()) {
             this.props.parentEl.removeChild( this.renderer.domElement )
@@ -76,7 +78,7 @@ export class Armoury extends React.Component<IProps, IState> {
 
     componentWillReceiveProps(nextProps) {
         const { height, width, savedParams } = this.props;
-        console.log(nextProps.savedParams);
+        console.log('armoury: ' + nextProps.savedParams);
 
         const isHeightChanged = nextProps.height !== height;
         const isWidthChanged = nextProps.width !== width;
@@ -210,7 +212,6 @@ export class Armoury extends React.Component<IProps, IState> {
     }
 
     render(): JSX.Element {
-        console.log(this.props.savedParams);
         return (
             this.state.isFallback
             &&  <CenteredText

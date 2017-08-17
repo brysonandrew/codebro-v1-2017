@@ -1,7 +1,5 @@
 import THREE = require('three');
 import { createGun } from './gunParts';
-import { easeMotion } from "../../../../../../../../../data/helpers/controls/motion";
-import { playerPositionX, playerPositionZ, playerRotationY } from "../../../../../../../../../data/helpers/controls/keyboard";
 
 export class GatlingGun {
 
