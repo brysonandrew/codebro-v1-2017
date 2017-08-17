@@ -23,7 +23,6 @@ interface IProperties {
 interface ICallbacks {
     onLocationListen?: (nextParams: IParams) => void
     onLoad?: (nextParams: IParams) => void
-    onAnimationStart?: () => void
     onResizeViewport?: (width: number, height: number) => void
     onArrowNavigate?: (nextParams: IParams) => void
 }
@@ -50,27 +49,19 @@ export class Home extends React.Component<IProps, IState> {
     }
 
     componentDidMount() {
-        const { onResizeViewport, onAnimationStart, history, onLocationListen, onLoad } = this.props;
-
-
+        const { onResizeViewport, history, onLocationListen, onLoad } = this.props;
+//reset window pos
+        window.scroll(0, 0);
+//initial save params
+        onLoad(toParams(history.location.pathname));
+//listen to future params
         history.listen( location =>  {
 
-            const params = toParams(location.pathname);
-
             onLocationListen(
-                params
+                toParams(location.pathname)
             );
+
         });
-
-        const params = toParams(history.location.pathname);
-
-        onLoad(
-            params
-        );
-
-        if (params.activeProjectPath) {
-            onAnimationStart();
-        }
 
         this.timerId = setTimeout(() => this.setState({ isMounted: true }), 0);
 
@@ -80,12 +71,6 @@ export class Home extends React.Component<IProps, IState> {
             , () => onResizeViewport(window.innerWidth, window.innerHeight));
     }
 
-    componentWillReceiveProps(nextProps) {
-        const isProjectPathChanged = nextProps.savedParams.activeProjectPath !== this.props.savedParams.activeProjectPath;
-        if (isProjectPathChanged || (!nextProps.savedParams.activeProjectPath && isProjectPathChanged)) {
-            nextProps.onAnimationStart();
-        }
-    }
 
     componentWillUnmount() {
         clearTimeout(this.timerId);
@@ -162,9 +147,6 @@ function mapDispatchToProps(dispatch, ownProps: IProps): ICallbacks {
         },
         onLocationListen: (nextParams) => {
             dispatch(saveParams(nextParams));
-        },
-        onAnimationStart: () => {
-            dispatch(toggleScrollAnimation(true));
         },
         onResizeViewport: (width, height) => {
             dispatch(changeViewportDimensions(width, height));

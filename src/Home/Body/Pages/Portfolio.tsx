@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as history from 'history';
 import { connect } from 'react-redux';
-import { ProjectsFromStore } from '../PortfolioProjects/Projects';
+import { ProjectsFromStore } from '../Projects/PortfolioProjects/Projects';
 import { BottomNavigationMenu } from '../../BottomNavigationMenu/BottomNavigationMenu';
 import { IParams } from '../../../data/models';
 import { saveParams, toggleScrollAnimation } from '../../HomeActionCreators';
@@ -18,6 +18,7 @@ interface IProperties {
 
 interface ICallbacks {
     onArrowNavigate?: (nextParams: IParams) => void
+    onAnimationStart?: () => void
 }
 
 interface IProps extends IProperties, ICallbacks {
@@ -40,7 +41,25 @@ export class Portfolio extends React.Component<IProps, IState> {
     }
 
     componentDidMount() {
+        const { savedParams, onAnimationStart } = this.props;
+
+        if (savedParams.activeProjectPath) {
+            onAnimationStart();
+        }
+
         this.timerId = setTimeout(() => this.setState({ isMounted: true }), 0);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        const isProjectPathChanged = nextProps.savedParams.activeProjectPath !== this.props.savedParams.activeProjectPath;
+        const isProjectPathChangedAndEmpty = !nextProps.savedParams.activeProjectPath && isProjectPathChanged;
+        const isPagePathChangedAndEmpty = !nextProps.savedParams.activePagePath && isProjectPathChanged;
+
+        if (isProjectPathChanged
+            || isProjectPathChangedAndEmpty
+            || isPagePathChangedAndEmpty) {
+            nextProps.onAnimationStart();
+        }
     }
 
     componentWillUnmount() {
@@ -98,6 +117,9 @@ function mapStateToProps(state: IStoreState, ownProps: IProps): IProperties {
 
 function mapDispatchToProps(dispatch, ownProps: IProps): ICallbacks {
     return {
+        onAnimationStart: () => {
+            dispatch(toggleScrollAnimation(true));
+        },
         onArrowNavigate: (nextParams) => {
             dispatch(saveParams(nextParams));
             dispatch(toggleScrollAnimation(true));

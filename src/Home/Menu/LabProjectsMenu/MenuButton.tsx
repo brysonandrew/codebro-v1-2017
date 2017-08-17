@@ -44,7 +44,7 @@ export class MenuButton extends React.Component<IProps, IState> {
                 width: "100%",
                 height: 6,
                 borderRadius: 2,
-                background: colors.std
+                background: isACross ? colors.wht : colors.std
             },
             menuButton__lines: [
                 {

@@ -38,6 +38,7 @@ interface IState extends IProperties, ICallbacks {
 export class Lab extends React.Component<IProps, IState> {
 
     timeoutId;
+    parentEl;
 
     public constructor(props?: any, context?: any) {
         super(props, context);
@@ -139,12 +140,12 @@ export class Lab extends React.Component<IProps, IState> {
                 top: 0,
                 left: 0,
                 width: "100%",
-                height: `${isIntro ? 100 : 0}vh`
+                height: `100vh`
             },
             pages__menu: {
                 position: 'absolute',
-                top: 2,
-                left: 2,
+                top: "2vh",
+                left: "2vw",
                 zIndex: 4
             },
             pages__page: {
@@ -160,22 +161,25 @@ export class Lab extends React.Component<IProps, IState> {
         const component = labProjects[activeProjectPath ? activeProjectPath : 'intro'].component;
 
         return (
-            <div style={ styles.pages }>
+            <div style={ styles.pages }
+                 ref={el => this.parentEl = el}>
                 <div style={ styles.pages__menu }>
                     <MenuFromStore
                         onClick={this.handlePagesMenuClick}
                     />
                 </div>
                 <div style={ styles.pages__page }>
-                    {React.cloneElement(
-                        component,
-                        {
-                            keysPressed: keysPressed,
-                            mx: mx,
-                            my: my,
-                            history: history
-                        }
-                    )}
+                    {isMounted
+                    &&  React.cloneElement(
+                            component,
+                            {
+                                parentEl: this.parentEl,
+                                keysPressed: keysPressed,
+                                mx: mx,
+                                my: my,
+                                history: history
+                            }
+                        )}
                 </div>
             </div>
         );

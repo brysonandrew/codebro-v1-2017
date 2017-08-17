@@ -4,16 +4,16 @@ import { toPath } from "./helpers/toPath";
 import { IDictionary, IPortfolioProject, ILabProject, ISocialMediaSelector } from "./models";
 import { PortfolioFromStore } from '../Home/Body/Pages/Portfolio';
 import { LabFromStore } from '../Home/Body/Pages/Lab';
-import { SpotlightFromStore } from '../Home/Body/LabProjects/Projects/Spotlight/Spotlight';
-import { CruisingFromStore } from '../Home/Body/LabProjects/Projects/Cruising/Cruising';
-import { FPSFromStore } from '../Home/Body/LabProjects/Projects/FPS/FPS';
-import { ParticlesFromStore } from '../Home/Body/LabProjects/Projects/Particles/Particles';
-import { particlesMenuItemList } from '../Home/Body/LabProjects/Projects/Particles/particlesMenu/particlesMenu';
-import { ArmouryFromStore } from '../Home/Body/LabProjects/Projects/Armoury/Armoury';
-import { armouryMenuItemList } from '../Home/Body/LabProjects/Projects/Armoury/armouryMenu/armouryMenu';
-import { GarageFromStore } from '../Home/Body/LabProjects/Projects/Garage/Garage';
-import { garageMenuItemList } from '../Home/Body/LabProjects/Projects/Garage/garageMenu/garageMenu';
-import { IntroFromStore } from '../Home/Body/LabProjects/Intro/Intro';
+import { SpotlightFromStore } from '../Home/Body/Projects/LabProjects/Projects/Spotlight/Spotlight';
+import { CruisingFromStore } from '../Home/Body/Projects/LabProjects/Projects/Cruising/Cruising';
+import { FPSFromStore } from '../Home/Body/Projects/LabProjects/Projects/FPS/FPS';
+import { ParticlesFromStore } from '../Home/Body/Projects/LabProjects/Projects/Particles/Particles';
+import { particlesMenuItemList } from '../Home/Body/Projects/LabProjects/Projects/Particles/particlesMenu/particlesMenu';
+import { ArmouryFromStore } from '../Home/Body/Projects/LabProjects/Projects/Armoury/Armoury';
+import { armouryMenuItemList } from '../Home/Body/Projects/LabProjects/Projects/Armoury/armouryMenu/armouryMenu';
+import { GarageFromStore } from '../Home/Body/Projects/LabProjects/Projects/Garage/Garage';
+import { garageMenuItemList } from '../Home/Body/Projects/LabProjects/Projects/Garage/garageMenu/garageMenu';
+import { IntroFromStore } from '../Home/Body/Projects/LabProjects/Intro/Intro';
 
 function Page(name, component) {
     this.name = name;

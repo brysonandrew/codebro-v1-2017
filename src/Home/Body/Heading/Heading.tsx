@@ -59,7 +59,7 @@ export class Heading extends React.Component<IProps, IState> {
     render(): JSX.Element {
         const { isMounted } = this.state;
         const { isMobile, isTablet, isLaptop, history, onPageSelect, savedParams } = this.props;
-        const isPortfolio = savedParams.activePagePath === "portfolio";
+        const isPortfolio = !savedParams.activePagePath || savedParams.activePagePath === "portfolio";
 
         const styles = {
             heading: {
@@ -73,8 +73,7 @@ export class Heading extends React.Component<IProps, IState> {
                 top: 50,
             },
             heading__logo: {
-                position: "absolute",
-                right: "2vw",
+                display: "inline-block",
                 height: 40,
                 width: 40,
                 padding: 5,
@@ -82,7 +81,8 @@ export class Heading extends React.Component<IProps, IState> {
             },
             heading__main: {
                 position: "absolute",
-                right: "calc(2vw + 50px)",
+                top: `${isPortfolio ? 0 : 2}vh`,
+                right: `${isPortfolio ? 0 : 2}vw`,
                 color: colors.std,
                 fontSize: 24,
                 opacity: isMounted ? 1 : 0,
@@ -97,17 +97,21 @@ export class Heading extends React.Component<IProps, IState> {
                         isTablet={isTablet}
                         isLaptop={isLaptop}
                     />}
-                <div style={styles.heading__main}>
-                    <PageHeading
-                        isMobile={isMobile}
-                        isTablet={isTablet}
-                        isLaptop={isLaptop}
-                        history={history}
-                        onPageSelect={onPageSelect}
-                    />
-                </div>
-                <div style={styles.heading__logo}>
-                    <Logo/>
+                <div>
+                    <div style={styles.heading__main}>
+                        <div style={{display: "inline-block"}}>
+                            <PageHeading
+                                isMobile={isMobile}
+                                isTablet={isTablet}
+                                isLaptop={isLaptop}
+                                history={history}
+                                onPageSelect={onPageSelect}
+                            />
+                        </div>
+                        <div style={styles.heading__logo}>
+                            <Logo/>
+                        </div>
+                    </div>
                 </div>
                 {isPortfolio
                 &&  <div style={styles.heading__sub}>

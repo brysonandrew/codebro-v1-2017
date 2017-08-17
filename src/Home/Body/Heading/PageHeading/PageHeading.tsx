@@ -38,11 +38,12 @@ export class PageHeading extends React.Component<IProps, IState> {
         const { history, isMobile } = this.props;
         const params: IParams = toParams(history.location.pathname);
         const pagePath = params.activePagePath ? params.activePagePath : "portfolio";
-        const isPortfolio = pagePath === "portfolio";
+        const isPortfolio = !pagePath || pagePath === "portfolio";
         const mobileDisplay = `${!isMobile ? 'inline-' : ''}block`;
 
         const styles = {
-            pageHeading: {},
+            pageHeading: {
+            },
             pageHeading__main: {
                 display: mobileDisplay,
                 float: isMobile ? 'none' : 'right',

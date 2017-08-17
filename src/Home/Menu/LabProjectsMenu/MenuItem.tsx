@@ -50,7 +50,7 @@ export class MenuItem extends React.Component<IProps, IState> {
                 width: 220,
                 height: 40,
                 opacity: isHovered ? 0.8 : 1,
-                borderRight: `1px solid ${colors.std}`,
+                borderRight: `1px solid ${colors.wht}`,
                 cursor: "pointer"
             },
             menuItem__text: {
