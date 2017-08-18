@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { ProjectsFromStore } from './PortfolioProjects/Projects';
 import { BottomNavigationMenu } from './PorfolioProjectsMenu/BottomNavigationMenu/BottomNavigationMenu';
 import { IParams } from '../../../../data/models';
-import { saveParams, toggleScrollAnimation } from '../../../HomeActionCreators';
+import { toggleScrollAnimation } from '../../../HomeActionCreators';
 import { IStoreState } from '../../../../redux/main_reducer';
 import { HeadingFromStore } from './PortfolioProjects/Heading/Heading';
 
@@ -40,6 +40,7 @@ export class Portfolio extends React.Component<IProps, IState> {
         this.state = {
             isMounted: false
         };
+        this.handleArrowNavigation = this.handleArrowNavigation.bind(this);
     }
 
     componentDidMount() {
@@ -68,9 +69,12 @@ export class Portfolio extends React.Component<IProps, IState> {
         clearTimeout(this.timerId);
     }
 
+    handleArrowNavigation(nextPath) {
+        this.props.history.push(nextPath);
+    }
+
     render(): JSX.Element {
         const {
-            onArrowNavigate,
             savedParams,
             isMobile,
             isTablet,
@@ -115,7 +119,7 @@ export class Portfolio extends React.Component<IProps, IState> {
                 </div>
                 <div style={ styles.portfolio__bottomNav }>
                     <BottomNavigationMenu
-                        onArrowNavigation={onArrowNavigate}
+                        onArrowNavigation={this.handleArrowNavigation}
                         savedParams={savedParams}
                         isMobile={isMobile}
                         isTablet={isTablet}
@@ -144,10 +148,6 @@ function mapStateToProps(state: IStoreState, ownProps: IProps): IProperties {
 function mapDispatchToProps(dispatch, ownProps: IProps): ICallbacks {
     return {
         onAnimationStart: () => {
-            dispatch(toggleScrollAnimation(true));
-        },
-        onArrowNavigate: (nextParams) => {
-            dispatch(saveParams(nextParams));
             dispatch(toggleScrollAnimation(true));
         }
     }

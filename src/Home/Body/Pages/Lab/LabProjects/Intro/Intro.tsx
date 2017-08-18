@@ -3,10 +3,8 @@ import * as history from 'history';
 import { connect } from 'react-redux';
 import { IStoreState } from '../../../../../../redux/main_reducer';
 import { IParams } from "../../../../../../data/models";
-import { saveParams } from "../../../../../HomeActionCreators";
 import { labProjectList } from '../../../../../../data/content';
 import { IntroContents } from './IntroContents';
-import { toParams } from '../../../../../../data/helpers/toParams';
 
 interface IProperties {
     isMobile?: boolean
@@ -15,10 +13,7 @@ interface IProperties {
     savedParams?: IParams
 }
 
-interface ICallbacks {
-    onURLChange?: (nextParams: IParams) => void
-    onProjectSelect?: (nextParams: IParams) => void
-}
+interface ICallbacks {}
 
 interface IProps extends IProperties, ICallbacks {
     keysPressed?: string
@@ -43,7 +38,6 @@ export class Intro extends React.Component<IProps, IState> {
             const firstPath = labProjectList[1].path;
 
             this.props.history.push(`/lab/${firstPath}`);
-            this.props.onURLChange({activePagePath: "lab", activeProjectPath: firstPath});
         }
     }
 
@@ -54,9 +48,8 @@ export class Intro extends React.Component<IProps, IState> {
     }
 
     handleParamsChange(path) {
-        const { history, onProjectSelect } = this.props;
+        const { history } = this.props;
         history.push(path);
-        onProjectSelect(toParams(path));
     }
 
     render(): JSX.Element {
@@ -102,14 +95,7 @@ function mapStateToProps(state: IStoreState, ownProps: IProps): IProperties {
 }
 
 function mapDispatchToProps(dispatch, ownProps: IProps): ICallbacks {
-    return {
-        onProjectSelect: (nextParams: IParams) => {
-            dispatch(saveParams(nextParams));
-        },
-        onURLChange: (nextParams: IParams) => {
-            dispatch(saveParams(nextParams));
-        }
-    }
+    return {}
 }
 
 export const IntroFromStore = connect(

@@ -3,9 +3,8 @@ import * as history from 'history';
 import { connect } from 'react-redux';
 import { IParams } from "../data/models";
 import { IStoreState } from '../redux/main_reducer';
-import { changeViewportDimensions, saveLocation, saveParams, toggleScrollAnimation } from './HomeActionCreators';
+import { changeViewportDimensions, saveParams, toggleScrollAnimation } from './HomeActionCreators';
 import { toParams } from "../data/helpers/toParams";
-import { HeadingFromStore } from "./Body/Pages/Lab/LabProjects/Heading/Heading";
 import { match } from 'react-router';
 import { Pages } from './Body/Pages/Pages';
 

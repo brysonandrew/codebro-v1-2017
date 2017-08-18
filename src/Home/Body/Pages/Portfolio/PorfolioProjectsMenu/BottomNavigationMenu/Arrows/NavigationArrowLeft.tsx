@@ -109,8 +109,7 @@ export class NavigationArrowLeft extends React.Component<IProps, IState> {
             }
         } as any;
         return (
-            <Link style= {styles.navigationArrowLeft}
-                  to={nextPath}
+            <div style= {styles.navigationArrowLeft}
                   onClick={isMin ? e => e.preventDefault() : () => this.handleClick(nextPath)}
                   onMouseEnter={isMin ? null : () => this.handleMouseEnter()}
                   onMouseLeave={isMin ? null : () => this.handleMouseLeave()}>
@@ -118,7 +117,7 @@ export class NavigationArrowLeft extends React.Component<IProps, IState> {
                     <div style={ styles.navigationArrowLeft__headTop }/>
                     <div style={ styles.navigationArrowLeft__headBottom }/>
                 </div>
-            </Link>
+            </div>
         );
     }
 }

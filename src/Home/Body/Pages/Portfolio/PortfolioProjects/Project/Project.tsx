@@ -5,7 +5,7 @@ import { IStoreState } from '../../../../../../redux/main_reducer';
 import { IGrabParams, IParams, IPortfolioProject } from "../../../../../../data/models";
 import { ProjectHeading } from "./Heading/ProjectHeading";
 import { toParams } from "../../../../../../data/helpers/toParams";
-import { saveParams, togglePreview, toggleScrollAnimation } from "../../../../../HomeActionCreators";
+import { togglePreview, toggleScrollAnimation } from "../../../../../HomeActionCreators";
 import { colors } from "../../../../../../data/themeOptions";
 import { Loader } from "../../../../../../Widgets/Loader";
 import { ImageLoader } from "../../../../../../Widgets/ImageLoader";
@@ -22,7 +22,7 @@ interface IProperties {
 }
 
 interface ICallbacks {
-    onAnimationStart?: (nextParams: IParams) => void
+    onAnimationStart?: () => void
     onExtendPreview?: () => void
     onCondensePreview?: () => void
 }
@@ -93,7 +93,7 @@ export class Project extends React.Component<IProps, IState> {
         const { project, history, onAnimationStart } = this.props;
         const path = `/portfolio/${project.path}`;
         history.push(path);
-        onAnimationStart(toParams(path));
+        onAnimationStart();
     }
 
     handleReset() {
@@ -110,7 +110,7 @@ export class Project extends React.Component<IProps, IState> {
     }
 
     handleHeadingClick() {
-        const { project, onAnimationStart, onExtendPreview, history, onCondensePreview } = this.props;
+        const { project, onAnimationStart, onExtendPreview, history } = this.props;
         const { isProjectExtended } = this.state;
         if (isProjectExtended) {
             this.handleReset();
@@ -119,8 +119,7 @@ export class Project extends React.Component<IProps, IState> {
                 isProjectExtended: true,
                 isImagesLoading: true
             });
-
-            onAnimationStart(toParams(`/portfolio/${project.path}`));
+            onAnimationStart();
             onExtendPreview();
         }
         history.push(`/portfolio/${project.path}`);
@@ -472,9 +471,8 @@ function mapStateToProps(state: IStoreState, ownProps: IProps): IProperties {
 
 function mapDispatchToProps(dispatch, ownProps: IProps): ICallbacks {
     return {
-        onAnimationStart: (nextParams) => {
+        onAnimationStart: () => {
             dispatch(toggleScrollAnimation(true));
-            dispatch(saveParams(nextParams));
         },
         onExtendPreview: () => {
             dispatch(togglePreview(true));

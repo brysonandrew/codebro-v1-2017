@@ -3,7 +3,6 @@ import { colors } from "../../../../../../data/themeOptions";
 import { NavigationArrowRight } from "./Arrows/NavigationArrowRight";
 import { IParams } from "../../../../../../data/models";
 import { NavigationArrowLeft } from "./Arrows/NavigationArrowLeft";
-import { toParams } from '../../../../../../data/helpers/toParams';
 
 interface IProps {
     onArrowNavigation: (nextParams: IParams) => void
@@ -24,7 +23,7 @@ export class BottomNavigationMenu extends React.Component<IProps, IState> {
 
     handleArrowClick(nextPath) {
         const { onArrowNavigation } = this.props;
-        onArrowNavigation(toParams(nextPath));
+        onArrowNavigation(nextPath);
     }
 
     render(): JSX.Element {

@@ -2,11 +2,9 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { IStoreState } from '../../../../../../redux/main_reducer';
 import { MenuSelector } from "./MenuSelector";
-import { saveParams, toggleMenu, toggleScrollAnimation } from "../../../../../HomeActionCreators";
-import { toParams } from "../../../../../../data/helpers/toParams";
+import { toggleMenu, toggleScrollAnimation } from "../../../../../HomeActionCreators";
 import { portfolioProjectList } from '../../../../../../data/content';
 import { IParams } from "../../../../../../data/models";
-import { colors } from "../../../../../../data/themeOptions";
 
 interface IProperties {
     isMenuOpen?: boolean
@@ -16,7 +14,7 @@ interface IProperties {
 }
 
 interface ICallbacks {
-    onAnimationStart?: (nextParams: IParams) => void
+    onAnimationStart?: () => void
     onCloseMenu?: () => void
 }
 
@@ -37,7 +35,7 @@ export class MenuSelectors extends React.Component<IProps, IState> {
         if (isTablet && isMenuOpen) {
             onCloseMenu();
         }
-        onAnimationStart(toParams(nextPath));
+        onAnimationStart();
     }
 
     render(): JSX.Element {
@@ -81,9 +79,8 @@ function mapStateToProps(state: IStoreState, ownProps: IProps): IProperties {
 
 function mapDispatchToProps(dispatch, ownProps: IProps): ICallbacks {
     return {
-        onAnimationStart: (nextParams) => {
+        onAnimationStart: () => {
             dispatch(toggleScrollAnimation(true));
-            dispatch(saveParams(nextParams));
         },
         onCloseMenu: () => {
             dispatch(toggleMenu(false));

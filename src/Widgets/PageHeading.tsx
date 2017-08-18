@@ -21,7 +21,6 @@ export class PageHeading extends React.Component<IProps, IState> {
 
     handleClick(nextPath: string) {
         this.props.history.push(nextPath);
-        this.props.onPageSelect(toParams(nextPath));
     }
 
     static nextPath(pagePath: string, params: IParams): string {

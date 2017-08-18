@@ -8,7 +8,6 @@ import { MenuLeft } from "./MenuLeft/MenuLeft";
 import { PageHeading } from '../../../../../../Widgets/PageHeading';
 import { IParams } from '../../../../../../data/models';
 import { IStoreState } from '../../../../../../redux/main_reducer';
-import { saveParams } from '../../../../../HomeActionCreators';
 
 interface IProps {}
 
@@ -25,9 +24,7 @@ interface IProperties {
     height?: number
 }
 
-interface ICallbacks {
-    onPageSelect?: (nextParams: IParams) => void
-}
+interface ICallbacks {}
 
 interface IProps extends IProperties, ICallbacks {
     history: history.History
@@ -45,7 +42,7 @@ export class Heading extends React.Component<IProps, IState> {
         super(props, context);
         this.state = {
             isMounted:  false
-        }
+        };
     }
 
     componentDidMount() {
@@ -58,7 +55,7 @@ export class Heading extends React.Component<IProps, IState> {
 
     render(): JSX.Element {
         const { isMounted } = this.state;
-        const { isMobile, isTablet, isLaptop, history, onPageSelect, savedParams } = this.props;
+        const { isMobile, isTablet, isLaptop, history, savedParams } = this.props;
 
         const styles = {
             heading: {
@@ -112,7 +109,6 @@ export class Heading extends React.Component<IProps, IState> {
                                 isTablet={isTablet}
                                 isLaptop={isLaptop}
                                 history={history}
-                                onPageSelect={onPageSelect}
                             />
                         </div>
                         <div style={styles.heading__mainLogo}>
@@ -149,9 +145,6 @@ function mapStateToProps(state: IStoreState, ownProps: IProps): IProperties {
 
 function mapDispatchToProps(dispatch, ownProps: IProps): ICallbacks {
     return {
-        onPageSelect: (nextParams) => {
-            dispatch(saveParams(nextParams));
-        }
     }
 }
 

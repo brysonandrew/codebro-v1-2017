@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { IStoreState } from '../../../../../redux/main_reducer';
 import { portfolioProjectList } from "../../../../../data/content";
 import { IParams, IDictionary } from "../../../../../data/models";
-import { toggleScrollAnimation, toggleWheel, saveParams, togglePreview } from '../../../../HomeActionCreators';
+import { toggleScrollAnimation, toggleWheel } from '../../../../HomeActionCreators';
 import { toParams} from "../../../../../data/helpers/toParams";
 import { MotionScroll } from "../../../../../Widgets/MotionScroll/MotionScroll";
 import { ProjectFromStore } from "./Project/Project";
@@ -23,7 +23,6 @@ interface ICallbacks {
     onAnimationEnd?: () => void
     onWheel?: () => void
     onWheelStop?: () => void
-    onURLChange?: (nextParams: IParams) => void
 }
 
 interface IProps extends IProperties, ICallbacks {
@@ -101,7 +100,6 @@ export class Projects extends React.Component<IProps, IState> {
         if (currentIndex > -1 && portfolioProjectList[currentIndex].path !== savedParams.activeProjectPath) {
             const nextPath = `/portfolio/${portfolioProjectList[currentIndex].path}`;
             this.props.history.push(nextPath);
-            this.props.onURLChange(toParams(nextPath));
         }
     }
 
@@ -215,9 +213,6 @@ function mapDispatchToProps(dispatch, ownProps: IProps): ICallbacks {
         },
         onWheelStop: () => {
             dispatch(toggleWheel(false));
-        },
-        onURLChange: (nextParams) => {
-            dispatch(saveParams(nextParams));
         }
     }
 }
