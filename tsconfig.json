@@ -3,18 +3,20 @@
         "outDir": "./dist/",
         "module": "commonjs",
         "target": "es5",
+        "lib": ["es2017", "dom"],
         "jsx": "react",
         "moduleResolution": "node",
+        "experimentalDecorators": true,
         "types": [
+            "core-js",
             "node",
             "history",
             "react",
             "react-dom",
             "react-motion",
+            "redux",
             "react-router",
-            "react-router-dom",
-            "es6-shim",
-            "redux"
+            "react-router-dom"
         ],
         "typeRoots": [
             "node_modules/@types"

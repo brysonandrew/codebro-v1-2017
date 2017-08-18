@@ -7,7 +7,7 @@ interface IProps {
     isMobile?: boolean
     isTablet?: boolean
     isLaptop?: boolean
-    onPageSelect?: (nextPage: string) => void
+    onPageSelect?: (nextParams: IParams) => void
     history: history.History
 }
 
