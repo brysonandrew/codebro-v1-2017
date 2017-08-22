@@ -40,7 +40,6 @@ addComponentCSS({
     `
 });
 
-
 export class App extends React.Component<any, any> {
 
     public render(): JSX.Element {

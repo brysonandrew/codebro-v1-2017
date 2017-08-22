@@ -10,8 +10,6 @@
     "release": "webpack --config ./webpack/release.js",
     "prod": "NODE_ENV=production",
     "prod-win": "SET NODE_ENV=production",
-    "postinstall": "NODE_ENV=production webpack --config ./webpack/release.js",
-    "postinstall-win": "SET NODE_ENV=production webpack --config ./webpack/release.js",
     "start": "node ./build/server.js",
     "dev": "node ./webpack/dev.js",
     "watch": "node ./node_modules/webpack/bin/webpack.js --watch --config ./webpack/server.js"
@@ -36,6 +34,7 @@
     "http-proxy-middleware": "^0.16.0",
     "immutable": "^3.8.1",
     "isarray": "^2.0.1",
+    "json5": "^0.5.1",
     "react": "^15.5.4",
     "react-dom": "^15.4.0",
     "react-motion": "^0.5.0",
@@ -51,7 +50,7 @@
     "url-loader": "^0.5.7",
     "webpack": "^1.13.1",
     "webpack-dev-middleware": "^1.6.1",
-    "webpack-dev-server": "^1.14.1"
+    "webpack-dev-server": "^2.4.2"
   },
   "devDependencies": {
     "browser-sync": "^2.13.0",

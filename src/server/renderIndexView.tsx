@@ -13,12 +13,12 @@ export const renderIndexView = (req: any, res: any) => {
         res.render('index', {
             renderedRoot: ReactDOMServer.renderToString(
                 <Provider store={store()}>
-                    <Router
-                        location={req.url}
-                        context={context} >
-                        <App/>
-                    </Router>
-                </Provider>
+                            <Router
+                                location={req.url}
+                                context={context} >
+                                <App/>
+                            </Router>
+                        </Provider>
             )
         });
     }
